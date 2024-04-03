@@ -1,0 +1,35 @@
+name: github-actions
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  jest-tests:
+    name: Run Jest Tests
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Jest Dependencies
+        run: npm install --prefix server
+
+      - name: Run Jest Tests
+        run: npm test --prefix server/tests
+
+  cypress-tests:
+    name: Run Cypress Tests
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Cypress Dependencies
+        run: npm install --prefix testing/cypress
+
+      - name: Run Cypress Tests
+        run: npx cypress run --headless --spec "testing/cypress/e2e/fakeso.cy.js"
