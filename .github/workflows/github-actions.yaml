@@ -20,8 +20,22 @@ jobs:
       - name: Run Jest Tests
         run: npm test --prefix server/tests
 
-  cypress-tests:
-    name: Run Cypress Tests
+cypress-e2e-tests:
+  name: Run Cypress End-to-End Tests
+  runs-on: self-hosted
+
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Cypress Dependencies
+      run: npm install --prefix testing/cypress
+
+    - name: Run Cypress End-to-End Tests
+      run: npx cypress run --headless --spec "testing/cypress/e2e/*.js"
+
+  cypress-component-tests:
+    name: Run Cypress Component Tests
     runs-on: self-hosted
 
     steps:
@@ -31,5 +45,5 @@ jobs:
       - name: Install Cypress Dependencies
         run: npm install --prefix testing/cypress
 
-      - name: Run Cypress Tests
-        run: npx cypress run --headless --spec "testing/cypress/e2e/fakeso.cy.js"
+      - name: Run Cypress Component Tests
+        run: npx cypress run --headless --spec "testing/cypress/components/*.js"
