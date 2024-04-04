@@ -8,7 +8,7 @@ on:
 jobs:
   jest-tests:
     name: Run Jest Tests
-    runs-on: self-hosted
+    runs-on: [self-hosted, x64]
 
     steps:
       - name: Checkout Repository
