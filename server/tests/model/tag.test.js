@@ -54,7 +54,10 @@ describe('Tag Model Tests', () => {
 
     // Test Case 7: Catch error -- invalid data type (name)
     it('Should throw an error when creating a tag with invalid data type (name)', async () => {
-        await expect(Tag.create({ name: 123 })).rejects.toThrow(); // Providing name as an integer should throw an error
+        await expect(Tag.create(
+            {
+                name: 123
+            })).rejects.toThrow(); // Name as an integer should throw an error
     });
 
     // Test Case 8: Retrieving a Tag by ID

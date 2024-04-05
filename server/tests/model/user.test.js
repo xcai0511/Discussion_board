@@ -1,6 +1,5 @@
 // User Model Tests
 
-const { default: mongoose } = require("mongoose");
 const User = require('../../models/users');
 const Question = require('../../models/questions');
 
@@ -38,13 +37,46 @@ describe('User Model Tests', () => {
         expect(newUser2).toBeDefined(); // Ensure the user object is defined
     });
 
-    // TODO: Test Case 3: Creating a User with Missing Required Fields (username)
+    // Test Case 3: Creating a User with Missing Required Fields (username)
+    it('Should throw an error when creating a user with missing required field (username)', async () => {
+        await expect(User.create(
+            {
+                contactemail: 'test@example.com',
+                password: 'password123',
+                saved_questions: []
+            })).rejects.toThrow(); // Not adding a username should throw an error
+    });
 
-    // TODO: Test Case 4: Creating a User with Missing Required Fields (contactemail)
+    // Test Case 4: Creating a User with Missing Required Fields (contactemail)
+    it('Should throw an error when creating a user with missing required field (contactemail)', async () => {
+        await expect(User.create(
+            {
+                username: 'testuser',
+                password: 'password123',
+                saved_questions: []
+            })).rejects.toThrow(); // Not adding a contactemail should throw an error
+    });
 
-    // TODO: Test Case 5: Creating a User with Missing Required Fields (password)
+    // Test Case 5: Creating a User with Missing Required Fields (password)
+    it('Should throw an error when creating a user with missing required field (password)', async () => {
+        await expect(User.create(
+            {
+                username: 'testuser',
+                contactemail: 'test@example.com',
+                saved_questions: []
+            })).rejects.toThrow(); // Not adding a password should throw an error
+    });
 
-    // TODO: Test Case 6: Creating a User with Invalid Data Type(s)
+    // Test Case 6: Creating a User with Invalid Data Type
+    it('Should throw an error when creating a user with invalid data type', async () => {
+        await expect(User.create(
+            {
+                username: 123, // Username should be a string, not an integer
+                contactemail: 'test@example.com',
+                password: 'password123',
+                saved_questions: []
+            })).rejects.toThrow(); // Adding a user with invalid data type should throw an error
+    });
 
     // Test Case 7: Retrieving a User by ID
     it('Should retrieve a user by ID', async () => {
