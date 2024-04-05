@@ -1,13 +1,9 @@
 // Answer Model Tests
 
 const mockingoose = require('mockingoose');
-const { default: mongoose } = require("mongoose");
 const Answer = require('../../models/answers');
 
 describe('Answer Model Tests', () => {
-
-    // Variable to hold the ID of the newly created test answer
-    let answerId;
 
     // Before each test, reset mockingoose mocks
     beforeEach(() => {
@@ -20,23 +16,108 @@ describe('Answer Model Tests', () => {
             text: 'This is the text for a test answer',
             ans_by: 'test_admin'
         });
-        expect(newAnswer).toBeDefined();
+        expect(newAnswer.length).toEqual(1); // Ensure a new answer is created
     });
 
-    // TODO: Test Case 2: Creating Multiple Valid Answers
+    // Test Case 2: Creating Multiple Valid Answers
+    it('Should create multiple valid answers', async () => {
+        const newAnswers = await Answer.create([
+            {
+                text: 'Answer 1 text',
+                ans_by: 'user1'
+            },
+            {
+                text: 'Answer 2 text',
+                ans_by: 'user2'
+            }
+        ]);
+        expect(newAnswers.length).toEqual(2); // Ensure two answers are created
+    });
 
-    // TODO: Test Case 3: Creating a Question with Missing Required Field (text)
+    // Test Case 3: Creating a Question with Missing Required Field (text)
+    it('Should throw an error when creating an answer with missing required field (text)', async () => {
+        await expect(Answer.create(
+            {
+                ans_by: 'test_admin'
+            })).rejects.toThrow(); // Should throw an error because there is no text field
+    });
 
-    // TODO: Test Case 4: Creating a Question with Missing Required Field (ans_by)
+    // Test Case 4: Creating a Question with Missing Required Field (ans_by)
+    it('Should throw an error when creating an answer with missing required field (ans_by)', async () => {
+        await expect(Answer.create(
+            {
+                text: 'Answer text'
+            })).rejects.toThrow(); // Should throw an error because there is no ans_by field
+    });
 
-    // TODO: Test Case 5: Creating a User with Invalid Data Type(s) (text)
+    // Test Case 5: Creating a User with Invalid Data Type(s) (text)
+    it('Should throw an error when creating an answer with invalid data type (text)', async () => {
+        await expect(Answer.create(
+            {
+                text: 123, // Adding text as integer instead of string
+                ans_by: 'test_admin'
+            })).rejects.toThrow(); // Should throw an error
+    });
 
-    // TODO: Test Case 6: Creating a User with Invalid Data Type(s) (ans_by)
+    // Test Case 6: Creating a User with Invalid Data Type(s) (ans_by)
+    it('Should throw an error when creating an answer with invalid data type (ans_by)', async () => {
+        await expect(Answer.create(
+            {
+                text: 'Answer text',
+                ans_by: 123 // Adding ans_by as integer instead of string
+            })).rejects.toThrow(); // Should throw an error
+    });
 
-    // TODO: Test Case 7: Retrieve an Answer by ID
+    // Test Case 7: Retrieve an Answer by ID
+    it('Should retrieve an answer by ID', async () => {
+        // Create a test answer
+        const testAnswer =
+            {
+                _id: 'testAnswerId',
+                text: 'Test answer text',
+                ans_by: 'test_admin'
+            };
+        mockingoose(Answer).toReturn(testAnswer, 'findOne');
 
-    // TODO: Test Case 8: Update an Answer by ID
+        const retrievedAnswer = await Answer.findById('testAnswerId');
+        expect(retrievedAnswer._id).toEqual('testAnswerId'); // Ensure the retrieved answer matches the test answer
+    });
 
-    // TODO: Test Case 9: Delete an Answer by ID
+    // Test Case 8: Update an Answer by ID
+    it('Should update an answer by ID', async () => {
+        // Create test answer
+        const testAnswer =
+            {
+                _id: 'testAnswerId',
+                text: 'Test answer text',
+                ans_by: 'test_admin'
+            };
+        mockingoose(Answer).toReturn(testAnswer, 'findOneAndUpdate');
+
+        const updatedAnswer = await Answer.findByIdAndUpdate('testAnswerId',
+            {
+                text: 'Updated answer text'
+            },
+            {
+                new: true
+            });
+        expect(updatedAnswer.text).toEqual('Updated answer text'); // Ensure the answer text is updated
+    });
+
+    // Test Case 9: Delete an Answer by ID
+    it('Should delete an answer by ID', async () => {
+        // Create a test answer
+        const testAnswer =
+            {
+                _id: 'testAnswerId',
+                text: 'Test answer text',
+                ans_by: 'test_admin'
+            };
+        mockingoose(Answer).toReturn(testAnswer, 'findOneAndDelete');
+
+        await Answer.findByIdAndDelete('testAnswerId');
+        const deletedAnswer = await Answer.findById('testAnswerId');
+        expect(deletedAnswer).toBeNull(); // Ensure the answer is deleted
+    });
 
 });
