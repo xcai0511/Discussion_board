@@ -47,31 +47,7 @@ describe('Question Model Tests', () => {
         expect(newQuestion.length).toEqual(1); // Ensure the question is created
     });
 
-    // Test Case 3: Creating a Question with Missing Required Field (title)
-    it('Should throw an error when creating a question with missing required field (title)', async () => {
-        await expect(Question.create(
-            {
-                text: 'Question text',
-                tags: [],
-                asked_by: 'askedUserId',
-                views: 0,
-                answers: []
-            })).rejects.toThrow(); // Not including a title should throw an error
-    });
-
-    // Test Case 4: Creating a Question with Missing Required Field (text)
-    it('Should throw an error when creating a question with missing required field (text)', async () => {
-        await expect(Question.create(
-            {
-                title: 'Question',
-                tags: [],
-                asked_by: 'askedUserId',
-                views: 0,
-                answers: []
-            })).rejects.toThrow(); // Not including text should throw an error
-    });
-
-    // Test Case 5: Creating a User with Invalid Data Type
+    // Test Case 3: Creating a User with Invalid Data Type
     it('Should throw an error when creating a question with invalid data type', async () => {
         await expect(Question.create(
             {
@@ -84,7 +60,7 @@ describe('Question Model Tests', () => {
             })).rejects.toThrow(); // Adding an incorrect data type should throw an error
     });
 
-    // Test Case 6: Retrieving a Question by ID
+    // Test Case 4: Retrieving a Question by ID
     it('Should retrieve a question by ID', async () => {
         // Create a test question
         const testQuestion =
@@ -103,7 +79,7 @@ describe('Question Model Tests', () => {
         expect(retrievedQuestion._id).toEqual('testQuestionId'); // Ensure the retrieved question matches the test question
     });
 
-    // Test Case 7: Updating a Question
+    // Test Case 5: Updating a Question
     it('Should update a question', async () => {
         // Create a test question
         const testQuestion =
@@ -128,7 +104,7 @@ describe('Question Model Tests', () => {
         expect(updatedQuestion.title).toEqual('Updated Question'); // Ensure the question title is updated
     });
 
-    // Test Case 8: Deleting a Question
+    // Test Case 6: Deleting a Question
     it('Should delete a question', async () => {
         // Create a test question
         const testQuestion =

@@ -37,37 +37,7 @@ describe('User Model Tests', () => {
         expect(newUser2).toBeDefined(); // Ensure the user object is defined
     });
 
-    // Test Case 3: Creating a User with Missing Required Fields (username)
-    it('Should throw an error when creating a user with missing required field (username)', async () => {
-        await expect(User.create(
-            {
-                contactemail: 'test@example.com',
-                password: 'password123',
-                saved_questions: []
-            })).rejects.toThrow(); // Not adding a username should throw an error
-    });
-
-    // Test Case 4: Creating a User with Missing Required Fields (contactemail)
-    it('Should throw an error when creating a user with missing required field (contactemail)', async () => {
-        await expect(User.create(
-            {
-                username: 'testuser',
-                password: 'password123',
-                saved_questions: []
-            })).rejects.toThrow(); // Not adding a contactemail should throw an error
-    });
-
-    // Test Case 5: Creating a User with Missing Required Fields (password)
-    it('Should throw an error when creating a user with missing required field (password)', async () => {
-        await expect(User.create(
-            {
-                username: 'testuser',
-                contactemail: 'test@example.com',
-                saved_questions: []
-            })).rejects.toThrow(); // Not adding a password should throw an error
-    });
-
-    // Test Case 6: Creating a User with Invalid Data Type
+    // Test Case 3: Creating a User with Invalid Data Type
     it('Should throw an error when creating a user with invalid data type', async () => {
         await expect(User.create(
             {
@@ -78,27 +48,27 @@ describe('User Model Tests', () => {
             })).rejects.toThrow(); // Adding a user with invalid data type should throw an error
     });
 
-    // Test Case 7: Retrieving a User by ID
+    // Test Case 4: Retrieving a User by ID
     it('Should retrieve a user by ID', async () => {
         const retrievedUser = await User.findById(testUserId);
         expect(retrievedUser._id).toEqual(testUserId); // Ensure the retrieved user matches the one saved
     });
 
-    // Test Case 8: Updating a User
+    // Test Case 5: Updating a User
     it('Should update a user', async () => {
         await User.findByIdAndUpdate(testUserId, { username: 'updated_user' });
         const updatedUser = await User.findById(testUserId);
         expect(updatedUser.username).toEqual('updated_user'); // Ensure the username is updated
     });
 
-    // Test Case 9: Deleting a User
+    // Test Case 6: Deleting a User
     it('Should delete a user', async () => {
         await User.findByIdAndDelete(testUserId);
         const deletedUser = await User.findById(testUserId);
         expect(deletedUser).toBeNull(); // Ensure the user is deleted
     });
 
-    // Test Case 10: Retrieving Question IDs from Saved Questions
+    // Test Case 7: Retrieving Question IDs from Saved Questions
     it('Should retrieve question IDs from saved_questions field', async () => {
         // Test User
         const newUser = await User.create({

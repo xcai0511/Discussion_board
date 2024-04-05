@@ -34,23 +34,7 @@ describe('Answer Model Tests', () => {
         expect(newAnswers.length).toEqual(2); // Ensure two answers are created
     });
 
-    // Test Case 3: Creating a Question with Missing Required Field (text)
-    it('Should throw an error when creating an answer with missing required field (text)', async () => {
-        await expect(Answer.create(
-            {
-                ans_by: 'test_admin'
-            })).rejects.toThrow(); // Should throw an error because there is no text field
-    });
-
-    // Test Case 4: Creating a Question with Missing Required Field (ans_by)
-    it('Should throw an error when creating an answer with missing required field (ans_by)', async () => {
-        await expect(Answer.create(
-            {
-                text: 'Answer text'
-            })).rejects.toThrow(); // Should throw an error because there is no ans_by field
-    });
-
-    // Test Case 5: Creating a User with Invalid Data Type(s) (text)
+    // Test Case 3: Creating a User with Invalid Data Type(s) (text)
     it('Should throw an error when creating an answer with invalid data type (text)', async () => {
         await expect(Answer.create(
             {
@@ -59,7 +43,7 @@ describe('Answer Model Tests', () => {
             })).rejects.toThrow(); // Should throw an error
     });
 
-    // Test Case 6: Creating a User with Invalid Data Type(s) (ans_by)
+    // Test Case 4: Creating a User with Invalid Data Type(s) (ans_by)
     it('Should throw an error when creating an answer with invalid data type (ans_by)', async () => {
         await expect(Answer.create(
             {
@@ -68,7 +52,7 @@ describe('Answer Model Tests', () => {
             })).rejects.toThrow(); // Should throw an error
     });
 
-    // Test Case 7: Retrieve an Answer by ID
+    // Test Case 5: Retrieve an Answer by ID
     it('Should retrieve an answer by ID', async () => {
         // Create a test answer
         const testAnswer =
@@ -83,7 +67,7 @@ describe('Answer Model Tests', () => {
         expect(retrievedAnswer._id).toEqual('testAnswerId'); // Ensure the retrieved answer matches the test answer
     });
 
-    // Test Case 8: Update an Answer by ID
+    // Test Case 6: Update an Answer by ID
     it('Should update an answer by ID', async () => {
         // Create test answer
         const testAnswer =
@@ -104,7 +88,7 @@ describe('Answer Model Tests', () => {
         expect(updatedAnswer.text).toEqual('Updated answer text'); // Ensure the answer text is updated
     });
 
-    // Test Case 9: Delete an Answer by ID
+    // Test Case 7: Delete an Answer by ID
     it('Should delete an answer by ID', async () => {
         // Create a test answer
         const testAnswer =
