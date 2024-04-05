@@ -1,34 +1,72 @@
 // User Model Tests
 
-const mockingoose = require('mockingoose');
 const { default: mongoose } = require("mongoose");
 const User = require('../../models/users');
 const Question = require('../../models/questions');
 
 describe('User Model Tests', () => {
 
-    // Before each test, reset mockingoose mocks
-    beforeEach(() => {
-        mockingoose.resetAll(); // Reset all mocks
+    let testUserId;
+
+    // Before each test, create a test user
+    beforeEach(async () => {
+        // Create a test user before each test
+        const newUser = await User.create({
+            username: 'testuser',
+            contactemail: 'testuser@example.com',
+            password: 'testpassword',
+            saved_questions: []
+        });
+        testUserId = newUser._id;
     });
 
-    // TODO: Test Case 1: Creating a Valid User
+    // Test Case 1: Retrieving the Valid User from beforeEach
+    it('Should create a valid user in beforeEach hook', async () => {
+        // Find the user from the beforeEach hook
+        const users = await User.find({ username: 'testuser' });
+        expect(users.length).toBeGreaterThan(0); // Ensure the user exists
+    });
 
-    // TODO: Test Case 2: Creating a User with Missing Required Fields (username)
+    // Test Case 2: Creating a Valid User
+    it('Should create a valid user', async () => {
+        const newUser2 = await User.create({
+            username: 'testuser2',
+            contactemail: 'testuser2@example.com',
+            password: 'testpassword2',
+            saved_questions: []
+        });
+        expect(newUser2).toBeDefined(); // Ensure the user object is defined
+    });
 
-    // TODO: Test Case 3: Creating a User with Missing Required Fields (contactemail)
+    // TODO: Test Case 3: Creating a User with Missing Required Fields (username)
 
-    // TODO: Test Case 4: Creating a User with Missing Required Fields (password)
+    // TODO: Test Case 4: Creating a User with Missing Required Fields (contactemail)
 
-    // TODO: Test Case 5: Creating a User with Invalid Data Type(s)
+    // TODO: Test Case 5: Creating a User with Missing Required Fields (password)
 
-    // TODO: Test Case 6: Retrieving a User by ID
+    // TODO: Test Case 6: Creating a User with Invalid Data Type(s)
 
-    // TODO: Test Case 7: Updating a User
+    // Test Case 7: Retrieving a User by ID
+    it('Should retrieve a user by ID', async () => {
+        const retrievedUser = await User.findById(testUserId);
+        expect(retrievedUser._id).toEqual(testUserId); // Ensure the retrieved user matches the one saved
+    });
 
-    // TODO: Test Case 8: Deleting a User
+    // Test Case 8: Updating a User
+    it('Should update a user', async () => {
+        await User.findByIdAndUpdate(testUserId, { username: 'updated_user' });
+        const updatedUser = await User.findById(testUserId);
+        expect(updatedUser.username).toEqual('updated_user'); // Ensure the username is updated
+    });
 
-    // Test Case 9: Retrieving Question IDs from Saved Questions
+    // Test Case 9: Deleting a User
+    it('Should delete a user', async () => {
+        await User.findByIdAndDelete(testUserId);
+        const deletedUser = await User.findById(testUserId);
+        expect(deletedUser).toBeNull(); // Ensure the user is deleted
+    });
+
+    // Test Case 10: Retrieving Question IDs from Saved Questions
     it('Should retrieve question IDs from saved_questions field', async () => {
         // Test User
         const newUser = await User.create({
