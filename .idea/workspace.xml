@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfcf20db-9b3b-471f-94fe-999609551368" name="Changes" comment="trying to fix answer.test.js">
+    <list default="true" id="cfcf20db-9b3b-471f-94fe-999609551368" name="Changes" comment="fix tag.test.js, except for findOne">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/tests/model/answer.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/tests/model/answer.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/tests/model/question.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/tests/model/question.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/tests/model/user.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/tests/model/user.test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +84,21 @@
       <option name="project" value="LOCAL" />
       <updated>1712349908460</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="trying to fix question.test.js">
+      <created>1712364418341</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1712364418341</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix tag.test.js, except for findOne">
+      <created>1712364952021</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1712364952021</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +120,8 @@
     <MESSAGE value="updating GitHub Actions YAML file to include both cypress e2e and component tests" />
     <MESSAGE value="adding necessary model files, schemas, and updating init.js to populate database" />
     <MESSAGE value="trying to fix answer.test.js" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to fix answer.test.js" />
+    <MESSAGE value="trying to fix question.test.js" />
+    <MESSAGE value="fix tag.test.js, except for findOne" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix tag.test.js, except for findOne" />
   </component>
 </project>
