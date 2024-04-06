@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfcf20db-9b3b-471f-94fe-999609551368" name="Changes" comment="adding necessary model files, schemas, and updating init.js to populate database">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/tests/model/answer.test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/tests/model/question.test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/tests/model/tag.test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/tests/model/user.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/.eslintrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/.eslintrc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
+    <list default="true" id="cfcf20db-9b3b-471f-94fe-999609551368" name="Changes" comment="trying to fix answer.test.js">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/tests/model/answer.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/tests/model/answer.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/tests/model/question.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/tests/model/question.test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +43,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -83,7 +78,14 @@
       <option name="project" value="LOCAL" />
       <updated>1712194797549</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="trying to fix answer.test.js">
+      <created>1712349908460</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712349908460</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -104,6 +106,7 @@
     <MESSAGE value="adding GitHub Actions YAML file" />
     <MESSAGE value="updating GitHub Actions YAML file to include both cypress e2e and component tests" />
     <MESSAGE value="adding necessary model files, schemas, and updating init.js to populate database" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding necessary model files, schemas, and updating init.js to populate database" />
+    <MESSAGE value="trying to fix answer.test.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to fix answer.test.js" />
   </component>
 </project>
