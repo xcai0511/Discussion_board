@@ -45,12 +45,11 @@ describe('Question Model Tests', () => {
                 views: 0,
                 answers: []
             });
-        //expect(newQuestion.length).toEqual(1); // Ensure the question is created
         expect(newQuestion.title).toEqual('Question');
         expect(newQuestion.text).toEqual('Question text');
     });
 
-    // Test Case 4: Retrieving a Question by ID
+    // Test Case 3: Retrieving a Question by ID
     it('Should retrieve a question by ID', async () => {
         // Create a test question
         const testQuestion =
@@ -69,32 +68,7 @@ describe('Question Model Tests', () => {
         expect(retrievedQuestion._id.toString()).toEqual('66109aab2844a576c7fe373d'); // Ensure the retrieved question matches the test question
     });
 
-    // // Test Case 5: Updating a Question
-    // it('Should update a question', async () => {
-    //     // Create a test question
-    //     const testQuestion =
-    //         {
-    //             _id: 'testQuestionId',
-    //             title: 'Test Question',
-    //             text: 'Test question text',
-    //             tags: [],
-    //             asked_by: 'askedUserId',
-    //             views: 0,
-    //             answers: []
-    //         };
-    //     mockingoose(Question).toReturn(testQuestion, 'findOneAndUpdate');
-    //
-    //     const updatedQuestion = await Question.findByIdAndUpdate('testQuestionId',
-    //         {
-    //             title: 'Updated Question'
-    //         },
-    //         {
-    //             new: true
-    //         });
-    //     expect(updatedQuestion.title).toEqual('Updated Question'); // Ensure the question title is updated
-    // });
-
-    // Test Case 6: Deleting a Question
+    // Test Case 4: Deleting a Question
     it('Should delete a question', async () => {
         // Create a test question
         const testQuestion =

@@ -52,7 +52,7 @@ describe('Tag Model Tests', () => {
         expect(newTags.length).toEqual(2); // Ensure two tags are created
     });
 
-    // Test Case 7: Retrieving a Tag by ID
+    // Test Case 6: Retrieving a Tag by ID
     it('Should retrieve a tag by ID', async () => {
         const newTag = await Tag.create({ name: 'test-tag' }); // Create a new tag
         console.log(newTag._id.toString());
@@ -61,16 +61,7 @@ describe('Tag Model Tests', () => {
         expect(retrievedTag._id).toEqual(newTag._id); // Ensure the retrieved tag matches the created tag
     });
 
-    // // Test Case 8: Updating a Tag
-    // it('Should update a tag', async () => {
-    //     const newTag = await Tag.create({ name: 'test-tag' }); // Create a new tag
-    //     const updatedTagName = 'updated-test-tag'; // Update the name of the newly created tag
-    //     await Tag.findByIdAndUpdate(newTag._id, { name: updatedTagName });
-    //     const updatedTag = await Tag.findById(newTag._id); // Retrieve the updated tag
-    //     expect(updatedTag.name).toEqual(updatedTagName); // Ensure the name of the updated tag matches the updated name
-    // });
-
-    // Test Case 9: Deleting a Tag
+    // Test Case 7: Deleting a Tag
     it('Should delete a tag', async () => {
         const newTag = await Tag.create({name: 'test-tag'}); // Create a new tag
         await Tag.findByIdAndDelete(newTag._id); // Attempt to delete the tag
