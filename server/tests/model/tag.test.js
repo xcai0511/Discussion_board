@@ -1,0 +1,72 @@
+// Tag Model Tests
+
+const mockingoose = require('mockingoose');
+const Tag = require('../../models/tags');
+
+describe('Tag Model Tests', () => {
+
+    // Before each test, reset mockingoose mocks
+    beforeEach(() => {
+        mockingoose.resetAll(); // Reset all mocks
+    });
+
+    // Test Case 1: Creating Multiple Valid Tags
+    it('Should create multiple valid tags', async () => {
+        const newTags = await Tag.create([
+            { name: 'javascript' },
+            { name: 'react' }
+        ]);
+        expect(newTags.length).toEqual(2); // Ensure two tags are created
+    });
+
+    // Test Case 2: Creating Single Valid Tag
+    it('Should create a single valid tag', async () => {
+        const newTag = await Tag.create({ name: 'mongodb' });
+        expect(newTag.name).toEqual('mongodb'); // Ensure the tag name matches
+    });
+
+    // Test Case 3: Creating Single Hyphenated Tag
+    it('Should create a single hyphenated tag', async () => {
+        const newTag = await Tag.create({ name: 'react-native' });
+        expect(newTag.name).toEqual('react-native'); // Ensure the tag name matches
+    });
+
+    // Test Case 4: Creating Multiple Hyphenated Tags
+    it('Should create multiple hyphenated tags', async () => {
+        const newTags = await Tag.create([
+            { name: 'react-native' },
+            { name: 'vue-js' },
+            { name: 'web-development' },
+            { name: 'app-development' },
+            { name: 'storage-solution' }
+        ]);
+        expect(newTags.length).toEqual(5); // Ensure two tags are created
+    });
+
+    // Test Case 5: Creating Single Word Tag and Hyphenated Tag
+    it('Should create a single word tag and hyphenated tag', async () => {
+        const newTags = await Tag.create([
+            { name: 'mongodb' },
+            { name: 'react-native' }
+        ]);
+        expect(newTags.length).toEqual(2); // Ensure two tags are created
+    });
+
+    // Test Case 6: Retrieving a Tag by ID
+    it('Should retrieve a tag by ID', async () => {
+        const newTag = await Tag.create({ name: 'test-tag' }); // Create a new tag
+        console.log(newTag._id.toString());
+        const retrievedTag = await Tag.findById(newTag._id); // Retrieve the newly created tag by ID
+        console.log(retrievedTag);
+        expect(retrievedTag._id).toEqual(newTag._id); // Ensure the retrieved tag matches the created tag
+    });
+
+    // Test Case 7: Deleting a Tag
+    it('Should delete a tag', async () => {
+        const newTag = await Tag.create({name: 'test-tag'}); // Create a new tag
+        await Tag.findByIdAndDelete(newTag._id); // Attempt to delete the tag
+        const deletedTag = await Tag.findById(newTag._id); // Attempt to retrieve the tag after deletion
+        expect(deletedTag).toBeUndefined(); // Ensure the tag is deleted
+    });
+
+});
