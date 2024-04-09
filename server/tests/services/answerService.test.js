@@ -1,17 +1,17 @@
 // Jest tests for client > src > services > answerService.js
 
-
-const { addAnswer, editAnswer } = require('../../../client/src/services/answerService');
+const mockingoose = require('mockingoose');
 const Answer = require('../../../server/models/answers');
 const Question = require('../../../server/models/questions');
+const { addAnswer, editAnswer } = require('../../../client/src/services/answerService.js');
 
 jest.mock('../../../server/models/answers');
 jest.mock('../../../server/models/questions');
 
 describe('answerService', () => {
-    // After each test, clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
+    // Before each test, reset mockingoose mocks
+    beforeEach(() => {
+        mockingoose.resetAll(); // Reset all mocks
     });
 
     // Tests for addAnswer function in answerService.js

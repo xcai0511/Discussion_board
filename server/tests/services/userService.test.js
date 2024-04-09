@@ -1,14 +1,15 @@
 // Jest tests for client > src > services > userService.js
 
+const mockingoose = require('mockingoose');
 const { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions } = require('../../../client/src/services/userService');
 const User = require('../../../server/models/users');
 
 jest.mock('../../../server/models/users');
 
 describe('userService', () => {
-    // After each test, clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
+    // Before each test, reset mockingoose mocks
+    beforeEach(() => {
+        mockingoose.resetAll(); // Reset all mocks
     });
 
     // Tests for addUser function in userService.js

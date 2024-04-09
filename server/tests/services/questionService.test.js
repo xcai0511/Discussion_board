@@ -1,14 +1,15 @@
 // Jest tests for client > src > services > questionService.js
 
+const mockingoose = require('mockingoose');
 const Question = require('../../../server/models/questions');
 const { getQuestionsByFilter, getQuestionById, addQuestion } = require('../../../client/src/services/questionService.js');
 
 jest.mock("../../../server/models/questions");
 
 describe('questionService', () => {
-    // After each test, clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
+    // Before each test, reset mockingoose mocks
+    beforeEach(() => {
+        mockingoose.resetAll(); // Reset all mocks
     });
 
     // Tests for getQuestionsByFilter function in questionService.js

@@ -1,14 +1,15 @@
 // Jest tests for client > src > services > tagService.js
 
+const mockingoose = require('mockingoose');
 const { getTagsWithQuestionNumber } = require('../../../client/src/services/tagService');
 const Tag = require('../../../server/models/tags');
 
 jest.mock('../../../server/models/tags');
 
 describe('tagService', () => {
-    // After each test, clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
+    // Before each test, reset mockingoose mocks
+    beforeEach(() => {
+        mockingoose.resetAll(); // Reset all mocks
     });
 
     // Tests for getTagsWithQuestionNumber function in tagService.js
