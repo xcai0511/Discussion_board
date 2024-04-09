@@ -26,7 +26,7 @@ const getUserByEmail = async (email) => {
 // To edit user
 const editUser = async(uid, user) => {
     const data = {uid: uid, user: user};
-    const res = await api.post(`${USER_API_URL}/editUser`, data)
+    const res = await api.put(`${USER_API_URL}/editUser`, data)
     return res.data;
 }
 

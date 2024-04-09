@@ -13,7 +13,7 @@ const addAnswer = async (qid, ans) => {
 // To edit answer
 const editAnswer = async(qid, ans) => {
     const data = {qid: qid, ans: ans};
-    const res = await api.post(`${ANSWER_API_URL}/editAnswer`, data)
+    const res = await api.put(`${ANSWER_API_URL}/editAnswer`, data)
     return res.data;
 }
 
