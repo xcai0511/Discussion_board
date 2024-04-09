@@ -12,6 +12,17 @@ it('header shows search bar and title', () => {
     cy.get('.title').contains(title)
 })
 
+it('header shows login and signup button', () => {
+    const setQuesitonPageSpy = cy.spy().as('setQuesitonPageSpy')
+    const searchQuery = ''
+    cy.mount(<Header
+        search={searchQuery}
+        setQuesitonPage={setQuesitonPageSpy}/>)
+    cy.get('.login_button').should('have.text', 'Login');
+    cy.get('.signup_button').should('have.text', 'Sign Up');
+
+})
+
 it('search bar shows search text entered by user', () => {
     const setQuesitonPageSpy = cy.spy().as('setQuesitonPageSpy')
     const searchQuery = 'test search'
@@ -33,4 +44,8 @@ it('set question page called when enter is pressed in search', () => {
         setQuesitonPage={setQuesitonPageSpy}/>)
     cy.get('#searchBar').type('{enter}')
     cy.get('@setQuesitonPageSpy').should('have.been.calledWith', searchQuery, 'Search Results')
+})
+
+it('log in called when enter is pressed in search', () => {
+    // TODO: implement set login page and set signup page
 })
