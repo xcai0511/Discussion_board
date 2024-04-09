@@ -1,9 +1,9 @@
 // Jest tests for client > src > services > tagService.js
 
-import { getTagsWithQuestionNumber } from '../../../client/src/services/tagService.js';
-import Tag from '../../../server/models/tags.js';
+const { getTagsWithQuestionNumber } = require('../../../client/src/services/tagService');
+const Tag = require('../../../server/models/tags');
 
-jest.mock('../../../server/models/tags.js');
+jest.mock('../../../server/models/tags');
 
 describe('tagService', () => {
     // After each test, clear all mocks

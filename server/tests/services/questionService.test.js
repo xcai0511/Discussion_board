@@ -1,9 +1,9 @@
 // Jest tests for client > src > services > questionService.js
 
-import { getQuestionsByFilter, getQuestionById, addQuestion } from '../../../client/src/services/questionService.js';
-import Question from '../../../server/models/questions.js';
+const Question = require('../../../server/models/questions');
+const { getQuestionsByFilter, getQuestionById, addQuestion } = require('../../../client/src/services/questionService.js');
 
-jest.mock('../../../server/models/questions.js');
+jest.mock("../../../server/models/questions");
 
 describe('questionService', () => {
     // After each test, clear all mocks

@@ -1,9 +1,9 @@
 // Jest tests for client > src > services > userService.js
 
-import { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions } from '../../../client/src/services/userService.js';
-import User from '../../../server/models/users.js';
+const { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions } = require('../../../client/src/services/userService');
+const User = require('../../../server/models/users');
 
-jest.mock('../../../server/models/users.js');
+jest.mock('../../../server/models/users');
 
 describe('userService', () => {
     // After each test, clear all mocks

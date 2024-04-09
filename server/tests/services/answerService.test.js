@@ -1,11 +1,12 @@
 // Jest tests for client > src > services > answerService.js
 
-import { addAnswer, editAnswer } from '../../../client/src/services/answerService.js';
-import Answer from '../../../server/models/answers.js';
-import Question from '../../../server/models/questions.js';
 
-jest.mock('../../../server/models/answers.js');
-jest.mock('../../../server/models/questions.js');
+const { addAnswer, editAnswer } = require('../../../client/src/services/answerService');
+const Answer = require('../../../server/models/answers');
+const Question = require('../../../server/models/questions');
+
+jest.mock('../../../server/models/answers');
+jest.mock('../../../server/models/questions');
 
 describe('answerService', () => {
     // After each test, clear all mocks
