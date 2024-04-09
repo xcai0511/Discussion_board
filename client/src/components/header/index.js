@@ -9,7 +9,6 @@ const Header = ({ search, setQuestionPage }) => {
             <div className="title">Fake Stack Overflow</div>
             <input
                 id="searchBar"
-                className="form-control"
                 placeholder="Search..."
                 type="text"
                 value={val}
@@ -24,8 +23,8 @@ const Header = ({ search, setQuestionPage }) => {
                 }}
             />
             <div>
-                <button className="btn btn-outline-primary btn-sm">Login</button>
-                <button className="btn btn-primary btn-sm">Sign Up</button>
+                <button className="login_button">Login</button>
+                <button className="signup_button">Sign Up</button>
             </div>
         </div>
     );
