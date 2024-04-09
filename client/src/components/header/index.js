@@ -23,8 +23,8 @@ const Header = ({ search, setQuestionPage }) => {
                 }}
             />
             <div>
-                <button className="login_button" id="login_button"><div>Login</div></button>
-                <button className="signup_button" id="signup_button"><div>Sign Up</div></button>
+                <button className="login_button"><div>Login</div></button>
+                <button className="signup_button"><div>Sign Up</div></button>
             </div>
         </div>
     );
