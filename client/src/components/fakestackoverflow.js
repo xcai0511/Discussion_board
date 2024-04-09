@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import Header from "./header";
-// import Main from "./main";
+import Main from "./main";
 
 export default function FakeStackOverflow() {
     const [search, setSearch] = useState("");
-    const [setMainTitle] = useState("All Questions");
+    const [mainTitle, setMainTitle] = useState("All Questions");
 
     const setQuestionPage = (search = "", title = "All Questions") => {
         setSearch(search);
@@ -14,11 +14,11 @@ export default function FakeStackOverflow() {
     return (
         <>
             <Header search={search} setQuestionPage={setQuestionPage} />
-            {/* <Main
+            <Main
                 title={mainTitle}
                 search={search}
                 setQuestionPage={setQuestionPage}
-            /> */}
+            />
         </>
     );
 }
