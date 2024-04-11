@@ -1,34 +1,34 @@
 import Header from '../../src/components/header/index.js';
 
 it('header shows search bar and title', () => {
-    const setQuesitonPageSpy = cy.spy().as('setQuesitonPageSpy')
+    const setQuestionPageSpy = cy.spy().as('setQuestionPageSpy')
     const searchQuery = ''
     const title = 'Fake Stack Overflow'
     cy.mount(<Header
         search={searchQuery}
-        setQuesitonPage={setQuesitonPageSpy}/>)
+        setQuestionPage={setQuestionPageSpy}/>)
     cy.get('#searchBar').should('have.value', searchQuery)
     cy.get('#searchBar').should('have.attr', 'placeholder')
     cy.get('.title').contains(title)
 })
 
 it('header shows login and signup button', () => {
-    const setQuesitonPageSpy = cy.spy().as('setQuesitonPageSpy')
+    const setQuestionPageSpy = cy.spy().as('setQuestionPageSpy')
     const searchQuery = ''
     cy.mount(<Header
         search={searchQuery}
-        setQuesitonPage={setQuesitonPageSpy}/>)
+        setQuestionPage={setQuestionPageSpy}/>)
     cy.get('.login_button').should('have.text', 'Login');
     cy.get('.signup_button').should('have.text', 'Sign Up');
 
 })
 
 it('search bar shows search text entered by user', () => {
-    const setQuesitonPageSpy = cy.spy().as('setQuesitonPageSpy')
+    const setQuestionPageSpy = cy.spy().as('setQuestionPageSpy')
     const searchQuery = 'test search'
     cy.mount(<Header
         search={searchQuery}
-        setQuesitonPage={setQuesitonPageSpy}/>)
+        setQuestionPage={setQuestionPageSpy}/>)
     cy.get('#searchBar').should('have.value', searchQuery)
     cy.get('#searchBar').should('have.attr', 'placeholder');
     cy.get('#searchBar').clear()
@@ -37,13 +37,13 @@ it('search bar shows search text entered by user', () => {
 })
 
 it('set question page called when enter is pressed in search', () => {
-    const setQuesitonPageSpy = cy.spy().as('setQuesitonPageSpy')
+    const setQuestionPageSpy = cy.spy().as('setQuestionPageSpy')
     const searchQuery = 'test search'
     cy.mount(<Header
         search={searchQuery}
-        setQuesitonPage={setQuesitonPageSpy}/>)
+        setQuestionPage={setQuestionPageSpy}/>)
     cy.get('#searchBar').type('{enter}')
-    cy.get('@setQuesitonPageSpy').should('have.been.calledWith', searchQuery, 'Search Results')
+    cy.get('@setQuestionPageSpy').should('have.been.calledWith', searchQuery, 'Search Results')
 })
 
 it('log in called when enter is pressed in search', () => {

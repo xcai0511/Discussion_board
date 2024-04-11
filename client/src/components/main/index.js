@@ -11,6 +11,7 @@ const Main = ({ search = "", title, setQuesitonPage }) => {
     const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
+    console.log(qid);
     let selected = "";
     let content = null;
 
@@ -29,7 +30,7 @@ const Main = ({ search = "", title, setQuesitonPage }) => {
     };
 
     const clickTag = (tname) => {
-        setQuesitonPage("[" + tname + "]", tname);
+        setQuestionPage("[" + tname + "]", tname);
         setPage("home");
     };
 
