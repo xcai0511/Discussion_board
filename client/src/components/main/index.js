@@ -2,6 +2,7 @@ import "./index.css";
 import { useState } from "react";
 import SideBarNav from "./sideBarNav";
 import QuestionPage from "./questionPage";
+import TagPage from "./tagPage";
 
 const Main = ({ search = "", title, setQuestionPage }) => {
     const [page, setPage] = useState("home");
@@ -44,12 +45,12 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         }
         case "tag": {
             selected = "t";
-            // content = (
-            //     <TagPage
-            //         clickTag={clickTag}
-            //         handleNewQuestion={handleNewQuestion}
-            //     />
-            // );
+            content = (
+                <TagPage
+                    // clickTag={clickTag}
+                    // handleNewQuestion={handleNewQuestion}
+                />
+            );
             break;
         }
         case "savedPosts": {
