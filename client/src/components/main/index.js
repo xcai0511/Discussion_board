@@ -3,10 +3,15 @@ import { useState } from "react";
 import SideBarNav from "./sideBarNav";
 import QuestionPage from "./questionPage";
 import TagPage from "./tagPage";
+//import AnswerPage from "./answerPage";
+//import NewQuestion from "./newQuestion";
+//mport NewAnswer from "./newAnswer";
 
 const Main = ({ search = "", title, setQuestionPage }) => {
     const [page, setPage] = useState("home");
-    const [questionOrder, ] = useState("newest");
+    const [questionOrder, setQuestionOrder] = useState("newest");
+    const [qid, setQid] = useState("");
+    console.log(qid);
     let selected = "";
     let content = null;
 
@@ -19,9 +24,23 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         setPage("tag");
     };
 
-    const handleSavedPosts = () => {
-        setPage("savedPosts")
-    }
+    const handleAnswer = (qid) => {
+        setQid(qid);
+        setPage("answer");
+    };
+
+    const clickTag = (tname) => {
+        setQuestionPage("[" + tname + "]", tname);
+        setPage("home");
+    };
+
+    const handleNewQuestion = () => {
+        setPage("newQuestion");
+    };
+
+    // const handleNewAnswer = () => {
+    //     setPage("newAnswer");
+    // };
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -29,14 +48,14 @@ const Main = ({ search = "", title, setQuestionPage }) => {
                 title_text={title}
                 order={order}
                 search={search}
-                // setQuestionOrder={setQuestionOrder}
-                // clickTag={clickTag}
-                // handleAnswer={handleAnswer}
-                // handleNewQuestion={handleNewQuestion}
+                setQuestionOrder={setQuestionOrder}
+                clickTag={clickTag}
+                handleAnswer={handleAnswer}
+                handleNewQuestion={handleNewQuestion}
             />
         );
     };
-    
+
     switch (page) {
         case "home": {
             selected = "q";
@@ -47,14 +66,10 @@ const Main = ({ search = "", title, setQuestionPage }) => {
             selected = "t";
             content = (
                 <TagPage
-                    // clickTag={clickTag}
-                    // handleNewQuestion={handleNewQuestion}
+                    clickTag={clickTag}
+                    handleNewQuestion={handleNewQuestion}
                 />
             );
-            break;
-        }
-        case "savedPosts": {
-            selected = "s";
             break;
         }
         // case "answer": {
@@ -80,7 +95,7 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         // }
         default:
             selected = "q";
-            // content = getQuestionPage();
+            content = getQuestionPage();
             break;
     }
 
@@ -90,7 +105,6 @@ const Main = ({ search = "", title, setQuestionPage }) => {
                 selected={selected}
                 handleQuestions={handleQuestions}
                 handleTags={handleTags}
-                handleSavedPosts={handleSavedPosts}
             />
             <div id="right_main" className="right_main">
                 {content}
