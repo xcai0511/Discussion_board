@@ -1,9 +1,11 @@
 import "./index.css";
 import { useState } from "react";
 import SideBarNav from "./sideBarNav";
+import QuestionPage from "./questionPage";
 
-const Main = ({ setQuestionPage }) => {
+const Main = ({ search = "", title, setQuestionPage }) => {
     const [page, setPage] = useState("home");
+    const [questionOrder, ] = useState("newest");
     let selected = "";
     let content = null;
 
@@ -20,11 +22,24 @@ const Main = ({ setQuestionPage }) => {
         setPage("savedPosts")
     }
 
+    const getQuestionPage = (order = "newest", search = "") => {
+        return (
+            <QuestionPage
+                title_text={title}
+                order={order}
+                search={search}
+                // setQuestionOrder={setQuestionOrder}
+                // clickTag={clickTag}
+                // handleAnswer={handleAnswer}
+                // handleNewQuestion={handleNewQuestion}
+            />
+        );
+    };
     
     switch (page) {
         case "home": {
             selected = "q";
-            // content = getQuestionPage(questionOrder.toLowerCase(), search);
+            content = getQuestionPage(questionOrder.toLowerCase(), search);
             break;
         }
         case "tag": {
