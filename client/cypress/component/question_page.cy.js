@@ -1,8 +1,8 @@
-//import QuestionObj from '../../src/models/question';
+//import QuestionObj from '../../../server/models/questions';
 import QuestionHeader from '../../src/components/main/questionPage/header';
 import OrderButton from '../../src/components/main/questionPage/header/orderButton';
 //import Question from '../../src/components/main/questionPage/question';
-//import Answer from '../../src/models/answer';
+//import Answer from '../../../server/models/schema/answer.js'
 
 // Question Page - Order Button
 it('Rendering Order Button', () => {
@@ -47,7 +47,7 @@ it('Rendering Question Header', () => {
     })
 })
 
-// Question Body
+//Question Body
 // it('Rendering Question Body', () => {
 //     const answers = []
 //     for(let index= 1; index <= 2; index++){
