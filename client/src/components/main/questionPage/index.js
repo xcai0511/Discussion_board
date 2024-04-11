@@ -2,23 +2,23 @@ import "./index.css";
 import QuestionHeader from "./header";
 import Question from "./question";
 
-// import { getQuestionsByFilter } from "../../../services/questionService";
+import { getQuestionsByFilter } from "../../../services/questionService";
 import { useEffect, useState } from "react";
 
 const QuestionPage = ({
-    title_text = "All Questions",
-    order,
-    search,
-    setQuestionOrder,
-    clickTag,
-    handleAnswer,
-    handleNewQuestion,
-}) => {
-    const [qlist, ] = useState([]);
+                          title_text = "All Questions",
+                          order,
+                          search,
+                          setQuestionOrder,
+                          clickTag,
+                          handleAnswer,
+                          handleNewQuestion,
+                      }) => {
+    const [qlist, setQlist] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            // let res = await getQuestionsByFilter(order, search);
-            // setQlist(res || []);
+            let res = await getQuestionsByFilter(order, search);
+            setQlist(res || []);
         };
 
         fetchData().catch((e) => console.log(e));

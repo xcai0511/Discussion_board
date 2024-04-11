@@ -3,7 +3,7 @@ import "./index.css";
 import Tag from "./tag";
 import { getTagsWithQuestionNumber } from "../../../services/tagService";
 
-const TagPage = () => {
+const TagPage = ({ clickTag, handleNewQuestion }) => {
     const [tlist, setTlist] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
@@ -20,16 +20,16 @@ const TagPage = () => {
                 <div className="bold_title">All Tags</div>
                 <button
                     className="bluebtn"
-                    // onClick={() => {
-                    //     handleNewQuestion();
-                    // }}
+                    onClick={() => {
+                        handleNewQuestion();
+                    }}
                 >
                     Ask a Question
                 </button>
             </div>
             <div className="tag_list right_padding">
                 {tlist.map((t, idx) => (
-                    <Tag key={idx} t={t} />
+                    <Tag key={idx} t={t} clickTag={clickTag} />
                 ))}
             </div>
         </>

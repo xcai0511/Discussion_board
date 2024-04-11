@@ -1,10 +1,10 @@
 import "./index.css";
 import { useState } from "react";
-import Form from "../baseComponents/form";
-import Input from "../baseComponents/input";
-import Textarea from "../baseComponents/textarea";
-import { validateHyperlink } from "../../../tool";
-import { addAnswer } from "../../../services/answerService";
+import Form from "../../baseComponents/form";
+import Input from "../../baseComponents/input";
+import Textarea from "../../baseComponents/textarea";
+import { validateHyperlink } from "../../../../tool";
+import { addAnswer } from "../../../../services/answerService";
 
 const NewAnswer = ({ qid, handleAnswer }) => {
     const [usrn, setUsrn] = useState("");

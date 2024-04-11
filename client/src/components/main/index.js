@@ -5,18 +5,18 @@ import QuestionPage from "./questionPage";
 import TagPage from "./tagPage";
 import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
-import NewAnswer from "./newAnswer";
+//import NewAnswer from "./newAnswer";
 
-const Main = ({ search = "", title, setQuesitonPage }) => {
+const Main = ({ search = "", title, setQuestionPage }) => {
     const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
-    console.log(qid);
+    //console.log(qid);
     let selected = "";
     let content = null;
 
     const handleQuestions = () => {
-        setQuesitonPage();
+        setQuestionPage();
         setPage("home");
     };
 
@@ -88,11 +88,11 @@ const Main = ({ search = "", title, setQuesitonPage }) => {
             content = <NewQuestion handleQuestions={handleQuestions} />;
             break;
         }
-        case "newAnswer": {
-            selected = "";
-            content = <NewAnswer qid={qid} handleAnswer={handleAnswer} />;
-            break;
-        }
+        // case "newAnswer": {
+        //     selected = "";
+        //     content = <NewAnswer qid={qid} handleAnswer={handleAnswer} />;
+        //     break;
+        // }
         default:
             selected = "q";
             content = getQuestionPage();
