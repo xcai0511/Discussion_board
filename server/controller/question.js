@@ -1,6 +1,6 @@
 const express = require("express");
 const Question = require("../models/questions");
-const Answer = require("../models/answers");
+// const Answer = require("../models/answers");
 const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question');
 
 const router = express.Router();

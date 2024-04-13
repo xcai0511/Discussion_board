@@ -2,6 +2,7 @@ import "./index.css";
 import { useState } from "react";
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
+import { addUser } from "../../services/userService";
 
 const SignUp = ({ signUpUser }) => {
     const [usrn, setUsrn] = useState("");
@@ -42,12 +43,31 @@ const SignUp = ({ signUpUser }) => {
         if (!isValid) {
             return;
         }
+    
+        try {
+            const newUser = {
+                username: usrn,
+                contactemail: email,
+                password: password,
+                saved_questions: [] // Initialize as an empty array
+            };
 
-        const res = await handleSignUp();
-        if (res && res._id) {
-            signUpUser();
+            console.log(newUser);
+    
+            // Make POST request to backend API to add new user
+            const res = await addUser(newUser);
+            console.log(res);
+            if (res && res._id) {
+                console.log("Signing up user");
+                signUpUser();
+            } else {
+                return; // TODO: Add error handling
+            }
+        } catch (error) {
+            console.error("Error signing up:", error); // TODO: Add error handling
         }
     };
+
     return (
         <Form>
             <Input
@@ -83,7 +103,7 @@ const SignUp = ({ signUpUser }) => {
                     className="form_postBtn"
                     onClick={handleSignUp}
                 >
-                    Login
+                    Sign Up
                 </button>
                 <div className="mandatory_indicator">
                     * indicates mandatory fields

@@ -9,6 +9,7 @@ const addUser = async(user) => {
 
     return res.data;
 }
+
 // To get User by ID
 const getUserById = async (uid) => {
     const res = await api.get(`${USER_API_URL}/getUserById/${uid}`);
