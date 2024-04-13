@@ -18,6 +18,15 @@ const AnswerPage = ({ qid, handleNewQuestion }) => {
         fetchData().catch((e) => console.log(e));
     }, [qid]);
 
+    const handleNewAnswer = async (qid) => {
+        try {
+            const updatedQuestion = await getQuestionById(qid);
+            setQuestion(updatedQuestion || {});
+        } catch (error) {
+            console.error("Error fetching updated question:", error);
+        }
+    };
+
     return (
         <>
             <AnswerHeader
@@ -51,8 +60,7 @@ const AnswerPage = ({ qid, handleNewQuestion }) => {
             >
                 Answer Question
             </button> */}
-            <NewAnswer
-                qid={question.qid}/>
+            <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} />
         </>
     );
 };
