@@ -5,13 +5,13 @@ import QuestionPage from "./questionPage";
 import TagPage from "./tagPage";
 import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
+import Login from "./login";
 //import NewAnswer from "./newAnswer";
 
 const Main = ({ search = "", title, setQuestionPage }) => {
     const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
-    //console.log(qid);
     let selected = "";
     let content = null;
 
@@ -41,6 +41,10 @@ const Main = ({ search = "", title, setQuestionPage }) => {
     const handleNewAnswer = () => {
         // setPage("newAnswer");
     };
+
+    const loginUser = () => {
+        setPage("login");
+    }
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -86,6 +90,15 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         case "newQuestion": {
             selected = "";
             content = <NewQuestion handleQuestions={handleQuestions} />;
+            break;
+        }
+        case "login": {
+            selected = "";
+            content = (
+                <Login
+                    loginUser={loginUser}
+                />
+            );
             break;
         }
         // case "newAnswer": {

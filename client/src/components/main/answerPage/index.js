@@ -8,7 +8,7 @@ import { getQuestionById } from "../../../services/questionService";
 import NewAnswer from "./newAnswer";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
+const AnswerPage = ({ qid, handleNewQuestion }) => {
     const [question, setQuestion] = useState({});
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +33,6 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
                 askby={question && question.asked_by}
                 meta={question && getMetaData(new Date(question.ask_date_time))}
             />
-            <NewAnswer/>
             {question &&
                 question.answers &&
                 question.answers.map((a, idx) => (
@@ -44,14 +43,15 @@ const AnswerPage = ({ qid, handleNewQuestion, handleNewAnswer }) => {
                         meta={getMetaData(new Date(a.ans_date_time))}
                     />
                 ))}
-            <button
+            {/* <button
                 className="bluebtn ansButton"
                 onClick={() => {
                     handleNewAnswer();
                 }}
             >
                 Answer Question
-            </button>
+            </button> */}
+            <NewAnswer/>
         </>
     );
 };
