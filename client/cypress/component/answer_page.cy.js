@@ -94,20 +94,14 @@ it('shows text inputted by user', () => {
 
 
 it('addAnswer is called when click Post Answer', () => {
-    const obj = {
-        addAnswer: (arg) => {return arg}
-    }
-    const handleAnswer = cy.spy().as('handleAnswerSpy')
-    cy.spy(obj, 'addAnswer')
-    cy.mount(<NewAnswer qid={123} addAnswer={obj.addAnswer} handleAnswer={handleAnswer} />)
-    cy.get('#answerUsernameInput').type('usr')
-    cy.get('#answerTextInput').type('abc')
-    cy.get('.form_postBtn').click().then(
-        () => {
-            expect(obj.addAnswer).to.be.calledWith(123, {text: 'abc', ansBy: 'usr'})
-        }
-    )
-})
+    const addAnswerSpy = cy.spy().as('addAnswerSpy');
+    cy.mount(<NewAnswer qid="123" addAnswer={addAnswerSpy} handleAnswer={() => {}} />);
+    cy.get('#answerUsernameInput').type('usr');
+    cy.get('#answerTextInput').type('abc');
+    cy.get('.form_postBtn').click().then(() => {
+        expect(addAnswerSpy).to.be.calledWith(123, { text: 'abc', ansBy: 'usr' });
+    });
+});
 
 it('handleAnswer is called when click Post Answer', () => {
     const obj = {
