@@ -3,12 +3,16 @@ import { useState } from "react";
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 
-const Login = ({ loginUser }) => {
+const SignUp = ({ signUpUser }) => {
     const [usrn, setUsrn] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordVerify, setPasswordVerify] = useState("");
     const [usrnErr, setUsrnErr] = useState("");
+    const [emailErr, setEmailErr] = useState("");
     const [passwordErr, setPasswordErr] = useState("");
-    const handleLogin = async () => {
+    const [passwordVerifyErr, setPasswordVerifyErr] = useState("");
+    const handleSignUp = async () => {
         let isValid = true;
 
         if (!usrn) {
@@ -16,8 +20,22 @@ const Login = ({ loginUser }) => {
             isValid = false;
         }
 
+        if (!email) {
+            setEmailErr("Email address cannot be empty")
+        }
+
         if (!password) {
             setPasswordErr("Password cannot be empty");
+            isValid = false;
+        }
+
+        if (!passwordVerify) {
+            setPasswordVerifyErr("You must confirm your password");
+            isValid = false;
+        }
+
+        if(password != passwordVerify) {
+            setPasswordVerifyErr("Password does not match")
             isValid = false;
         }
 
@@ -25,31 +43,45 @@ const Login = ({ loginUser }) => {
             return;
         }
 
-        const res = await handleLogin();
+        const res = await handleSignUp();
         if (res && res._id) {
-            loginUser();
+            signUpUser();
         }
     };
     return (
         <Form>
             <Input
                 title={"Username"}
-                id={"loginUsernameInput"}
+                id={"signUpUsernameInput"}
                 val={usrn}
                 setState={setUsrn}
                 err={usrnErr}
             />
             <Input
+                title={"Email Address"}
+                id={"signUpEmailInput"}
+                val={email}
+                setState={setEmail}
+                err={emailErr}
+            />
+            <Input
                 title={"Password"}
-                id={"loginPasswordInput"}
+                id={"signUpPasswordInput"}
                 val={password}
                 setState={setPassword}
                 err={passwordErr}
             />
+            <Input
+                title={"Confirm Password"}
+                id={"signUpPasswordVerifyInput"}
+                val={passwordVerify}
+                setState={setPasswordVerify}
+                err={passwordVerifyErr}
+            />
             <div className="btn_indicator_container">
                 <button
                     className="form_postBtn"
-                    onClick={handleLogin}
+                    onClick={handleSignUp}
                 >
                     Login
                 </button>
@@ -61,4 +93,4 @@ const Login = ({ loginUser }) => {
     );
 };
 
-export default Login;
+export default SignUp;

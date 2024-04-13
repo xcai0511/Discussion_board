@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import Header from "./header";
-import Login from "./login"
+import Login from "./login";
+import SignUp from "./signup";
 import Main from "./main";
 
 export default function FakeStackOverflow() {
@@ -16,14 +17,20 @@ export default function FakeStackOverflow() {
     };
 
     const setLoginPage = () => {
-        console.log("log in clicked")
         setPage("login");
+    }
+
+    const setSignUpPage = () => {
+        setPage("signup");
     }
 
     let content;
     switch(page) {
         case "login":
             content = <Login loginUser={() => console.log("Login successful")} />;
+            break;
+        case "signup":
+            content = <SignUp signUpUser={() => console.log("Sign up successful")} />;
             break;
         case "home":
         default:
@@ -41,7 +48,7 @@ export default function FakeStackOverflow() {
 
     return (
         <>
-            <Header search={search} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage}/>
+            <Header search={search} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage} setSignUpPage={setSignUpPage}/>
             {/*<Main*/}
             {/*    title={mainTitle}*/}
             {/*    search={search}*/}

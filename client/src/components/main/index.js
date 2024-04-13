@@ -5,7 +5,7 @@ import QuestionPage from "./questionPage";
 import TagPage from "./tagPage";
 import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
-import Login from "./login";
+// import Login from "./login";
 //import NewAnswer from "./newAnswer";
 
 const Main = ({ search = "", title, setQuestionPage }) => {
