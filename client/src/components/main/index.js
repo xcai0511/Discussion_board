@@ -42,9 +42,11 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         // setPage("newAnswer");
     };
 
-    const loginUser = () => {
-        setPage("login");
-    }
+    // const loginUser = () => {
+    //     console.log("log in user function called");
+    //     setLoginPage();
+    //     setPage("login");
+    // }
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -92,13 +94,13 @@ const Main = ({ search = "", title, setQuestionPage }) => {
             content = <NewQuestion handleQuestions={handleQuestions} />;
             break;
         }
-        case "login": {
-            selected = "";
-            content = (
-                <Login loginUser={loginUser} />
-            );
-            break;
-        }
+        // case "login": {
+        //     selected = "";
+        //     content = (
+        //         <Login loginUser={loginUser} />
+        //     );
+        //     break;
+        // }
         // case "newAnswer": {
         //     selected = "";
         //     content = <NewAnswer qid={qid} handleAnswer={handleAnswer} />;

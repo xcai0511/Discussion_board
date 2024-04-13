@@ -1,7 +1,7 @@
 import "./index.css";
 import { useState } from "react";
 
-const Header = ({ search, setQuestionPage, loginUser }) => {
+const Header = ({ search, setQuestionPage, setLoginPage }) => {
     const [val, setVal] = useState(search);
     return (
         <div id="header" className="header">
@@ -23,7 +23,7 @@ const Header = ({ search, setQuestionPage, loginUser }) => {
                 }}
             />
             <div>
-                <button className="login_button" onClick={loginUser}><div>Login</div></button>
+                <button className="login_button" onClick={setLoginPage}><div>Login</div></button>
                 <button className="signup_button"><div>Sign Up</div></button>
             </div>
         </div>

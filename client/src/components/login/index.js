@@ -1,8 +1,8 @@
 import "./index.css";
 import { useState } from "react";
-import Form from "../baseComponents/form";
-import Input from "../baseComponents/input";
-import Textarea from "../baseComponents/textarea";
+import Form from "../main/baseComponents/form";
+import Input from "../main/baseComponents/input";
+import Textarea from "../main/baseComponents/textarea";
 
 const Login = ({ loginUser }) => {
     const [usrn, setUsrn] = useState("");
