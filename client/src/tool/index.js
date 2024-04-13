@@ -93,4 +93,9 @@ const handleHyperlink = (text = "") => {
     return <div dangerouslySetInnerHTML={{ __html: replacedText }} />;
 };
 
-export { getMetaData, handleHyperlink, validateHyperlink };
+const validateEmailAddress = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+export { getMetaData, handleHyperlink, validateHyperlink, validateEmailAddress };

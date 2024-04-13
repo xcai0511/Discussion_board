@@ -3,6 +3,7 @@ import { useState } from "react";
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 import { addUser } from "../../services/userService";
+import { validateEmailAddress } from "../../tool"
 
 const SignUp = ({ signUpUser }) => {
     const [usrn, setUsrn] = useState("");
@@ -37,6 +38,11 @@ const SignUp = ({ signUpUser }) => {
 
         if(password != passwordVerify) {
             setPasswordVerifyErr("Password does not match")
+            isValid = false;
+        }
+
+        if (!validateEmailAddress(email)) {
+            setTextErr("Invalid email format.");
             isValid = false;
         }
 
