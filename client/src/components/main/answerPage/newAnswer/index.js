@@ -68,7 +68,7 @@ const NewAnswer = ({ qid, handleAnswer }) => {
                         postAnswer();
                     }}
                 >
-                    Post Answer
+                    <div>Post Answer</div>
                 </button>
                 <div className="mandatory_indicator">
                     * indicates mandatory fields

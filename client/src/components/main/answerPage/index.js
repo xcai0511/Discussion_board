@@ -51,7 +51,8 @@ const AnswerPage = ({ qid, handleNewQuestion }) => {
             >
                 Answer Question
             </button> */}
-            <NewAnswer/>
+            <NewAnswer
+                qid={question.qid}/>
         </>
     );
 };
