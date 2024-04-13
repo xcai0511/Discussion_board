@@ -95,9 +95,7 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         case "login": {
             selected = "";
             content = (
-                <Login
-                    loginUser={loginUser}
-                />
+                <Login loginUser={loginUser} />
             );
             break;
         }

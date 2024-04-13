@@ -11,13 +11,19 @@ export default function FakeStackOverflow() {
         setSearch(search);
         setMainTitle(title);
     };
+
+    const setLoginPage = (title = "Login") => {
+        setMainTitle(title);
+    }
+
     return (
         <>
-            <Header search={search} setQuestionPage={setQuestionPage} />
+            <Header search={search} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage}/>
             <Main
                 title={mainTitle}
                 search={search}
                 setQuestionPage={setQuestionPage}
+                setLoginPage={setLoginPage}
             />
         </>
     );
