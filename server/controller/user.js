@@ -6,14 +6,30 @@ const router = express.Router();
 // To add User
 const addUser = async (req, res) => {
     try {
-        const { username, contactemail, password, saved_questions } = req.body;
+        const { username, contactemail, password } = req.body.user;
         console.log(req.body);
         const savedUser = await User.create({
             username: username,
             contactemail: contactemail,
             password: password,
-            saved_questions: saved_questions
+            saved_questions: []
         })
+        console.log('saved user: ', savedUser);
+        // console.log(req.body);
+        // const {user} = req.body;
+        // try {
+        //     const savedUser = await User.create({
+        //         username: user.username,
+        //         contactemail: user.contactemail,
+        //         password: user.password,
+        //         saved_questions: user.saved_questions
+        //     })
+        //     console.log('saved user: ', savedUser);
+        // } catch (e) {
+        //     console.log('failed user.create');
+        //     console.log(e);
+        // }
+
         res.status(200).json(savedUser);
     } catch (e) {
         console.log("Went to catch");

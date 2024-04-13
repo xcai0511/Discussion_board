@@ -2,7 +2,7 @@ import { REACT_APP_API_URL, api } from "./config";
 
 const USER_API_URL = `${REACT_APP_API_URL}/user`;
 
-// To add User
+// To add User (for sign up)
 const addUser = async(user) => {
     const data = { user: user };
     const res = await api.post(`${USER_API_URL}/addUser`, data);
@@ -37,4 +37,4 @@ const getSavedQuestions = async(uid) => {
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser,getSavedQuestions  };
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions  };
