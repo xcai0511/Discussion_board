@@ -84,5 +84,8 @@ const getSavedQuestions = async (req, res) => {
 
 router.post('/addUser', addUser);
 router.get('/getSavedQuestions/:uid', getSavedQuestions);
+router.get('/getUserById/:uid', getUserById);
+router.get('/getUserByEmail/:email', getUserByEmail);
+router.put('/editUser', editUser);
 
 module.exports = router;
