@@ -6,9 +6,9 @@ const router = express.Router();
 
 // Adding answer
 const addAnswer = async (req, res) => {
-    console.log("add answer: ", req.body);
     try {
         const {qid, ans} = req.body;
+        console.log("add answer: ", req.body);
         const savedAnswer = await Answer.create({
             text: ans.text,
             ans_by: ans.ans_by,

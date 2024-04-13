@@ -6,7 +6,7 @@ import Textarea from "../../baseComponents/textarea";
 import { validateHyperlink } from "../../../../tool";
 import { addAnswer } from "../../../../services/answerService";
 
-const NewAnswer = ({ qid, handleNewAnswer }) => {
+const NewAnswer = ({ qid, handleAnswer  }) => {
     const [usrn, setUsrn] = useState("");
     const [text, setText] = useState("");
     const [usrnErr, setUsrnErr] = useState("");
@@ -42,7 +42,7 @@ const NewAnswer = ({ qid, handleNewAnswer }) => {
 
         const res = await addAnswer(qid, answer);
         if (res && res._id) {
-            handleNewAnswer(qid);
+            handleAnswer ();
             setUsrn("");
             setText("");
         }
