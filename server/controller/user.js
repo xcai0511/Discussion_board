@@ -15,20 +15,6 @@ const addUser = async (req, res) => {
             saved_questions: []
         })
         console.log('saved user: ', savedUser);
-        // console.log(req.body);
-        // const {user} = req.body;
-        // try {
-        //     const savedUser = await User.create({
-        //         username: user.username,
-        //         contactemail: user.contactemail,
-        //         password: user.password,
-        //         saved_questions: user.saved_questions
-        //     })
-        //     console.log('saved user: ', savedUser);
-        // } catch (e) {
-        //     console.log('failed user.create');
-        //     console.log(e);
-        // }
 
         res.status(200).json(savedUser);
     } catch (e) {
