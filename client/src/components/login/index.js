@@ -1,5 +1,6 @@
 import "./index.css";
-import { useState } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 import { getUserByEmail } from "../../services/userService";
@@ -9,6 +10,65 @@ const Login = ({ loginUser }) => {
     const [password, setPassword] = useState("");
     const [emailErr, setEmailErr] = useState("");
     const [passwordErr, setPasswordErr] = useState("");
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [user, setUser] = useState("")
+    const [csrfToken, setCsrfToken] = useState('');
+
+    const fetchCsrfToken = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/auth/csrf-token', { withCredentials: true });
+            setCsrfToken(response.data.csrfToken);
+        } catch (error) {
+            console.error('Error fetching CSRF token:', error);
+        }
+    }, []);
+
+    const checkLoginStatus = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/check-login', {
+                headers: {
+                    'X-CSRF-Token': csrfToken,
+                },
+                withCredentials: true,
+            });
+            console.log("check log in status response.data ==> ", response.data);
+            const resLoggedIn = response.data.loggedIn;
+            setLoggedIn(resLoggedIn);
+            if(resLoggedIn)
+                setUser(response.data.user.username);
+        } catch (error) {
+            console.error('Error checking login status:', error);
+        }
+    }, [csrfToken]);
+
+    useEffect(() => {
+        const fetchCsrfAndCheckLoginStatus = async () => {
+            await fetchCsrfToken();
+            await checkLoginStatus();
+        };
+
+        // Call the function only when the component mounts
+        if (!csrfToken) {
+            fetchCsrfAndCheckLoginStatus();
+        }
+    }, [csrfToken, fetchCsrfToken, checkLoginStatus]);
+
+    const handleLogout = async () => {
+        try {
+            await axios.post('http://localhost:8000/logout', null, {
+                headers: {
+                    'X-CSRF-Token': csrfToken,
+                },
+                withCredentials: true,
+            });
+
+            setLoggedIn(false);
+            setUser("");
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
+
     const handleLogin = async () => {
         let isValid = true;
 
@@ -27,6 +87,15 @@ const Login = ({ loginUser }) => {
         }
 
         try {
+            const response = await axios.post('http://localhost:8001/login', { email, password }, {
+                headers: {
+                    'X-CSRF-Token': csrfToken,
+                },
+                withCredentials: true,
+            });
+
+            setLoggedIn(response.data.success);
+            setUser(response.data.user.username);
             // Make API call to get user by email
             const res = await getUserByEmail(email);
             if (res && res.password === password) {
