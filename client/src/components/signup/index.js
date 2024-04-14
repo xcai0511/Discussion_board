@@ -42,7 +42,7 @@ const SignUp = ({ signUpUser }) => {
         }
 
         if (!validateEmailAddress(email)) {
-            setTextErr("Invalid email format.");
+            setEmailErr("Invalid email format.");
             isValid = false;
         }
 
