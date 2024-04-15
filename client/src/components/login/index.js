@@ -22,30 +22,16 @@ const Login = ({ loginUser }) => {
             return;
         }
 
-        // try {
-        //     const res = await login(email, password, csrfToken);
-        //     console.log("trying to log in with ==>", email, password, res);
-        //     if (res.success) {
-        //         setLoggedIn(true);
-        //         setUser(res.user);
-        //         loginUser(res.user);
-        //         console.log("log in success");
-        //     } else {
-        //         setErrors({ ...errors, form: 'Invalid credentials' });
-        //     }
-        // } catch (error) {
-        //     console.error("Error during login:", error);
-        //     setErrors({ ...errors, form: 'An error occurred while logging in. Please try again later.' });
-        // }
         try {
             const res = await login(email, password, csrfToken);
-            console.log("Login response:", res);
+            console.log("trying to log in with ==>", email, password, res);
             if (res.success) {
                 setLoggedIn(true);
                 setUser(res.user);
                 loginUser(res.user);
+                console.log("log in success");
             } else {
-                setErrors({ ...errors, form: res.message || 'Invalid credentials' });
+                setErrors({ ...errors, form: 'Invalid credentials' });
             }
         } catch (error) {
             console.error("Error during login:", error);

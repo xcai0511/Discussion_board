@@ -3,11 +3,12 @@ const User = require("../models/users")
 const router = express.Router();
 
 const login = async (req, res) => {
-    const { contactemail, password } = req.body;
+    const { email, password } = req.body;
     console.log("enter auth.js under server/controller", req.body);
     try {
         // Mock authentication
-        const user = await User.findOne({ contactemail, password });
+        const user = await User.findOne({contactemail: email, password: password});
+        console.log(user);
         if (user) {
             req.session.user = user;
             res.json({ success: true, user });
