@@ -25,6 +25,9 @@ const SignUp = ({ signUpUser }) => {
         if (!usrn) {
             setUsrnErr("Username cannot be empty");
             isValid = false;
+        } else if (usrn.length > 20) {
+            setUsrnErr("Usernama cannot be more than 20")
+            isValid = false;
         }
 
         if (!email) {
@@ -33,6 +36,12 @@ const SignUp = ({ signUpUser }) => {
 
         if (!password) {
             setPasswordErr("Password cannot be empty");
+            isValid = false;
+        } else if (password.length < 8) {
+            setPasswordErr("Password is too short (minimum is 8 characters)");
+            isValid = false;
+        } else if (password.length > 20) {
+            setPasswordErr("Password is too long (maximum is 20 characters");
             isValid = false;
         }
 
