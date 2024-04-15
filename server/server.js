@@ -1,11 +1,11 @@
-// Application server
-
+// application server
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 // for user authentication using session
 const session = require("express-session");
-const csurf = require("csurf");
+const bodyParser = require('body-parser');
+const csurf = require('csurf');
 
 const { MONGO_URL, CLIENT_URL, port, SESSION_SECRET} = require("./config");
 
@@ -28,6 +28,7 @@ app.use(
 app.use(express.json());
 
 // Session configuration
+app.use(bodyParser.json());
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
@@ -36,13 +37,10 @@ app.use(session({
 }));
 
 // CSRF protection
-app.use(csurf({
-    cookie: {
-        httpOnly: true,
-        secure: 'auto',
-        sameSite: 'strict'
-    }
-}));
+app.use(csurf());
+app.get('/csrf-token', (req, res) => {
+    res.json({ csrfToken: req.csrfToken() });
+});
 
 const questionController = require("./controller/question");
 const tagController = require("./controller/tag");
@@ -67,4 +65,4 @@ process.on("SIGINT", () => {
     process.exit(0);
 });
 
-module.exports = server
+module.exports = server;

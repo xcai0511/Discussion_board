@@ -4,6 +4,7 @@ const router = express.Router();
 
 const login = async (req, res) => {
     const { contactemail, password } = req.body;
+    console.log("enter auth.js under server/controller", req.body);
     try {
         // Mock authentication
         const user = await User.findOne({ contactemail, password });
@@ -25,7 +26,7 @@ const logout = async (req, res) => {
 }
 
 // check login status
-const checkLogin = async (req, res) => {
+const checkLoginStatus = async (req, res) => {
     try {
         const user = req.session.user;
         res.json({ loggedIn: !!user, user });
@@ -35,13 +36,13 @@ const checkLogin = async (req, res) => {
     }
 }
 
-const csrf = async (req, res) => {
-    res.json({ csrfToken: req.csrfToken() });
-}
+// const csrf = async (req, res) => {
+//     res.json({ csrfToken: req.csrfToken() });
+// }
 
 
 router.post('/login', login);
 router.post('/logout', logout);
-router.get('/check-login', checkLogin);
-router.get('/csrf-token', csrf);
+router.get('/check-login', checkLoginStatus);
+//router.get('/csrf-token', csrf);
 module.exports = router;

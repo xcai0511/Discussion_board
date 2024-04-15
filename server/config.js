@@ -7,7 +7,8 @@ require('dotenv').config();
 const MONGO_URL = "mongodb://127.0.0.1:27017/fake_so";
 const CLIENT_URL = "http://localhost:3000";
 const port = 8000;
-const SESSION_SECRET = process.env.SESSION_SECRET || "default-session-secret";
+//const SESSION_SECRET = process.env.SESSION_SECRET || "default-session-secret";
+const SESSION_SECRET = "default-session-secret";
 
 module.exports = {
     MONGO_URL,

@@ -1,5 +1,4 @@
 import { REACT_APP_API_URL, api } from "./config";
-import {useState} from "react";
 
 const AUTH_API_URL = `${REACT_APP_API_URL}/auth`;
 
@@ -11,6 +10,7 @@ const login = async(email, password, csrfToken) => {
         },
         withCredentials: true,
     });
+    console.log("enter login in authService ====", res.data);
     return res.data;
 }
 
@@ -24,8 +24,19 @@ const logout = async (csrfToken) => {
     return res.data;
 }
 
-const fetchCsrfToken = async () => {
-    return api.get(`${AUTH_API_URL}/csrf-token`, { withCredentials: true });
+const checkLoginStatus = async (csrfToken) => {
+    return api.get(`${AUTH_API_URL}/check-login`, {
+        headers: {
+            'X-CSRF-Token': csrfToken,
+        },
+        withCredentials: true,
+    });
 };
 
-export { login, logout, fetchCsrfToken };
+
+const fetchCsrfToken = async () => {
+    const response = await api.get(`${REACT_APP_API_URL}/csrf-token`, { withCredentials: true });
+    return response.data.csrfToken;
+};
+
+export { login, logout, checkLoginStatus, fetchCsrfToken };
