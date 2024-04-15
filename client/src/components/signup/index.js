@@ -1,9 +1,10 @@
 import "./index.css";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 import { addUser } from "../../services/userService";
 import { validateEmailAddress } from "../../tool"
+import {checkLoginStatus, fetchCsrfToken} from "../../services/authService";
 
 const SignUp = ({ signUpUser }) => {
     const [usrn, setUsrn] = useState("");
@@ -14,6 +15,10 @@ const SignUp = ({ signUpUser }) => {
     const [emailErr, setEmailErr] = useState("");
     const [passwordErr, setPasswordErr] = useState("");
     const [passwordVerifyErr, setPasswordVerifyErr] = useState("");
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [csrfToken, setCsrfToken] = useState('');
+
+    console.log(loggedIn);
     const handleSignUp = async () => {
         let isValid = true;
 
@@ -61,7 +66,7 @@ const SignUp = ({ signUpUser }) => {
             console.log(newUser);
     
             // Make POST request to backend API to add new user
-            const res = await addUser(newUser);
+            const res = await addUser(newUser, csrfToken);
             console.log(res);
             if (res && res._id) {
                 console.log("Signing up user");
@@ -73,6 +78,18 @@ const SignUp = ({ signUpUser }) => {
             console.error("Error signing up:", error); // TODO: Add error handling
         }
     };
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = await fetchCsrfToken();
+            console.log('22',token)
+            setCsrfToken(token);
+            const status = await checkLoginStatus(token);
+            console.log('11',status)
+            setLoggedIn(status.loggedIn);
+        };
+        initAuth();
+    }, []);
+
 
     return (
         <Form>

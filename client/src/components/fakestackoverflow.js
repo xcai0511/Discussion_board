@@ -36,7 +36,6 @@ export default function FakeStackOverflow() {
         default:
             content =
                 <>
-                    {/*<Header search={search} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage}/>*/}
                     <Main
                         title={mainTitle}
                         search={search}
@@ -49,11 +48,6 @@ export default function FakeStackOverflow() {
     return (
         <>
             <Header search={search} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage} setSignUpPage={setSignUpPage}/>
-            {/*<Main*/}
-            {/*    title={mainTitle}*/}
-            {/*    search={search}*/}
-            {/*    setQuestionPage={setQuestionPage}*/}
-            {/*/>*/}
             {content}
         </>
     );
