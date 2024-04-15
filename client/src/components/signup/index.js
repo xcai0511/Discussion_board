@@ -67,12 +67,11 @@ const SignUp = ({ signUpUser }) => {
     
             // Make POST request to backend API to add new user
             const res = await addUser(newUser, csrfToken);
-            console.log(res);
             if (res && res._id) {
                 console.log("Signing up user");
                 signUpUser();
             } else {
-                return; // TODO: Add error handling
+                setEmailErr("Account exists, please try again")
             }
         } catch (error) {
             console.error("Error signing up:", error); // TODO: Add error handling
