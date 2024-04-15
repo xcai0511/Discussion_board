@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 //import { getUserByEmail } from "../../services/userService";
-import {login, logout, checkLoginStatus, fetchCsrfToken} from "../../services/authService";
+import {login, checkLoginStatus, fetchCsrfToken} from "../../services/authService";
 
 const Login = ({ loginUser }) => {
     const [email, setEmail] = useState('');
@@ -39,15 +39,15 @@ const Login = ({ loginUser }) => {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            await logout(csrfToken);
-            setLoggedIn(false);
-            setUser(null);
-        } catch (error) {
-            console.error('Error logging out:', error);
-        }
-    };
+    // const handleLogout = async () => {
+    //     try {
+    //         await logout(csrfToken);
+    //         setLoggedIn(false);
+    //         setUser(null);
+    //     } catch (error) {
+    //         console.error('Error logging out:', error);
+    //     }
+    // };
 
     useEffect(() => {
         const initAuth = async () => {
@@ -68,7 +68,6 @@ const Login = ({ loginUser }) => {
             {loggedIn ? (
                 <div>
                     <p>Welcome, {user.contactemail}!</p>
-                    <button onClick={handleLogout}>Logout</button>
                 </div>
             ) : (
                 <Form>

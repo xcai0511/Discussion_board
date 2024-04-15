@@ -7,19 +7,30 @@ const router = express.Router();
 const addUser = async (req, res) => {
     try {
         const { username, contactemail, password } = req.body.user;
-        console.log(req.body);
-        const savedUser = await User.create({
-            username: username,
-            contactemail: contactemail,
-            password: password,
-            saved_questions: []
-        })
-        console.log('saved user: ', savedUser);
 
-        res.status(200).json(savedUser);
+        // Check if a user with the same email already exists
+        let existingUser = await User.findOne({ contactemail: contactemail });
+        if (existingUser) {
+            // If the user exists, return an error message
+            return res.status(409).json({ message: 'Email already in use' });
+        }
+        // If no existing user, create a new user
+        const newUser = new User({
+            username,
+            contactemail,
+            password,
+            saved_questions: []
+        });
+
+        const savedUser = await newUser.save();
+        console.log('Saved user:', savedUser);
+
+        // Return the saved user
+        res.status(201).json(savedUser);
+
     } catch (e) {
-        console.log("Went to catch");
-        res.status(404).json({ message: 'Error adding user', error: e.toString() });
+        console.error("Error adding user:", e);
+        res.status(500).json({ message: 'Error adding user', error: e.toString() });
     }
 };
 
