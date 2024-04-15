@@ -42,22 +42,13 @@ export default function FakeStackOverflow() {
         setLoggedIn(false);
         setPage("login");
     }
-
-    // const handleLogin = async (user) => {
-    //     setUserEmail(user.contactemail);
-    //     setLoggedIn(true);
-    // };
-
-    // const handleLogout = async () => {
-    //     setUserEmail('');
-    //     setLoggedIn(false);
-    // };
     const handleLogout = async () => {
         try {
             await logout(csrfToken);
             setLoggedIn(false);
             setUser(null);
             setUserEmail('');
+            setPage("login")
         } catch (error) {
             console.error('Error logging out:', error);
         }
