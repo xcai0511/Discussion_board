@@ -1,8 +1,9 @@
 import "./index.css";
 import { useState } from "react";
 
-const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage }) => {
+const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, userEmail, handleLogout }) => {
     const [val, setVal] = useState(search);
+
     return (
         <div id="header" className="header">
             <div></div>
@@ -22,10 +23,17 @@ const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage }) => {
                     }
                 }}
             />
-            <div>
-                <button className="login_button" onClick={setLoginPage}><div>Login</div></button>
-                <button className="signup_button" onClick={setSignUpPage}><div>Sign Up</div></button>
-            </div>
+            {loggedIn ? (
+                <div className="user-info">
+                    <button className="user_email"><div>{userEmail}</div></button>
+                    <button className="logout_button" onClick={handleLogout}><div>Logout</div></button>
+                </div>
+            ) : (
+                <div>
+                    <button className="login_button" onClick={setLoginPage}><div>Login</div></button>
+                    <button className="signup_button" onClick={setSignUpPage}><div>Sign Up</div></button>
+                </div>
+            )}
         </div>
     );
 };

@@ -9,6 +9,8 @@ export default function FakeStackOverflow() {
     const [search, setSearch] = useState("");
     const [mainTitle, setMainTitle] = useState("All Questions");
     const [page, setPage] = useState("home");
+    const [userEmail, setUserEmail] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const setQuestionPage = (search = "", title = "All Questions") => {
         setSearch(search);
@@ -24,10 +26,20 @@ export default function FakeStackOverflow() {
         setPage("signup");
     }
 
+    const handleLogin = async (user) => {
+        setUserEmail(user.contactemail);
+        setLoggedIn(true);
+    };
+
+    const handleLogout = async () => {
+        setUserEmail('');
+        setLoggedIn(false);
+    };
+
     let content;
     switch(page) {
         case "login":
-            content = <Login loginUser={() => console.log("Login successful")} />;
+            content = <Login loginUser={handleLogin}/>;
             break;
         case "signup":
             content = <SignUp signUpUser={() => console.log("Sign up successful")} />;
@@ -47,7 +59,15 @@ export default function FakeStackOverflow() {
 
     return (
         <>
-            <Header search={search} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage} setSignUpPage={setSignUpPage}/>
+            <Header 
+                search={search} 
+                setQuestionPage={setQuestionPage} 
+                setLoginPage={setLoginPage} 
+                setSignUpPage={setSignUpPage}
+                loggedIn={loggedIn} 
+                userEmail={userEmail} 
+                handleLogout={handleLogout}
+            />
             {content}
         </>
     );
