@@ -5,8 +5,7 @@ import QuestionPage from "./questionPage";
 import TagPage from "./tagPage";
 import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
-// import Login from "./login";
-//import NewAnswer from "./newAnswer";
+import SavedQuestionPage from "./savedQuestionPage";
 
 const Main = ({ search = "", title, setQuestionPage }) => {
     const [page, setPage] = useState("home");
@@ -42,11 +41,9 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         // setPage("newAnswer");
     };
 
-    // const loginUser = () => {
-    //     console.log("log in user function called");
-    //     setLoginPage();
-    //     setPage("login");
-    // }
+    const handleSavedPosts = () => {
+        setPage("savedPosts");
+    };
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -94,18 +91,11 @@ const Main = ({ search = "", title, setQuestionPage }) => {
             content = <NewQuestion handleQuestions={handleQuestions} />;
             break;
         }
-        // case "login": {
-        //     selected = "";
-        //     content = (
-        //         <Login loginUser={loginUser} />
-        //     );
-        //     break;
-        // }
-        // case "newAnswer": {
-        //     selected = "";
-        //     content = <NewAnswer qid={qid} handleAnswer={handleAnswer} />;
-        //     break;
-        // }
+        case "savedPosts": {
+            selected = "s";
+            content = <SavedQuestionPage />;
+            break;
+        }
         default:
             selected = "q";
             content = getQuestionPage();
@@ -118,6 +108,7 @@ const Main = ({ search = "", title, setQuestionPage }) => {
                 selected={selected}
                 handleQuestions={handleQuestions}
                 handleTags={handleTags}
+                handleSavedPosts={handleSavedPosts}
             />
             <div id="right_main" className="right_main">
                 {content}
