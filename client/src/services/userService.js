@@ -3,9 +3,13 @@ import { REACT_APP_API_URL, api } from "./config";
 const USER_API_URL = `${REACT_APP_API_URL}/user`;
 
 // To add User (for sign up)
-const addUser = async(user) => {
+const addUser = async(user, csrfToken) => {
     const data = { user: user };
-    const res = await api.post(`${USER_API_URL}/addUser`, data);
+    const res = await api.post(`${USER_API_URL}/addUser`, data, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }
+    });
 
     return res.data;
 }
