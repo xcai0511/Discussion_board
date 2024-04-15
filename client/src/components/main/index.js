@@ -6,10 +6,10 @@ import TagPage from "./tagPage";
 import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
 import SavedQuestionPage from "./savedQuestionPage";
-// import UserProfile from "./userProfile";
+import UserProfile from "./userProfile";
 
-const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
-    const [page, setPage] = useState("home");
+const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handleProfile, page, setPage }) => {
+    //const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
     let selected = "";
@@ -46,9 +46,10 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
         setPage("savedPosts");
     };
 
-    // const handleClickProfile = () => {
-    //     setPage("profile");
-    // }
+    const handleProfilePage = () => {
+        handleProfile();
+        setPage("profile");
+    }
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -106,11 +107,11 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
                 userEmail={userEmail} />;
             break;
         }
-        // case "profile": {
-        //     selected = "";
-        //     content = <UserProfile username={userEmail} contactEmail={userEmail} />;
-        //     break;
-        // }
+        case "profile": {
+            selected = "p";
+            content = <UserProfile username={userEmail} contactEmail={userEmail} />;
+            break;
+        }
         default:
             selected = "q";
             content = getQuestionPage();
@@ -124,6 +125,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
                 handleQuestions={handleQuestions}
                 handleTags={handleTags}
                 handleSavedPosts={handleSavedPosts}
+                handleProfile={handleProfilePage}
             />
             <div id="right_main" className="right_main">
                 {content}

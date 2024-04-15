@@ -29,6 +29,10 @@ export default function FakeStackOverflow() {
         setPage("signup");
     }
 
+    const setProfilePage = () => {
+        setPage("profile");
+    }
+
     const loginUser = (user) => {
         setUser(user);
         setUserEmail(user.contactemail);
@@ -86,6 +90,9 @@ export default function FakeStackOverflow() {
                         setQuestionPage={setQuestionPage}
                         loggedIn={loggedIn}
                         userEmail={userEmail}
+                        handleProfile={setProfilePage}
+                        page={page}
+                        setPage={setPage}
                     />
                 </>
             break;
@@ -101,6 +108,7 @@ export default function FakeStackOverflow() {
                 loggedIn={loggedIn} 
                 userEmail={userEmail} 
                 handleLogout={handleLogout}
+                setProfilePage={setProfilePage}
             />
             {content}
         </>

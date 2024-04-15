@@ -1,11 +1,12 @@
 import "./index.css";
 import { useState } from "react";
 
-const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, userEmail, handleLogout, goToProfilePage }) => {
+const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, userEmail, handleLogout, setProfilePage }) => {
     const [val, setVal] = useState(search);
 
-    const handleClickProfile = () => {
-        goToProfilePage();
+    const handleProfile = () => {
+        console.log("profile button clicked");
+        setProfilePage();
     };
 
     return (
@@ -29,7 +30,7 @@ const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn
             />
             {loggedIn ? (
                 <div className="user-info">
-                    <button className="user_email" onClick={handleClickProfile}><div>{userEmail}</div></button>
+                    <button className="user_email" onClick={handleProfile}><div>{userEmail}</div></button>
                     <button className="logout_button" onClick={handleLogout}><div>Logout</div></button>
                 </div>
             ) : (

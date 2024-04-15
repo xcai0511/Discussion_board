@@ -1,6 +1,6 @@
 import "./index.css";
 
-const SideBarNav = ({ selected = "", handleQuestions, handleTags, handleSavedPosts }) => {
+const SideBarNav = ({ selected = "", handleQuestions, handleTags, handleSavedPosts, handleProfile }) => {
     return (
         <div id="sideBarNav" className="sideBarNav">
             <div
@@ -35,6 +35,17 @@ const SideBarNav = ({ selected = "", handleQuestions, handleTags, handleSavedPos
                 }}
             >
                 Saved Posts
+            </div>
+            <div
+                id="menu_profile"
+                className={`menu_button ${
+                    selected === "p" ? "menu_selected" : ""
+                }`}
+                onClick={() => {
+                    handleProfile();
+                }}
+            >
+                Profile
             </div>
         </div>
     );
