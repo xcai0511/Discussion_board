@@ -12,6 +12,7 @@ const SavedQuestionPage = ({
 }) => {
     return (
         <>
+            <h2>Saved Posts</h2>
             {loggedIn ? (
                 <>
                     <SavedQuestionHeader

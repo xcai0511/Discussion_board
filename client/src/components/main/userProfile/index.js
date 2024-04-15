@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UserProfile = ({ username, contactEmail, onSavePassword }) => {
+const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -26,28 +26,35 @@ const UserProfile = ({ username, contactEmail, onSavePassword }) => {
   return (
     <div>
       <h2>User Profile</h2>
-      <p>Username: {username}</p>
-      <p>Contact Email: {contactEmail}</p>
-      <button onClick={() => setShowChangePassword(true)}>Change Password</button>
-      {showChangePassword && (
-        <div>
-          <h3>Change Password</h3>
-          <input
-            type="password"
-            placeholder="Current Password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          {passwordMatchError && <p style={{ color: 'red' }}>Current password does not match</p>}
-          <button onClick={handleSavePassword}>Save Password</button>
-        </div>
+      {loggedIn ? (
+          <>
+            <p>Username: {username}</p>
+            <p>Contact Email: {contactEmail}</p>
+            <button onClick={() => setShowChangePassword(true)}>Change Password</button>
+            {showChangePassword && (
+                <div>
+                  <h3>Change Password</h3>
+                  <input
+                      type="password"
+                      placeholder="Current Password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                  <input
+                      type="password"
+                      placeholder="New Password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  {passwordMatchError && <p style={{ color: 'red' }}>Current password does not match</p>}
+                  <button onClick={handleSavePassword}>Save Password</button>
+                </div>
+            )}
+          </>
+      ) : (
+          <div> Please login to see saved posts </div>
       )}
+
     </div>
   );
 };

@@ -109,7 +109,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handle
         }
         case "profile": {
             selected = "p";
-            content = <UserProfile username={userEmail} contactEmail={userEmail} />;
+            content = <UserProfile username={userEmail} contactEmail={userEmail} loggedIn={loggedIn} />;
             break;
         }
         default:
