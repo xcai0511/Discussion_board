@@ -84,6 +84,8 @@ export default function FakeStackOverflow() {
                         title={mainTitle}
                         search={search}
                         setQuestionPage={setQuestionPage}
+                        loggedIn={loggedIn}
+                        userEmail={userEmail}
                     />
                 </>
             break;

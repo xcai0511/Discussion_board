@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { getSavedQuestions } from "../../../../services/userService";
 import Question from '../../questionPage/question/index';
 
-const SavedPosts = ({ clickTag, handleAnswer }) => {
+const SavedPosts = ({ clickTag, handleAnswer, userEmail }) => {
     const [savedQuestions, setSavedQuestions] = useState([]);
 
     useEffect(() => {
         const fetchSavedQuestions = async () => {
-            // let userId = await getUserById;
-            let userId = '661d1bd23b3185af303733a4'; // TODO: Retrieve User ID from logged in user
-            let res = await getSavedQuestions(userId);
+
+            let res = await getSavedQuestions(userEmail);
             setSavedQuestions(res || []);
         };
 

@@ -7,7 +7,7 @@ const router = express.Router();
 const getTagsWithQuestionNumber = async (req, res) => {
     try {
         const tags = await Tag.find();
-        console.log("tags: ", tags);
+        //console.log("tags: ", tags);
         if (tags[0]._id) {
             const tagQuestionCounts = new Map(tags.map(tag => [tag._id.toString(), 0]));
 

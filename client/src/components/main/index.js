@@ -7,7 +7,7 @@ import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
 import SavedQuestionPage from "./savedQuestionPage";
 
-const Main = ({ search = "", title, setQuestionPage }) => {
+const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
     const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
@@ -93,7 +93,12 @@ const Main = ({ search = "", title, setQuestionPage }) => {
         }
         case "savedPosts": {
             selected = "s";
-            content = <SavedQuestionPage />;
+            content = <SavedQuestionPage
+                setQuestionOrder={setQuestionOrder}
+                clickTag={clickTag}
+                handleAnswer={handleAnswer}
+                loggedIn={loggedIn}
+                userEmail={userEmail} />;
             break;
         }
         default:

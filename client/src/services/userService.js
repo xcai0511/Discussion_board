@@ -35,9 +35,9 @@ const editUser = async(uid, user) => {
     return res.data;
 }
 
-// To get user saved questions
-const getSavedQuestions = async(uid) => {
-    const res = await api.get(`${USER_API_URL}/getSavedQuestions/${uid}`);
+// To get user saved questions by email
+const getSavedQuestions = async(email) => {
+    const res = await api.get(`${USER_API_URL}/getSavedQuestions/${email}`);
     return res.data;
 }
 

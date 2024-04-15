@@ -77,12 +77,18 @@ const editUser = async (req, res) => {
 
 // To get user's saved questions
 const getSavedQuestions = async (req, res) => {
-    const userId = req.params.uid;
-
+    const email = req.params.email;
+    console.log("getsavedquestions ===> ", email);
     try {
-        // Find the user by ID and populate the saved_questions array
-        const user = await User.findById(userId).populate("saved_questions");
-        
+        // Find the user by email and populate the saved_questions array
+        const user = await User.findOne({ contactemail: email })
+            .populate({
+                path: 'saved_questions',
+                populate: {
+                    path: 'tags',
+                    model: 'Tag'
+                }
+            });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -96,7 +102,7 @@ const getSavedQuestions = async (req, res) => {
 }
 
 router.post('/addUser', addUser);
-router.get('/getSavedQuestions/:uid', getSavedQuestions);
+router.get('/getSavedQuestions/:email', getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
 router.get('/getUserByEmail/:email', getUserByEmail);
 router.put('/editUser', editUser);
