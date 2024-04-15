@@ -6,6 +6,7 @@ import TagPage from "./tagPage";
 import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
 import SavedQuestionPage from "./savedQuestionPage";
+// import UserProfile from "./userProfile";
 
 const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
     const [page, setPage] = useState("home");
@@ -44,6 +45,10 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
     const handleSavedPosts = () => {
         setPage("savedPosts");
     };
+
+    // const handleClickProfile = () => {
+    //     setPage("profile");
+    // }
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -101,6 +106,11 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail }) => {
                 userEmail={userEmail} />;
             break;
         }
+        // case "profile": {
+        //     selected = "";
+        //     content = <UserProfile username={userEmail} contactEmail={userEmail} />;
+        //     break;
+        // }
         default:
             selected = "q";
             content = getQuestionPage();
