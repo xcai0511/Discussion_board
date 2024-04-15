@@ -1,6 +1,5 @@
 const express = require("express");
 const Question = require("../models/questions");
-// const Answer = require("../models/answers");
 const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question');
 
 const router = express.Router();
@@ -23,7 +22,6 @@ const getQuestionsByFilter = async (req, res) => {
         console.error("Error getting questions by filter: ", e);
         res.status(500).json({message: e.message});
     }
-
 };
 
 // To get Questions by Id
@@ -42,13 +40,7 @@ const getQuestionById = async (req, res) => {
         if (!updatedQuestion) {
             return res.status(404).json({ message: 'Question not found' });
         }
-        // const answers = await Answer.find({_id: {$in: updatedQuestion.answers}}).sort({ans_date_time: -1});
-        // const response = {
-        //     ...updatedQuestion.toObject(),
-        //     answers: answers
-        // };
         res.json(updatedQuestion);
-        //res.json(updatedQuestion);
     } catch (e) {
         console.error(e);
         res.status(200).json({message: "error while getting question by id"});

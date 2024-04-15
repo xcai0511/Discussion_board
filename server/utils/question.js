@@ -1,15 +1,12 @@
 const Tag = require("../models/tags");
 const Question = require("../models/questions");
-//const Answer = require("../models/answers");
 
 const addTag = async (tname) => {
     try {
         let tag = await Tag.findOne({ name: tname });
-        //console.log("add tag: ", tag);
         if (!tag) {
             let newTag = new Tag({name: tname});
             newTag = await newTag.save();
-            //console.log("new tag added with id: ", newTag);
             return newTag._id.toString();
         }
         return tag._id.toString();
@@ -17,7 +14,6 @@ const addTag = async (tname) => {
         console.log("Error adding tag: ", e);
         return null;
     }
-
 };
 
 const getQuestionsByOrder = async (order) => {
@@ -31,7 +27,6 @@ const getQuestionsByOrder = async (order) => {
                     if (!b.ask_date_time) {return -1;}
                     return b.ask_date_time - a.ask_date_time;
                 })
-                //console.log("newest questions: ", questions);
                 break;
             case 'active':
                 questions = await Question.find().populate('tags').populate('answers');
@@ -43,7 +38,6 @@ const getQuestionsByOrder = async (order) => {
                             return b.ans_date_time - a.ans_date_time;
                         })
                         question.answers = question.answers.slice(0, 1);
-                        console.log("ANSWER: ", question.answers);
                     }
                 });
                 questions.sort((a, b) => {
@@ -72,7 +66,6 @@ const getQuestionsByOrder = async (order) => {
                     if (!b.ask_date_time) {return -1;}
                     return b.ask_date_time - a.ask_date_time;
                 })
-                //console.log("unanswered questions: ", questions);
                 break;
             default:
                 questions = await Question.find().populate('tags');
@@ -81,7 +74,6 @@ const getQuestionsByOrder = async (order) => {
                     if (!b.ask_date_time) {return -1;}
                     return b.ask_date_time - a.ask_date_time;
                 })
-                //console.log("default questions: ", questions);
                 break;
         }
         return questions;
@@ -91,12 +83,10 @@ const getQuestionsByOrder = async (order) => {
 }
 
 const filterQuestionsBySearch = (qlist, search) => {
-    // complete the function return [];
     if (!search) {
         return qlist;
     }
     const searchTerms = search.toLowerCase().match(/\[\s*([^\]]+)\s*\]|\S+/g);
-    //console.log(searchTerms);
     const filteredQuestions = qlist.filter(question => {
         const tagMatch = searchTerms.some(term => {
             if (term.startsWith("[") && term.endsWith("]")) {
@@ -120,8 +110,6 @@ const filterQuestionsBySearch = (qlist, search) => {
         return tagMatch || titleMatch || textMatch;
     })
     return filteredQuestions;
-    //return qlist;
 }
-
 
 module.exports = { addTag, getQuestionsByOrder, filterQuestionsBySearch };
