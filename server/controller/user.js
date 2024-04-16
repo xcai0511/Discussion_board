@@ -9,6 +9,7 @@ const addUser = async (req, res) => {
     try {
         const { username, contactemail, password } = req.body.user;
         const hashedPassword = await hashPassword(password);
+        console.log("hashed password for adding new user: ", hashedPassword);
 
         // Check if a user with the same email already exists
         let existingUser = await User.findOne({ contactemail: contactemail });
@@ -20,7 +21,7 @@ const addUser = async (req, res) => {
         const newUser = new User({
             username,
             contactemail,
-            hashedPassword,
+            password: hashedPassword,
             saved_questions: []
         });
 

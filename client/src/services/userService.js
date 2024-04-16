@@ -42,8 +42,11 @@ const getSavedQuestions = async(email) => {
 }
 
 const matchPassword = async(username, password, csrfToken) => {
-    const data = (username: username, password: password);
-    const res = await api.post(`${USER_API_URL}/matchPassword/${data}`)
+    const data = {username: username, password: password};
+    const res = await api.post(`${USER_API_URL}/matchPassword`, data, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }});
     return res.data;
 }
 
