@@ -2,17 +2,16 @@ const express = require("express");
 const User = require("../models/users")
 const router = express.Router();
 
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const { verifyPassword } = require("../utils/password")
 
 const login = async (req, res) => {
     const { email, password } = req.body;
     console.log("enter auth.js under server/controller", req.body);
     try {
-        // Mock authentication
-        const user = await User.findOne({contactemail: email, password: password});
+        const user = await User.findOne({contactemail: email});
         console.log(user);
-        if (user) {
+        const isMatch = await verifyPassword(password, user.password);
+        if (user && isMatch) {
             req.session.user = user;
             res.json({ success: true, user });
         } else {

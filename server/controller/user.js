@@ -2,11 +2,13 @@ const express = require("express");
 const User = require("../models/users");
 
 const router = express.Router();
+const { hashPassword } = require("../utils/password");
 
 // To add User
 const addUser = async (req, res) => {
     try {
         const { username, contactemail, password } = req.body.user;
+        const hashedPassword = await hashPassword(password);
 
         // Check if a user with the same email already exists
         let existingUser = await User.findOne({ contactemail: contactemail });
@@ -18,7 +20,7 @@ const addUser = async (req, res) => {
         const newUser = new User({
             username,
             contactemail,
-            password,
+            hashedPassword,
             saved_questions: []
         });
 
