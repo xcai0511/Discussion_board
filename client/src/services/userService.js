@@ -50,4 +50,16 @@ const updatePassword = async(username, oldPassword, newPassword, csrfToken) => {
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, updatePassword  };
+// To add/remove saved question from user
+const saveQuestionToUser = async(username, isBookmarked, qid, csrfToken) => {
+    const data = {isBookmarked: isBookmarked, qid: qid};
+    const res = await api.put(`${USER_API_URL}/saveQuestionToUser/${username}`,{data}, {
+        headers: {
+            'X-CSRF-Token': csrfToken
+        },
+        withCredentials: true,
+    } );
+    return res.data;
+}
+
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, saveQuestionToUser, updatePassword  };

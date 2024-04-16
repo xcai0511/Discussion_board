@@ -129,11 +129,45 @@ const updatePassword = async (req, res) => {
 
 }
 
+// To add/remove saved question from user
+const saveQuestionToUser = async (req, res) => {
+
+    const { isBookmarked, qid } = req.body.data;
+    console.log("save question to user controller =====", req.body);
+
+    const { username } = req.params;
+    console.log("save question to user controller, req.params", req.params);
+
+    const questionId = qid.toString();
+
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (isBookmarked) {
+            user.saved_questions.push(questionId);
+            console.log("Question ID being pushed is ===== ", questionId);
+        } else {
+            user.saved_questions = user.saved_questions.filter(id => id.toString() !== questionId);
+            console.log("Question ID being removed from saved posts is ===== ", questionId);
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Question saved/removed successfully" });
+    } catch (error) {
+        console.error("Error saving/removing question:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 router.post('/addUser', addUser);
 router.get('/getSavedQuestions/:email', getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
 router.get('/getUserByEmail/:email', getUserByEmail);
 router.put('/editUser', editUser);
 router.put('/updatePassword', updatePassword);
+router.put('/saveQuestionToUser/:username', saveQuestionToUser);
 
 module.exports = router;

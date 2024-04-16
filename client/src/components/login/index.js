@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 //import { getUserByEmail } from "../../services/userService";
-import {login, checkLoginStatus, fetchCsrfToken} from "../../services/authService";
+import {login, fetchCsrfToken} from "../../services/authService";
 
 const Login = ({ loginUser }) => {
     const [email, setEmail] = useState('');
@@ -53,12 +53,6 @@ const Login = ({ loginUser }) => {
         const initAuth = async () => {
             const token = await fetchCsrfToken();
             setCsrfToken(token);
-            const status = await checkLoginStatus(token);
-            setLoggedIn(status.loggedIn);
-            if (status.loggedIn) {
-                setUser(status.user);
-                loginUser(status.user);
-            }
         };
         initAuth();
     }, []);

@@ -30,6 +30,7 @@ const logout = async (req, res) => {
 
 // check login status
 const checkLoginStatus = async (req, res) => {
+    console.log("CHECK LOGIN STATUS CALLED");
     try {
         const user = req.session.user;
         res.json({ loggedIn: !!user, user });

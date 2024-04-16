@@ -92,8 +92,8 @@ const SignUp = ({ signUpUser }) => {
             const token = await fetchCsrfToken();
             console.log('22',token)
             setCsrfToken(token);
-            const status = await checkLoginStatus(token);
-            console.log('11',status)
+            // const status = await checkLoginStatus(token);
+            // console.log('11',status)
             setLoggedIn(status.loggedIn);
         };
         initAuth();

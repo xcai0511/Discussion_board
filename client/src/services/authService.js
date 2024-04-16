@@ -18,7 +18,7 @@ const logout = async (csrfToken) => {
     try {
         const response = await api.post(`${AUTH_API_URL}/logout`, {}, {
             headers: {
-                'X-CSRF-Token': csrfToken,
+                'x-csrf-Token': csrfToken,
             },
             withCredentials: true,
         });
