@@ -2,6 +2,9 @@ const express = require("express");
 const User = require("../models/users")
 const router = express.Router();
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const login = async (req, res) => {
     const { email, password } = req.body;
     console.log("enter auth.js under server/controller", req.body);
