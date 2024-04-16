@@ -9,7 +9,7 @@ const login = async (req, res) => {
     console.log("enter auth.js under server/controller", req.body);
     try {
         const user = await User.findOne({contactemail: email});
-        console.log(user);
+        console.log("LOGIN with user: ", user);
         const isMatch = await verifyPassword(password, user.password);
         if (user && isMatch) {
             req.session.user = user;
