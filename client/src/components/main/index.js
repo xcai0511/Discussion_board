@@ -96,7 +96,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
         }
         case "newQuestion": {
             selected = "";
-            content = <NewQuestion handleQuestions={handleQuestions} />;
+            content = <NewQuestion handleQuestions={handleQuestions} username={username} loggedIn={loggedIn} />;
             break;
         }
         case "savedPosts": {

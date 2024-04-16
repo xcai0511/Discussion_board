@@ -19,8 +19,12 @@ const getQuestionById = async (qid) => {
 };
 
 // To add Questions
-const addQuestion = async (q) => {
-    const res = await api.post(`${QUESTION_API_URL}/addQuestion`, q);
+const addQuestion = async (q, csrfToken) => {
+    const res = await api.post(`${QUESTION_API_URL}/addQuestion`, q, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }
+    });
 
     return res.data;
 };
