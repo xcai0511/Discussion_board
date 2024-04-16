@@ -89,6 +89,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
                     handleNewQuestion={handleNewQuestion}
                     handleNewAnswer={handleNewAnswer}
                     loggedIn={loggedIn}
+                    username={username}
                 />
             );
             break;

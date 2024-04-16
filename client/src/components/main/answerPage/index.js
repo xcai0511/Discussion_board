@@ -8,7 +8,7 @@ import { getQuestionById } from "../../../services/questionService";
 import NewAnswer from "./newAnswer";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion, loggedIn }) => {
+const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
     const [question, setQuestion] = useState({});
 
     const handleNewAnswer = async (qid) => {
@@ -61,7 +61,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn }) => {
                 Answer Question
             </button> */}
             {loggedIn ? (
-                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} />
+                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} username={username}/>
             ) : (
                 <div>Please log in to add comments</div>
             )}

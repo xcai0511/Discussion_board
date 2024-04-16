@@ -6,7 +6,7 @@ import Textarea from "../../baseComponents/textarea";
 import { validateHyperlink } from "../../../../tool";
 import { addAnswer } from "../../../../services/answerService";
 
-const NewAnswer = ({ qid, handleAnswer  }) => {
+const NewAnswer = ({ qid, handleAnswer, username  }) => {
     //const [usrn, setUsrn] = useState("");
     const [text, setText] = useState("");
     const [textErr, setTextErr] = useState("");
@@ -35,7 +35,7 @@ const NewAnswer = ({ qid, handleAnswer  }) => {
 
         const answer = {
             text: text,
-            // ans_by: usrn,
+            ans_by: username,
             ans_date_time: new Date(),
         };
 
@@ -48,13 +48,6 @@ const NewAnswer = ({ qid, handleAnswer  }) => {
     };
     return (
         <Form>
-            {/*<Input*/}
-            {/*    title={"Username"}*/}
-            {/*    id={"answerUsernameInput"}*/}
-            {/*    val={usrn}*/}
-            {/*    setState={setUsrn}*/}
-            {/*    err={usrnErr}*/}
-            {/*/>*/}
             <Textarea
                 title={"Answer Text"}
                 id={"answerTextInput"}
