@@ -2,10 +2,9 @@ import "./index.css";
 import React, { useState, useEffect } from 'react';
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
-//import { getUserByEmail } from "../../services/userService";
 import {login, checkLoginStatus, fetchCsrfToken} from "../../services/authService";
 
-const Login = ({ loginUser }) => {
+const Login = ({ loginUser, setQuestionPage, setSignUpPage  }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({ email: '', password: '' });
@@ -39,16 +38,6 @@ const Login = ({ loginUser }) => {
         }
     };
 
-    // const handleLogout = async () => {
-    //     try {
-    //         await logout(csrfToken);
-    //         setLoggedIn(false);
-    //         setUser(null);
-    //     } catch (error) {
-    //         console.error('Error logging out:', error);
-    //     }
-    // };
-
     useEffect(() => {
         const initAuth = async () => {
             const token = await fetchCsrfToken();
@@ -71,6 +60,9 @@ const Login = ({ loginUser }) => {
                 </div>
             ) : (
                 <Form>
+                    <div className="back_button">
+                        <a href="#" onClick={() => setQuestionPage()}>Back</a>
+                    </div>
                     <Input
                         title={"Email Address"}
                         id={"loginUsernameInput"}
@@ -95,6 +87,9 @@ const Login = ({ loginUser }) => {
                         <div className="mandatory_indicator">
                             * indicates mandatory fields
                         </div>
+                    </div>
+                    <div className="link_to_signup">
+                        <h5>Don&apos;t have an account?</h5><button onClick={setSignUpPage}>Sign Up</button>
                     </div>
                 </Form>
             )}

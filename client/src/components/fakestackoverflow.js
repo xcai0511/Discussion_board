@@ -84,11 +84,11 @@ export default function FakeStackOverflow() {
     let content;
     switch(page) {
         case "login":
-            content = <Login loginUser={loginUser}/>;
+            content = <Login loginUser={loginUser} setQuestionPage={setQuestionPage} setSignUpPage={setSignUpPage}/>;
             console.log("USER: ", user);
             break;
         case "signup":
-            content = <SignUp signUpUser={logoutUser} />;
+            content = <SignUp signUpUser={logoutUser} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage} />;
             break;
         case "home":
         default:
