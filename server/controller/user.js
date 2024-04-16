@@ -101,10 +101,30 @@ const getSavedQuestions = async (req, res) => {
     }
 }
 
+const matchPassword = async (req, red) => {
+    const {username, password} = req.body.data;
+    let existingPassword = "";
+    try {
+        let existingUser = await User.findOne({ username: username });
+        if (existingUser) {
+            existingPassword = existingUser.password;
+        }
+        if (existingPassword === password) {
+            res.status(200).json(True);
+        } else {
+            return res.status(404).json({message: "Password doesn't match"});
+        }
+    } catch (e) {
+        res.status(500).json({ message: "Internal server error", error: e.toString() });
+    }
+
+}
+
 router.post('/addUser', addUser);
 router.get('/getSavedQuestions/:email', getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
 router.get('/getUserByEmail/:email', getUserByEmail);
 router.put('/editUser', editUser);
+router.post('/matchPassword', matchPassword);
 
 module.exports = router;

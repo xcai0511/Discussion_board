@@ -3,7 +3,7 @@ import Form from '../baseComponents/form';
 import Input from '../baseComponents/input';
 import './index.css';
 
-const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
+const UserProfile = ({ username, contactEmail, loggedIn }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');

@@ -41,4 +41,10 @@ const getSavedQuestions = async(email) => {
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions  };
+const matchPassword = async(username, password, csrfToken) => {
+    const data = (username: username, password: password);
+    const res = await api.post(`${USER_API_URL}/matchPassword/${data}`)
+    return res.data;
+}
+
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, matchPassword  };
