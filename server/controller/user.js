@@ -104,13 +104,13 @@ const getSavedQuestions = async (req, res) => {
 // To add/remove saved question from user
 const saveQuestionToUser = async (req, res) => {
 
-    const { isBookmarked } = req.body;
+    const { isBookmarked, qid } = req.body.data;
     console.log("save question to user controller =====", req.body);
 
     const { username } = req.params;
     console.log("save question to user controller, req.params", req.params);
 
-    const questionId = req.body.qid.toString();
+    const questionId = qid.toString();
 
     try {
         const user = await User.findOne({ username });
@@ -127,7 +127,6 @@ const saveQuestionToUser = async (req, res) => {
         }
 
         await user.save();
-
         res.status(200).json({ message: "Question saved/removed successfully" });
     } catch (error) {
         console.error("Error saving/removing question:", error);

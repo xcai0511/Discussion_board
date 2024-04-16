@@ -33,19 +33,11 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
         fetchData().catch((e) => console.log(e));
     }, [qid]);
 
-    useEffect(() => {
-        const initAuth = async () => {
-            const token = await fetchCsrfToken();
-            setCsrfToken(token);
-        };
-        initAuth();
-    });
-
     const handleBookmarkClick = async () => {
-        setIsBookmarked(!isBookmarked);
+        const bookmarkStatus = !isBookmarked;
+        setIsBookmarked(bookmarkStatus);
         try {
-            const token = await fetchCsrfToken(); // Fetch CSRF token
-            const res = await saveQuestionToUser(username, isBookmarked, token, qid); // Pass qid to the function
+            const res = await saveQuestionToUser(username, bookmarkStatus, qid, csrfToken); // Pass qid to the function
             console.log(res);
         } catch (error) {
             console.error("Error saving question:", error);
@@ -60,6 +52,13 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
             setVote(type);
         }
     };
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = await fetchCsrfToken();
+            setCsrfToken(token);
+        };
+        initAuth();
+    })
 
     return (
         <>

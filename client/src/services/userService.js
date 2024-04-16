@@ -42,8 +42,8 @@ const getSavedQuestions = async(email) => {
 }
 
 // To add/remove saved question from user
-const saveQuestionToUser = async(username, isBookmarked, csrfToken) => {
-    const data = {isBookmarked};
+const saveQuestionToUser = async(username, isBookmarked, qid, csrfToken) => {
+    const data = {isBookmarked: isBookmarked, qid: qid};
     const res = await api.put(`${USER_API_URL}/saveQuestionToUser/${username}`,{data}, {
         headers: {
             'X-CSRF-Token': csrfToken
