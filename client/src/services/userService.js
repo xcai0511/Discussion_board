@@ -41,4 +41,16 @@ const getSavedQuestions = async(email) => {
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions  };
+// To add/remove saved question from user
+const saveQuestionToUser = async(username, isBookmarked, csrfToken) => {
+    const data = {isBookmarked};
+    const res = await api.put(`${USER_API_URL}/saveQuestionToUser/${username}`,{data}, {
+        headers: {
+            'X-CSRF-Token': csrfToken
+        },
+        withCredentials: true,
+    } );
+    return res.data;
+}
+
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, saveQuestionToUser  };

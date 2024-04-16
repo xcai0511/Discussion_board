@@ -11,6 +11,7 @@ module.exports = mongoose.Schema(
         views: {type: Number, default: 0},
         answers: [{type: Schema.Types.ObjectId, ref: 'Answer'}],
         votes: {type: Number, default: 0},
+        score: {type: Number, default: 0},
     },
 
     { collection: "Question" }

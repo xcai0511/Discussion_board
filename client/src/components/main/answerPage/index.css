@@ -5,3 +5,36 @@
 .ansButton {
     margin: 2% 0 2% 2%;
 }
+
+.left_main {
+    margin-left: 2rem;
+}
+
+.vote_button {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.vote_button.voted {
+    background-color: rgb(252, 172, 142);
+}
+
+.bookmark_button {
+    border: none;
+    background-color: white;
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+}
+
+.question_score {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 46px;
+}
+
+.question_score h2 {
+    margin: 0;
+}
