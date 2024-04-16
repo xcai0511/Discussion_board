@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import Form from '../baseComponents/form';
+import Input from '../baseComponents/input';
+import './index.css';
 
 const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
+  const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [passwordMatchError, setPasswordMatchError] = useState(false);
 
@@ -24,8 +27,8 @@ const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
   };
 
   return (
-    <div>
-      <h2>User Profile</h2>
+    <div className="userProfile_container">
+      <text className="user_profile_title">User Profile</text>
       {loggedIn ? (
           <>
             <p>Username: {username}</p>
@@ -33,26 +36,41 @@ const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
             <button onClick={() => setShowChangePassword(true)}>Change Password</button>
             {showChangePassword && (
                 <div>
-                  <h3>Change Password</h3>
-                  <input
-                      type="password"
-                      placeholder="Current Password"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                  />
-                  <input
-                      type="password"
-                      placeholder="New Password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                  {passwordMatchError && <p style={{ color: 'red' }}>Current password does not match</p>}
-                  <button onClick={handleSavePassword}>Save Password</button>
+                  <Form>
+                    <h3>Change Password</h3>
+                    <Input
+                        title={"Current Password"}
+                        id={"currPasswordInput"}
+                        val={currPassword}
+                        setState={setCurrPassword}
+                        err={passwordMatchError}
+                    />
+                    <Input
+                        title={"New Password"}
+                        id={"newPasswordInput"}
+                        val={newPassword}
+                        setState={setNewPassword}
+                        err={passwordMatchError}
+                    />
+                    <div className="btn_indicator_container">
+                        <button
+                            className="form_postBtn"
+                            onClick={() => {
+                              handleSavePassword();
+                            }}
+                        >
+                            <div>Change Password</div>
+                        </button>
+                        <div className="mandatory_indicator">
+                            * indicates mandatory fields
+                        </div>
+                    </div>
+                  </Form>
                 </div>
             )}
           </>
       ) : (
-          <div> Please login to see saved posts </div>
+          <div className="login_msg"> Please login to see saved posts </div>
       )}
 
     </div>

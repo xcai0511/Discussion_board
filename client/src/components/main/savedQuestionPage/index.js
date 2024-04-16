@@ -11,8 +11,7 @@ const SavedQuestionPage = ({
     userEmail
 }) => {
     return (
-        <>
-            <h2>Saved Posts</h2>
+        <div>
             {loggedIn ? (
                 <>
                     <SavedQuestionHeader
@@ -27,19 +26,9 @@ const SavedQuestionPage = ({
                     </div>
                 </>
             ) : (
-                <div> Please login to see saved posts</div>
+                <div className="login_msg"> Please login to see saved posts</div>
             )}
-            {/*<SavedQuestionHeader*/}
-            {/*    title_text={title_text}*/}
-            {/*    setQuestionOrder={setQuestionOrder}*/}
-            {/*/>*/}
-            {/*<div id="question_list" className="question_list">*/}
-            {/*    <SavedPosts*/}
-            {/*        clickTag={clickTag}*/}
-            {/*        handleAnswer={handleAnswer}*/}
-            {/*        userEmail={userEmail}/>*/}
-            {/*</div>*/}
-        </>
+        </div>
     );
 };
 
