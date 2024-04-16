@@ -11,6 +11,7 @@ export default function FakeStackOverflow() {
     const [mainTitle, setMainTitle] = useState("All Questions");
     const [page, setPage] = useState("home");
     const [userEmail, setUserEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
     const [csrfToken, setCsrfToken] = useState('');
@@ -36,6 +37,7 @@ export default function FakeStackOverflow() {
     const loginUser = (user) => {
         setUser(user);
         setUserEmail(user.contactemail);
+        setUsername(user.username);
         setLoggedIn(true);
         setPage("home")
     }
@@ -52,6 +54,7 @@ export default function FakeStackOverflow() {
             setLoggedIn(false);
             setUser(null);
             setUserEmail('');
+            setUsername('')
             setPage("login")
         } catch (error) {
             console.error('Error logging out:', error);
@@ -75,7 +78,7 @@ export default function FakeStackOverflow() {
     switch(page) {
         case "login":
             content = <Login loginUser={loginUser}/>;
-            //console.log(user);
+            console.log("USER: ", user);
             break;
         case "signup":
             content = <SignUp signUpUser={logoutUser} />;
@@ -89,7 +92,8 @@ export default function FakeStackOverflow() {
                         search={search}
                         setQuestionPage={setQuestionPage}
                         loggedIn={loggedIn}
-                        user={user}
+                        userEmail={userEmail}
+                        username={username}
                         handleProfile={setProfilePage}
                         page={page}
                         setPage={setPage}

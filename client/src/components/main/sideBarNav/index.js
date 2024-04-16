@@ -34,7 +34,7 @@ const SideBarNav = ({ selected = "", handleQuestions, handleTags, handleSavedPos
                     handleSavedPosts();
                 }}
             >
-                Saved Posts
+                Saved
             </div>
             <div
                 id="menu_profile"

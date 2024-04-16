@@ -28,7 +28,7 @@ const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
 
   return (
     <div className="userProfile_container">
-      <text className="user_profile_title">User Profile</text>
+      <h2>User Profile</h2>
       {loggedIn ? (
           <>
             <p>Username: {username}</p>

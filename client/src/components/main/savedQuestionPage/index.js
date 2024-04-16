@@ -26,7 +26,11 @@ const SavedQuestionPage = ({
                     </div>
                 </>
             ) : (
-                <div className="login_msg"> Please login to see saved posts</div>
+                <div>
+                    <h2 className="login_msg">Saved Questions</h2>
+                    <div className="login_msg"> Please login to see saved posts</div>
+                </div>
+
             )}
         </div>
     );
