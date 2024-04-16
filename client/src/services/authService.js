@@ -15,13 +15,18 @@ const login = async(email, password, csrfToken) => {
 }
 
 const logout = async (csrfToken) => {
-    const res = await api.post(`${AUTH_API_URL}/logout`, {}, {
-        headers: {
-            'X-CSRF-Token': csrfToken,
-        },
-        withCredentials: true,
-    });
-    return res.data;
+    try {
+        const response = await api.post(`${AUTH_API_URL}/logout`, {}, {
+            headers: {
+                'X-CSRF-Token': csrfToken,
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error during logout:', error);
+        throw error;
+    }
 }
 
 const checkLoginStatus = async (csrfToken) => {

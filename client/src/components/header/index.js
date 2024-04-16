@@ -1,13 +1,36 @@
 import "./index.css";
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import {logout, fetchCsrfToken} from "../../services/authService"
 
 const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, userEmail, handleLogout, setProfilePage }) => {
     const [val, setVal] = useState(search);
+    const [csrfToken, setCsrfToken] = useState('');
 
     const handleProfile = () => {
         console.log("profile button clicked");
         setProfilePage();
     };
+
+    const handleLogoutClick = async () => {
+        try {
+            const response = await logout(csrfToken);
+            console.log(response);
+            if (response.success) {
+                handleLogout()
+            }
+        } catch (e) {
+            console.error('Error logging out:', e);
+        }
+    }
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = await fetchCsrfToken();
+            console.log('22',token)
+            setCsrfToken(token);
+        };
+        initAuth();
+    }, []);
 
     return (
         <div id="header" className="header">
@@ -31,7 +54,7 @@ const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn
             {loggedIn ? (
                 <div className="user-info">
                     <button className="user_email" onClick={handleProfile}><div>{userEmail}</div></button>
-                    <button className="logout_button" onClick={handleLogout}><div>Logout</div></button>
+                    <button className="logout_button" onClick={handleLogoutClick}><div>Logout</div></button>
                 </div>
             ) : (
                 <div>

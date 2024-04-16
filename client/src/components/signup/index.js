@@ -78,6 +78,7 @@ const SignUp = ({ signUpUser }) => {
             const res = await addUser(newUser, csrfToken);
             if (res && res._id) {
                 console.log("Signing up user");
+                alert("Sign up success!");
                 signUpUser();
             } else {
                 setEmailErr("Account exists, please try again")
