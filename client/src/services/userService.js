@@ -50,4 +50,13 @@ const updatePassword = async(username, oldPassword, newPassword, csrfToken) => {
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, updatePassword  };
+const updateUserProfileImage = async (username, profileImage, csrfToken) => {
+    const data = { username, profileImage };
+    const res = await api.put(`${USER_API_URL}/updateProfileImage`, data, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }});
+    return res.data;
+};
+
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, updatePassword, updateUserProfileImage };
