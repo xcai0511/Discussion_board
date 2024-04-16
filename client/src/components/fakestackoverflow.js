@@ -75,7 +75,7 @@ export default function FakeStackOverflow() {
     switch(page) {
         case "login":
             content = <Login loginUser={loginUser}/>;
-            console.log(user);
+            //console.log(user);
             break;
         case "signup":
             content = <SignUp signUpUser={logoutUser} />;
@@ -89,7 +89,7 @@ export default function FakeStackOverflow() {
                         search={search}
                         setQuestionPage={setQuestionPage}
                         loggedIn={loggedIn}
-                        userEmail={userEmail}
+                        user={user}
                         handleProfile={setProfilePage}
                         page={page}
                         setPage={setPage}

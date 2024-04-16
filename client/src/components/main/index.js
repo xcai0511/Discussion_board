@@ -8,12 +8,22 @@ import NewQuestion from "./newQuestion";
 import SavedQuestionPage from "./savedQuestionPage";
 import UserProfile from "./userProfile";
 
-const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handleProfile, page, setPage }) => {
+const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfile, page, setPage }) => {
     //const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
     let selected = "";
     let content = null;
+    let username;
+    let email;
+    if (!user) {
+        username = "default username";
+        email = "default email";
+    } else {
+        username = user.username;
+        email = user.email;
+    }
+    //let anonymous_content = null;
 
     const handleQuestions = () => {
         setQuestionPage();
@@ -69,6 +79,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handle
         case "home": {
             selected = "q";
             content = getQuestionPage(questionOrder.toLowerCase(), search);
+            // anonymous_content = getQuestionPage(questionOrder.toLowerCase(), search);
             break;
         }
         case "tag": {
@@ -79,6 +90,12 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handle
                     handleNewQuestion={handleNewQuestion}
                 />
             );
+            // anonymous_content = (
+            //     <TagPage
+            //         clickTag={clickTag}
+            //         handleNewQuestion={handleNewQuestion}
+            //     />
+            // );
             break;
         }
         case "answer": {
@@ -91,11 +108,20 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handle
                     loggedIn={loggedIn}
                 />
             );
+            // anonymous_content = (
+            //     <AnswerPage
+            //         qid={qid}
+            //         handleNewQuestion={handleNewQuestion}
+            //         handleNewAnswer={handleNewAnswer}
+            //         loggedIn={loggedIn}
+            //     />
+            // );
             break;
         }
         case "newQuestion": {
             selected = "";
             content = <NewQuestion handleQuestions={handleQuestions} />;
+            // anonymous_content = <div>Please log in to ask question</div>;
             break;
         }
         case "savedPosts": {
@@ -105,17 +131,20 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handle
                 clickTag={clickTag}
                 handleAnswer={handleAnswer}
                 loggedIn={loggedIn}
-                userEmail={userEmail} />;
+                userEmail={email} />;
+            // anonymous_content = <div>Please log in to see saved posts</div>;
             break;
         }
         case "profile": {
             selected = "p";
-            content = <UserProfile username={userEmail} contactEmail={userEmail} loggedIn={loggedIn} />;
+            content = <UserProfile username={username} contactEmail={email} loggedIn={loggedIn} />;
+            // anonymous_content = <div>Please log in to see profile</div>;
             break;
         }
         default:
             selected = "q";
             content = getQuestionPage();
+            // anonymous_content = getQuestionPage();
             break;
     }
 
@@ -129,8 +158,10 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, handle
                 handleProfile={handleProfilePage}
             />
             <div id="right_main" className="right_main">
+                {/*{loggedIn ? content : anonymous_content}*/}
                 {content}
             </div>
+
         </div>
     );
 };

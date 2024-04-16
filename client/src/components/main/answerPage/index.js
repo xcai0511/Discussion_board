@@ -10,13 +10,6 @@ import NewAnswer from "./newAnswer";
 // Component for the Answers page
 const AnswerPage = ({ qid, handleNewQuestion, loggedIn }) => {
     const [question, setQuestion] = useState({});
-    useEffect(() => {
-        const fetchData = async () => {
-            let res = await getQuestionById(qid);
-            setQuestion(res || {});
-        };
-        fetchData().catch((e) => console.log(e));
-    }, [qid]);
 
     const handleNewAnswer = async (qid) => {
         try {
@@ -26,6 +19,13 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn }) => {
             console.error("Error fetching updated question:", error);
         }
     };
+    useEffect(() => {
+        const fetchData = async () => {
+            let res = await getQuestionById(qid);
+            setQuestion(res || {});
+        };
+        fetchData().catch((e) => console.log(e));
+    }, [qid]);
 
     return (
         <>
