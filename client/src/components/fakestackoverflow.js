@@ -4,7 +4,6 @@ import Header from "./header";
 import Login from "./login";
 import SignUp from "./signup";
 import Main from "./main";
-//import { checkLoginStatus, fetchCsrfToken } from "../services/authService"
 
 export default function FakeStackOverflow() {
     const [search, setSearch] = useState("");
@@ -14,7 +13,6 @@ export default function FakeStackOverflow() {
     const [username, setUsername] = useState('');
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
-    //const [csrfToken, setCsrfToken] = useState('');
 
     const setQuestionPage = (search = "", title = "All Questions") => {
         setSearch(search);
@@ -49,37 +47,12 @@ export default function FakeStackOverflow() {
         setPage("login");
     }
     const handleLogout = async () => {
-        // try {
-        //     const result = await logout(csrfToken);
-        //     if (result.success) {
-        //         setLoggedIn(false);
-        //         setUser(null);
-        //         setUserEmail('');
-        //         setUsername('');
-        //         setPage("login");
-        //     }
-        // } catch (error) {
-        //     console.error('Error logging out:', error);
-        // }
         setLoggedIn(false);
         setUser(null);
         setUserEmail('');
         setUsername('');
         setPage("login");
     };
-
-    // useEffect(() => {
-    //     const initAuth = async () => {
-    //         const token = await fetchCsrfToken();
-    //         setCsrfToken(token);
-    //         const status = await checkLoginStatus(token);
-    //         setLoggedIn(status.loggedIn);
-    //         if (status.loggedIn) {
-    //             setUser(status.user);
-    //         }
-    //     };
-    //     initAuth();
-    // }, []);
 
     let content;
     switch(page) {
