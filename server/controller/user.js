@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/users");
 
 const router = express.Router();
-const { hashPassword } = require("../utils/password");
+const { hashPassword, verifyPassword } = require("../utils/password");
 
 // To add User
 const addUser = async (req, res) => {
@@ -104,20 +104,26 @@ const getSavedQuestions = async (req, res) => {
     }
 }
 
-const matchPassword = async (req, red) => {
-    const {username, password} = req.body.data;
-    let existingPassword = "";
+const updatePassword = async (req, res) => {
+    console.log(req.body);
+    const {username, oldPassword, newPassword} = req.body;
     try {
-        let existingUser = await User.findOne({ username: username });
-        if (existingUser) {
-            existingPassword = existingUser.password;
+        let user = await User.findOne({ username: username });
+        const isMatch = await verifyPassword(oldPassword, user.password);
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'User not found' });
         }
-        if (existingPassword === password) {
-            res.status(200).json(True);
+        if (isMatch) {
+            // Hash the new password before saving it
+            const hashedNewPassword = await hashPassword(newPassword);
+            user.password = hashedNewPassword; // Update the user's password with the new hashed password
+            await user.save(); // Save the updated user object
+            res.json({ success: true, message: 'Password updated successfully' });
         } else {
-            return res.status(404).json({message: "Password doesn't match"});
+            res.status(401).json({ success: false, message: 'Invalid current password' });
         }
     } catch (e) {
+        console.error("Error updating password")
         res.status(500).json({ message: "Internal server error", error: e.toString() });
     }
 
@@ -128,6 +134,6 @@ router.get('/getSavedQuestions/:email', getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
 router.get('/getUserByEmail/:email', getUserByEmail);
 router.put('/editUser', editUser);
-router.post('/matchPassword', matchPassword);
+router.put('/updatePassword', updatePassword);
 
 module.exports = router;

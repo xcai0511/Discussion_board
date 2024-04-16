@@ -1,30 +1,57 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Form from '../baseComponents/form';
 import Input from '../baseComponents/input';
 import './index.css';
+import {updatePassword} from "../../../services/userService"
+import {fetchCsrfToken} from "../../../services/authService"
 
 const UserProfile = ({ username, contactEmail, loggedIn }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [currPasswordError, setCurrPasswordError] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
 
-  const handleSavePassword = () => {
-    
-    // Check if the current password matches the password stored in the backend
-    // If it matches, call onSavePassword with the new password
-    // Otherwise, set passwordMatchError to true
-    setPasswordMatchError(false); // Reset passwordMatchError
-
-    // Simulated backend check (replace with actual API call)
-    const isPasswordMatch = true; // Simulate password match
-    if (isPasswordMatch) {
-      onSavePassword(newPassword);
-      setShowChangePassword(false); // Hide the change password container
-    } else {
-      setPasswordMatchError(true);
+  const handleSavePassword = async () => {
+    let isValid = true;
+    if (!currPassword) {
+      setCurrPasswordError("Current password cannot be empty");
+      isValid = false;
     }
+    if (!newPassword) {
+      setNewPasswordError("New password cannot be empty");
+      isValid = false;
+    } else if (newPassword.length < 8) {
+      setNewPasswordError("Password is too short (minimum is 8 characters)")
+      isValid = false;
+    } else if (newPassword.length > 20) {
+      setNewPasswordError("Password is too long (maximum is 20 characters)")
+      isValid = false;
+    }
+    if (!isValid) {
+      return;
+    }
+    try {
+      const updateResponse = await updatePassword(username, currPassword, newPassword, csrfToken);
+      if (updateResponse.success) {
+        alert("Password updated successfully!");
+      } else {
+        setCurrPasswordError('Invalid current password');
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      setNewPasswordError("An error occurred while updating the password. Please try again later.");
+    }
+
   };
+  useEffect(() => {
+    const initAuth = async () => {
+      const token = await fetchCsrfToken();
+      setCsrfToken(token);
+    };
+    initAuth();
+  })
 
   return (
     <div className="userProfile_container">
@@ -43,14 +70,14 @@ const UserProfile = ({ username, contactEmail, loggedIn }) => {
                         id={"currPasswordInput"}
                         val={currPassword}
                         setState={setCurrPassword}
-                        err={passwordMatchError}
+                        err={currPasswordError}
                     />
                     <Input
                         title={"New Password"}
                         id={"newPasswordInput"}
                         val={newPassword}
                         setState={setNewPassword}
-                        err={passwordMatchError}
+                        err={newPasswordError}
                     />
                     <div className="btn_indicator_container">
                         <button

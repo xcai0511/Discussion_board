@@ -41,13 +41,13 @@ const getSavedQuestions = async(email) => {
     return res.data;
 }
 
-const matchPassword = async(username, password, csrfToken) => {
-    const data = {username: username, password: password};
-    const res = await api.post(`${USER_API_URL}/matchPassword`, data, {
+const updatePassword = async(username, oldPassword, newPassword, csrfToken) => {
+    const data = {username: username, oldPassword: oldPassword, newPassword: newPassword};
+    const res = await api.put(`${USER_API_URL}/updatePassword`, data, {
         headers: {
             "X-CSRF-Token": csrfToken
         }});
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, matchPassword  };
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, updatePassword  };
