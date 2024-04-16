@@ -8,7 +8,7 @@ import { getQuestionById } from "../../../services/questionService";
 import NewAnswer from "./newAnswer";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion }) => {
+const AnswerPage = ({ qid, handleNewQuestion, loggedIn }) => {
     const [question, setQuestion] = useState({});
     useEffect(() => {
         const fetchData = async () => {
@@ -60,7 +60,12 @@ const AnswerPage = ({ qid, handleNewQuestion }) => {
             >
                 Answer Question
             </button> */}
-            <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} />
+            {loggedIn ? (
+                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} />
+            ) : (
+                <div>Please log in to add comments</div>
+            )}
+
         </>
     );
 };
