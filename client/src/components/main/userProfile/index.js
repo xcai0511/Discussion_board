@@ -70,7 +70,7 @@ const UserProfile = ({ username, contactEmail, onSavePassword, loggedIn }) => {
             )}
           </>
       ) : (
-          <div className="login_msg"> Please login to see saved posts </div>
+          <div className="login_msg_profile"> Please login to see your user profile </div>
       )}
 
     </div>
