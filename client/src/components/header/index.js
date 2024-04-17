@@ -2,7 +2,7 @@ import "./index.css";
 import {useState} from "react";
 import {logout} from "../../services/authService"
 
-const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, userEmail, handleLogout, setProfilePage, csrfToken }) => {
+const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, user, handleLogout, setProfilePage, csrfToken }) => {
     const [val, setVal] = useState(search);
     //const [csrfToken, setCsrfToken] = useState('');
 
@@ -45,7 +45,7 @@ const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn
             />
             {loggedIn ? (
                 <div className="user-info">
-                    <button className="user_email" onClick={handleProfile}><div>{userEmail}</div></button>
+                    <button className="user_email" onClick={handleProfile}><div>{user.contactemail}</div></button>
                     <button className="logout_button" onClick={handleLogoutClick}><div>Logout</div></button>
                 </div>
             ) : (

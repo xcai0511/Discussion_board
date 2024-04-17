@@ -36,6 +36,9 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
       const updateResponse = await updatePassword(user.username, currPassword, newPassword, csrfToken);
       if (updateResponse.success) {
         alert("Password updated successfully!");
+        setShowChangePassword(false);
+        setCurrPassword('');
+        setNewPassword('');
       } else {
         setCurrPasswordError('Invalid current password');
       }
@@ -53,6 +56,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
         const updateResponse = await updateUserProfileImage(user.username, selectedProfileImage, csrfToken);
         if (updateResponse.success) {
             alert("Profile image updated successfully!");
+            setShowProfileImageOptions(false);
         } else {
             alert("Unable to update profile image.")
         }
