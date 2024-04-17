@@ -8,7 +8,7 @@ import NewQuestion from "./newQuestion";
 import SavedQuestionPage from "./savedQuestionPage";
 import UserProfile from "./userProfile";
 
-const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, username, handleProfile, page, setPage }) => {
+const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, username, handleProfile, page, setPage, csrfToken }) => {
     //const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
@@ -111,7 +111,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
         }
         case "profile": {
             selected = "p";
-            content = <UserProfile username={username} contactEmail={userEmail} loggedIn={loggedIn} />;
+            content = <UserProfile username={username} contactEmail={userEmail} loggedIn={loggedIn} csrfToken={csrfToken} />;
             break;
         }
         default:

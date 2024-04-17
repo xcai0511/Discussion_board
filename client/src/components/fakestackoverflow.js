@@ -81,6 +81,7 @@ export default function FakeStackOverflow() {
                         handleProfile={setProfilePage}
                         page={page}
                         setPage={setPage}
+                        csrfToken={csrfToken}
                     />
                 </>
             break;

@@ -5,7 +5,6 @@ const cors = require("cors");
 // for user authentication using session
 const session = require("express-session");
 const bodyParser = require('body-parser');
-const csurf = require('csurf');
 
 const { MONGO_URL, CLIENT_URL, port, SESSION_SECRET} = require("./config");
 

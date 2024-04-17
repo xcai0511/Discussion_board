@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Form from '../baseComponents/form';
 import Input from '../baseComponents/input';
 import './index.css';
 import {updatePassword} from "../../../services/userService"
-import {fetchCsrfToken} from "../../../services/authService"
+//import {fetchCsrfToken} from "../../../services/authService"
 
-const UserProfile = ({ username, contactEmail, loggedIn }) => {
+const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [currPasswordError, setCurrPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
-  const [csrfToken, setCsrfToken] = useState('');
+  //const [csrfToken, setCsrfToken] = useState('');
 
   const handleSavePassword = async () => {
     let isValid = true;
@@ -45,13 +45,13 @@ const UserProfile = ({ username, contactEmail, loggedIn }) => {
     }
 
   };
-  useEffect(() => {
-    const initAuth = async () => {
-      const token = await fetchCsrfToken();
-      setCsrfToken(token);
-    };
-    initAuth();
-  })
+  // useEffect(() => {
+  //   const initAuth = async () => {
+  //     const token = await fetchCsrfToken();
+  //     setCsrfToken(token);
+  //   };
+  //   initAuth();
+  // })
 
   return (
     <div className="userProfile_container">

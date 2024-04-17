@@ -3,6 +3,7 @@ const User = require("../models/users");
 
 const router = express.Router();
 const { hashPassword, verifyPassword } = require("../utils/password");
+const { csrfProtection } = require("../auth-server");
 
 // To add User
 const addUser = async (req, res) => {
@@ -163,11 +164,11 @@ const saveQuestionToUser = async (req, res) => {
 };
 
 router.post('/addUser', addUser);
-router.get('/getSavedQuestions/:email', getSavedQuestions);
+router.get('/getSavedQuestions/:email', csrfProtection, getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
 router.get('/getUserByEmail/:email', getUserByEmail);
 router.put('/editUser', editUser);
-router.put('/updatePassword', updatePassword);
-router.put('/saveQuestionToUser/:username', saveQuestionToUser);
+router.put('/updatePassword', csrfProtection, updatePassword);
+router.put('/saveQuestionToUser/:username', csrfProtection, saveQuestionToUser);
 
 module.exports = router;
