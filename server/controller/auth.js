@@ -3,6 +3,7 @@ const User = require("../models/users")
 const router = express.Router();
 
 const { verifyPassword } = require("../utils/password")
+const { csrfProtection } = require("../auth-server");
 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -29,24 +30,24 @@ const logout = async (req, res) => {
 }
 
 // check login status
-const checkLoginStatus = async (req, res) => {
-    console.log("CHECK LOGIN STATUS CALLED");
-    try {
-        const user = req.session.user;
-        res.json({ loggedIn: !!user, user });
-    } catch (e) {
-        console.error("error checking login status: ", e);
-        res.status(500).json({message: "error checking login status"});
-    }
-}
-
-// const csrf = async (req, res) => {
-//     res.json({ csrfToken: req.csrfToken() });
+// const checkLoginStatus = async (req, res) => {
+//     console.log("CHECK LOGIN STATUS CALLED");
+//     try {
+//         const user = req.session.user;
+//         res.json({ loggedIn: !!user, user });
+//     } catch (e) {
+//         console.error("error checking login status: ", e);
+//         res.status(500).json({message: "error checking login status"});
+//     }
 // }
 
+const csrf = async (req, res) => {
+    res.json({ csrfToken: req.csrfToken() });
+}
 
-router.post('/login', login);
-router.post('/logout', logout);
-router.get('/check-login', checkLoginStatus);
-//router.get('/csrf-token', csrf);
+
+router.post('/login', csrfProtection, login);
+router.post('/logout', csrfProtection, logout);
+//router.get('/check-login', checkLoginStatus);
+router.get('/csrf-token', csrfProtection, csrf);
 module.exports = router;

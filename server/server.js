@@ -37,10 +37,10 @@ app.use(session({
 }));
 
 // CSRF protection
-app.use(csurf());
-app.get('/csrf-token', (req, res) => {
-    res.json({ csrfToken: req.csrfToken() });
-});
+//app.use(csurf());
+// app.get('/csrf-token', (req, res) => {
+//     res.json({ csrfToken: req.csrfToken() });
+// });
 
 const questionController = require("./controller/question");
 const tagController = require("./controller/tag");
