@@ -8,7 +8,7 @@ const SavedQuestionPage = ({
     clickTag,
     handleAnswer,
     loggedIn,
-    userEmail
+    userEmail,
 }) => {
     return (
         <div>

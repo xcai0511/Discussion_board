@@ -36,8 +36,11 @@ const editUser = async(uid, user) => {
 }
 
 // To get user saved questions by email
-const getSavedQuestions = async(email) => {
-    const res = await api.get(`${USER_API_URL}/getSavedQuestions/${email}`);
+const getSavedQuestions = async(email, csrfToken) => {
+    const res = await api.get(`${USER_API_URL}/getSavedQuestions/${email}`, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }});
     return res.data;
 }
 

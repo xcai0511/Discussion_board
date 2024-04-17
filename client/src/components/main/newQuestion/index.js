@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Form from "../baseComponents/form";
 import Input from "../baseComponents/input";
 import Textarea from "../baseComponents/textarea";
@@ -6,14 +6,14 @@ import "./index.css";
 import { validateHyperlink } from "../../../tool";
 
 import { addQuestion } from "../../../services/questionService";
-import {fetchCsrfToken} from "../../../services/authService";
+//import {fetchCsrfToken} from "../../../services/authService";
 
-const NewQuestion = ({ handleQuestions, username, loggedIn }) => {
+const NewQuestion = ({ handleQuestions, username, loggedIn, csrfToken }) => {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [tag, setTag] = useState("");
     //const [usrn, setUsrn] = useState("");
-    const [csrfToken, setCsrfToken] = useState('');
+    //const [csrfToken, setCsrfToken] = useState('');
 
     const [titleErr, setTitleErr] = useState("");
     const [textErr, setTextErr] = useState("");
@@ -80,13 +80,13 @@ const NewQuestion = ({ handleQuestions, username, loggedIn }) => {
             handleQuestions();
         }
     };
-    useEffect(() => {
-        const initAuth = async () => {
-            const token = await fetchCsrfToken();
-            setCsrfToken(token);
-        };
-        initAuth();
-    })
+    // useEffect(() => {
+    //     const initAuth = async () => {
+    //         const token = await fetchCsrfToken();
+    //         setCsrfToken(token);
+    //     };
+    //     initAuth();
+    // })
 
     return (
         <>

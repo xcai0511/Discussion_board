@@ -1,6 +1,7 @@
 const express = require("express");
 const Question = require("../models/questions");
 const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question');
+const { csrfProtection } = require("../auth-server");
 
 const router = express.Router();
 
@@ -69,6 +70,6 @@ const addQuestion = async (req, res) => {
 // add appropriate HTTP verbs and their endpoints to the router
 router.get('/getQuestion', getQuestionsByFilter);
 router.get('/getQuestionById/:qid', getQuestionById);
-router.post('/addQuestion', addQuestion);
+router.post('/addQuestion', csrfProtection, addQuestion);
 
 module.exports = router;
