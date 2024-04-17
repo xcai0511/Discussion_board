@@ -73,7 +73,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
   const fetchUserQuestions = async () => {
     try {
       const questions = await getQuestionsByFilter('newest', ''); // Fetch all questions
-      const userQuestions = questions.filter(question => question.asked_by === username); // Filter questions by logged-in user
+      const userQuestions = questions.filter(question => question.asked_by === user.username); // Filter questions by logged-in user
       setUserQuestions(userQuestions);
       setLoading(false); // Set loading to false after fetching questions
     } catch (error) {
