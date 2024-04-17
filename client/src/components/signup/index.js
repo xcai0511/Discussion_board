@@ -4,7 +4,7 @@ import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 import { addUser } from "../../services/userService";
 import { validateEmailAddress } from "../../tool"
-import {checkLoginStatus, fetchCsrfToken} from "../../services/authService";
+import {fetchCsrfToken} from "../../services/authService";
 
 const SignUp = ({ signUpUser }) => {
     const [usrn, setUsrn] = useState("");

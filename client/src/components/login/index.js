@@ -2,16 +2,14 @@ import "./index.css";
 import React, { useState } from 'react';
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
-//import { getUserByEmail } from "../../services/userService";
 import {login, fetchCsrfToken} from "../../services/authService";
 
-const Login = ({ loginUser }) => {
+const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({ email: '', password: '' });
     const [loggedIn, setLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
-    //const [csrfToken, setCsrfToken] = useState('');
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -34,14 +32,10 @@ const Login = ({ loginUser }) => {
                 setUser(res.user);
                 loginUser(res.user, csrfToken);
                 console.log("log in success");
-            // } else {
-            //     console.log(res.message);
-            // }
             } else if (res.message === "email") {
                 //alert("Email does not exist");
                 setErrors({email: "Email does not exist"});
             } else if (res.message === "password") {
-                //alert("Password does not match");
                 setErrors({password: "Password does not match"});
             }
         } catch (error) {
@@ -58,6 +52,9 @@ const Login = ({ loginUser }) => {
                 </div>
             ) : (
                 <Form>
+                    <div className="back_button">
+                        <a href="#" onClick={() => setQuestionPage()}>Back</a>
+                    </div>
                     <Input
                         title={"Email Address"}
                         id={"loginUsernameInput"}
@@ -82,6 +79,9 @@ const Login = ({ loginUser }) => {
                         <div className="mandatory_indicator">
                             * indicates mandatory fields
                         </div>
+                    </div>
+                    <div className="link_to_signup">
+                        <h5>Don&apos;t have an account?</h5><button onClick={setSignUpPage}>Sign Up</button>
                     </div>
                 </Form>
             )}

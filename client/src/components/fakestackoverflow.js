@@ -4,7 +4,6 @@ import Header from "./header";
 import Login from "./login";
 import SignUp from "./signup";
 import Main from "./main";
-//import { checkLoginStatus, fetchCsrfToken } from "../services/authService"
 
 export default function FakeStackOverflow() {
     const [search, setSearch] = useState("");
@@ -61,11 +60,11 @@ export default function FakeStackOverflow() {
     let content;
     switch(page) {
         case "login":
-            content = <Login loginUser={loginUser}/>;
+            content = <Login loginUser={loginUser} setQuestionPage={setQuestionPage} setSignUpPage={setSignUpPage}/>;
             console.log("USER: ", user);
             break;
         case "signup":
-            content = <SignUp signUpUser={logoutUser} />;
+            content = <SignUp signUpUser={logoutUser} setQuestionPage={setQuestionPage} setLoginPage={setLoginPage} />;
             break;
         case "home":
         default:

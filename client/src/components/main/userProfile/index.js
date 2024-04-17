@@ -2,16 +2,16 @@ import React, {useState} from 'react';
 import Form from '../baseComponents/form';
 import Input from '../baseComponents/input';
 import './index.css';
-import {updatePassword} from "../../../services/userService"
-//import {fetchCsrfToken} from "../../../services/authService"
+import {updatePassword, updateUserProfileImage} from "../../../services/userService"
 
 const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showProfileImageOptions, setShowProfileImageOptions] = useState(false);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [currPasswordError, setCurrPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
-  //const [csrfToken, setCsrfToken] = useState('');
+  const [selectedProfileImage, setSelectedProfileImage] = useState('user-avatar-1.png');
 
   const handleSavePassword = async () => {
     let isValid = true;
@@ -45,13 +45,20 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
     }
 
   };
-  // useEffect(() => {
-  //   const initAuth = async () => {
-  //     const token = await fetchCsrfToken();
-  //     setCsrfToken(token);
-  //   };
-  //   initAuth();
-  // })
+
+  const handleSaveProfileImage = async () => {
+    try {
+        // Call the service method to update profile image
+        const updateResponse = await updateUserProfileImage(username, selectedProfileImage, csrfToken);
+        if (updateResponse.success) {
+            alert("Profile image updated successfully!");
+        } else {
+            alert("Unable to update profile image.")
+        }
+    } catch (error) {
+        console.error("Error updating profile image:", error);
+    }
+  };
 
   return (
     <div className="userProfile_container">
@@ -60,7 +67,12 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
           <>
             <p>Username: {username}</p>
             <p>Contact Email: {contactEmail}</p>
-            <button onClick={() => setShowChangePassword(true)}>Change Password</button>
+            <button onClick={() => setShowChangePassword(prevState => !prevState)}>
+                {showChangePassword ? "Hide Change Password" : "Change Password"}
+            </button>
+            <button onClick={() => setShowProfileImageOptions(prevState => !prevState)}>
+                {showProfileImageOptions ? "Hide Change Profile Picture" : "Change Profile Picture"}
+            </button>
             {showChangePassword && (
                 <div>
                   <Form>
@@ -93,6 +105,23 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
                         </div>
                     </div>
                   </Form>
+                </div>
+            )}
+            {showProfileImageOptions && (
+                <div>
+                    <h3>Select New Profile Image</h3>
+                    <div className="profile_image_options">
+                        {Array.from({ length: 8 }, (_, i) => i + 1).map((index) => (
+                            <img
+                                key={index}
+                                src={`images/user-avatar-${index}.png`}
+                                alt={`Profile Image ${index}`}
+                                onClick={() => setSelectedProfileImage(`user-avatar-${index}.png`)}
+                                className={selectedProfileImage === `user-avatar-${index}.png` ? 'selected' : ''}
+                            />
+                        ))}
+                    </div>
+                    <button onClick={handleSaveProfileImage}>Save</button>
                 </div>
             )}
           </>

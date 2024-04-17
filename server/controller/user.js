@@ -163,6 +163,23 @@ const saveQuestionToUser = async (req, res) => {
     }
 };
 
+// To update user profile image
+const updateUserProfileImage = async (req, res) => {
+    const { username, profileImage } = req.body;
+    try {
+        // Find the user by username and update the profileImage field
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { profileImage: profileImage },
+            { new: true }
+        );
+        res.json({ success: true, message: 'Profile image updated successfully', user: updatedUser });
+    } catch (error) {
+        console.error("Error updating profile image:", error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
 router.post('/addUser', addUser);
 router.get('/getSavedQuestions/:email', csrfProtection, getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
@@ -170,5 +187,6 @@ router.get('/getUserByEmail/:email', getUserByEmail);
 router.put('/editUser', editUser);
 router.put('/updatePassword', csrfProtection, updatePassword);
 router.put('/saveQuestionToUser/:username', csrfProtection, saveQuestionToUser);
+router.put('/updateUserProfileImage', csrfProtection, updateUserProfileImage);
 
 module.exports = router;

@@ -65,4 +65,14 @@ const saveQuestionToUser = async(username, isBookmarked, qid, csrfToken) => {
     return res.data;
 }
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, saveQuestionToUser, updatePassword  };
+// To update user profile image
+const updateUserProfileImage = async (username, profileImage, csrfToken) => {
+    const data = {username: username, profileImage: profileImage};
+    const res = await api.put(`${USER_API_URL}/updateProfileImage`, data, {
+        headers: {
+            "x-csrf-token": csrfToken
+        }});
+    return res.data;
+};
+
+export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, saveQuestionToUser, updatePassword, updateUserProfileImage  };
