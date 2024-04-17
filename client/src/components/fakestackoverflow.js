@@ -76,8 +76,7 @@ export default function FakeStackOverflow() {
                         search={search}
                         setQuestionPage={setQuestionPage}
                         loggedIn={loggedIn}
-                        userEmail={userEmail}
-                        username={username}
+                        user={user}
                         handleProfile={setProfilePage}
                         page={page}
                         setPage={setPage}

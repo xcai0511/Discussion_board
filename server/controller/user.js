@@ -76,6 +76,8 @@ const getUserByEmail = async (req, res) => {
 
 // TODO: Edit User
 const editUser = async (req, res) => {
+    console.log(req);
+    console.log(res);
     return;
 }
 
@@ -164,6 +166,7 @@ const saveQuestionToUser = async (req, res) => {
 
 // To update user profile image
 const updateUserProfileImage = async (req, res) => {
+    console.log("updating profile image: ", req.body);
     const { username, profileImage } = req.body;
     try {
         // Find the user by username and update the profileImage field

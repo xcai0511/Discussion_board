@@ -4,14 +4,14 @@ import Input from '../baseComponents/input';
 import './index.css';
 import {updatePassword, updateUserProfileImage} from "../../../services/userService"
 
-const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
+const UserProfile = ({ user, loggedIn, csrfToken }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showProfileImageOptions, setShowProfileImageOptions] = useState(false);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [currPasswordError, setCurrPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
-  const [selectedProfileImage, setSelectedProfileImage] = useState('user-avatar-1.png');
+  const [selectedProfileImage, setSelectedProfileImage] = useState(user.profileImage);
 
   const handleSavePassword = async () => {
     let isValid = true;
@@ -33,7 +33,7 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
       return;
     }
     try {
-      const updateResponse = await updatePassword(username, currPassword, newPassword, csrfToken);
+      const updateResponse = await updatePassword(user.username, currPassword, newPassword, csrfToken);
       if (updateResponse.success) {
         alert("Password updated successfully!");
       } else {
@@ -48,8 +48,9 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
 
   const handleSaveProfileImage = async () => {
     try {
+      console.log("handle save profile image button: ", selectedProfileImage);
         // Call the service method to update profile image
-        const updateResponse = await updateUserProfileImage(username, selectedProfileImage, csrfToken);
+        const updateResponse = await updateUserProfileImage(user.username, selectedProfileImage, csrfToken);
         if (updateResponse.success) {
             alert("Profile image updated successfully!");
         } else {
@@ -66,8 +67,8 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
       {loggedIn ? (
           <>
             <img src={`images/${selectedProfileImage}`} alt="Profile Image" />
-            <p>Username: {username}</p>
-            <p>Contact Email: {contactEmail}</p>
+            <p>Username: {user.username}</p>
+            <p>Contact Email: {user.contactemail}</p>
             <button onClick={() => setShowChangePassword(prevState => !prevState)}>
                 {showChangePassword ? "Hide Change Password" : "Change Password"}
             </button>

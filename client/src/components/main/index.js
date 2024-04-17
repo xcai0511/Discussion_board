@@ -9,7 +9,7 @@ import SavedQuestionPage from "./savedQuestionPage";
 import UserProfile from "./userProfile";
 import UsersPage from "./usersPage";
 
-const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, username, handleProfile, page, setPage, csrfToken }) => {
+const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfile, page, setPage, csrfToken }) => {
     //const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
@@ -99,7 +99,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
                     handleNewQuestion={handleNewQuestion}
                     handleNewAnswer={handleNewAnswer}
                     loggedIn={loggedIn}
-                    username={username}
+                    username={user.username}
                     csrfToken={csrfToken}
                 />
             );
@@ -110,7 +110,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
             content =
                 <NewQuestion
                     handleQuestions={handleQuestions}
-                    username={username}
+                    username={user.username}
                     loggedIn={loggedIn}
                     csrfToken={csrfToken}
                 />;
@@ -123,7 +123,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
                 clickTag={clickTag}
                 handleAnswer={handleAnswer}
                 loggedIn={loggedIn}
-                userEmail={userEmail} />;
+                userEmail={user.contactemail} />;
             break;
         }
         case "users": {
@@ -138,7 +138,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
         }
         case "profile": {
             selected = "p";
-            content = <UserProfile username={username} contactEmail={userEmail} loggedIn={loggedIn} csrfToken={csrfToken} />;
+            content = <UserProfile user={user} loggedIn={loggedIn} csrfToken={csrfToken} />;
             break;
         }
         default:
