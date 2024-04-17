@@ -97,6 +97,7 @@ export default function FakeStackOverflow() {
                 userEmail={userEmail} 
                 handleLogout={handleLogout}
                 setProfilePage={setProfilePage}
+                csrfToken={csrfToken}
             />
             {content}
         </>
