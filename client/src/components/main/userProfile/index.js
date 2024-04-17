@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Form from '../baseComponents/form';
 import Input from '../baseComponents/input';
 import './index.css';
-import {updatePassword, updateUserProfileImage} from "../../../services/userService"
+import {updatePassword, updateUserProfileImage} from "../../../services/userService";
+import YourQuestion from './question';
+import { getQuestionsByFilter, deleteQuestionById } from '../../../services/questionService';
 
 const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -12,6 +14,8 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
   const [currPasswordError, setCurrPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
   const [selectedProfileImage, setSelectedProfileImage] = useState('user-avatar-1.png');
+  const [userQuestions, setUserQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleSavePassword = async () => {
     let isValid = true;
@@ -57,6 +61,44 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
         }
     } catch (error) {
         console.error("Error updating profile image:", error);
+    }
+  };
+
+  // Function to fetch user's questions
+  const fetchUserQuestions = async () => {
+    try {
+      const questions = await getQuestionsByFilter('newest', ''); // Fetch all questions
+      const userQuestions = questions.filter(question => question.asked_by === username); // Filter questions by logged-in user
+      setUserQuestions(userQuestions);
+      setLoading(false); // Set loading to false after fetching questions
+    } catch (error) {
+      console.error('Error fetching user questions:', error);
+      setLoading(false); // Set loading to false if there's an error
+    }
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      fetchUserQuestions(); // Fetch user's questions when logged in
+    }
+  }, [loggedIn]);
+
+  const handleDeleteQuestion = async (questionId) => {
+    if (window.confirm("Are you sure you want to delete this question?")) {
+      try {
+        // Call the service method to delete the question
+        await deleteQuestionById(questionId, csrfToken);
+        
+        // Remove the deleted question from the userQuestions state
+        setUserQuestions(userQuestions.filter(question => question._id !== questionId));
+        
+        // Optional: Provide feedback to the user
+        alert("Question deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting question:", error);
+        // Optional: Provide error feedback to the user
+        alert("An error occurred while deleting the question. Please try again later.");
+      }
     }
   };
 
@@ -125,6 +167,18 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
                     <button onClick={handleSaveProfileImage}>Save</button>
                 </div>
             )}
+            <div>
+            <h2>Your Posts</h2>
+              {loading ? (
+                <p>Loading...</p>
+              ) : userQuestions.length === 0 ? (
+                <p>You haven&apos;t posted any questions yet.</p>
+              ) : (
+                userQuestions.map(question => (
+                  <YourQuestion key={question._id} q={question} handleDeleteQuestion={() => handleDeleteQuestion(question._id)} />
+                ))
+              )}
+            </div>
           </>
       ) : (
           <div className="login_msg_profile"> Please login to see your user profile </div>

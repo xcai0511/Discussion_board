@@ -29,4 +29,15 @@ const addQuestion = async (q, csrfToken) => {
     return res.data;
 };
 
-export { getQuestionsByFilter, getQuestionById, addQuestion };
+// To delete Question by ID
+const deleteQuestionById = async (qid, csrfToken) => {
+    const res = await api.delete(`${QUESTION_API_URL}/deleteQuestionById/${qid}`, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }
+    });
+
+    return res.data;
+}
+
+export { getQuestionsByFilter, getQuestionById, addQuestion, deleteQuestionById };

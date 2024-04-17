@@ -67,9 +67,31 @@ const addQuestion = async (req, res) => {
     }
 };
 
+// To delete a question by ID
+const deleteQuestionById = async (req, res) => {
+    try {
+        const id = req.params.qid;
+        
+        // Find and delete the question by its ID
+        const deletedQuestion = await Question.findByIdAndDelete(id);
+
+        // Check if the question was found and deleted
+        if (!deletedQuestion) {
+            return res.status(404).json({ message: 'Question not found' });
+        }
+
+        // If the question was successfully deleted, send a success response
+        res.status(200).json({ message: 'Question deleted successfully' });
+    } catch (e) {
+        console.error("Error deleting question:", e);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 // add appropriate HTTP verbs and their endpoints to the router
 router.get('/getQuestion', getQuestionsByFilter);
 router.get('/getQuestionById/:qid', getQuestionById);
 router.post('/addQuestion', csrfProtection, addQuestion);
+router.delete('/deleteQuestionById/:qid', deleteQuestionById);
 
 module.exports = router;
