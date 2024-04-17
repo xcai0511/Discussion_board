@@ -57,7 +57,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
     }
 
     const clickUser = (uname) => {
-        setQuestionPage("users:" + uname, uname);
+        setQuestionPage("user:" + uname, uname);
         setPage("home");
     };
 

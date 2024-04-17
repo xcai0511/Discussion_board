@@ -16,6 +16,7 @@ export default function FakeStackOverflow() {
     const [csrfToken, setCsrfToken] = useState('token');
 
     const setQuestionPage = (search = "", title = "All Questions") => {
+        //console.log("set question page searching: ", search, title);
         setSearch(search);
         setMainTitle(title);
         setPage("home");
