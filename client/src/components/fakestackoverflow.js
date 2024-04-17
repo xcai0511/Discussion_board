@@ -57,6 +57,7 @@ export default function FakeStackOverflow() {
         setUsername('');
         setPage("login");
     };
+    
     let content;
     switch(page) {
         case "login":

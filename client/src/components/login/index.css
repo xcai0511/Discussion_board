@@ -1,0 +1,12 @@
+.link_to_signup {
+    display: flex;
+    align-items: center;
+}
+
+.link_to_signup button {
+    margin-left: 0.5rem;
+}
+
+.back_button {
+    margin-bottom: 1rem;
+}

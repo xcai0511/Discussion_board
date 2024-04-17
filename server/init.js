@@ -1,7 +1,5 @@
 // Setup database with initial test data.
 const mongoose = require("mongoose");
-// const bcrypt = require('bcrypt');
-// const saltRounds = 10; // the cost factor for hashing
 
 const { MONGO_URL } = require("./config");
 const { hashPassword } = require("./utils/password")
@@ -53,18 +51,6 @@ function questionCreate(title, text, tags, answers, asked_by, ask_date_time, vie
     return question.save();
 }
 
-// function userCreate(username, contactemail, password, saved_questions) {
-//     let userdetail = {
-//         username: username,
-//         contactemail: contactemail,
-//         password: password,
-//     };
-//
-//     if (saved_questions != false) userdetail.saved_questions = saved_questions;
-//
-//     let user = new User(userdetail);
-//     return user.save();
-// }
 async function userCreate(username, contactemail, password, saved_questions) {
     let hashedPassword = await hashPassword(password);
     let userdetail = {

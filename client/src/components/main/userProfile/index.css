@@ -10,3 +10,9 @@
 .login_msg_profile {
     margin-top: 1rem;
 }
+
+.profile_image_options img {
+    width: 100px;
+    height: 100px;
+    margin: 0.5rem;
+}

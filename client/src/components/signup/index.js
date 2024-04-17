@@ -6,7 +6,7 @@ import { addUser } from "../../services/userService";
 import { validateEmailAddress } from "../../tool"
 import {fetchCsrfToken} from "../../services/authService";
 
-const SignUp = ({ signUpUser }) => {
+const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
     const [usrn, setUsrn] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -102,6 +102,9 @@ const SignUp = ({ signUpUser }) => {
 
     return (
         <Form>
+            <div className="back_button">
+                <a href="#" onClick={() => setQuestionPage()}>Back</a>
+            </div>
             <Input
                 title={"Username"}
                 id={"signUpUsernameInput"}
@@ -140,6 +143,9 @@ const SignUp = ({ signUpUser }) => {
                 <div className="mandatory_indicator">
                     * indicates mandatory fields
                 </div>
+            </div>
+            <div className="link_to_signup">
+                <h5>Already have an account?</h5><button onClick={setLoginPage}>Login</button>
             </div>
         </Form>
     );

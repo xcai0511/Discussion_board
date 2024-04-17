@@ -6,6 +6,7 @@ module.exports = mongoose.Schema(
         username: {type: String, required: true},
         contactemail: {type: String, required: true, unique: true},
         password: {type: String, required: true},
+        profileImage: { type: String, default: "user-avatar-1.png" },
         saved_questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
     },
 

@@ -107,7 +107,28 @@ const filterQuestionsBySearch = (qlist, search) => {
             }
             return false;
         })
-        return tagMatch || titleMatch || textMatch;
+        const authorMatch = searchTerms.some(term => {
+            if (term.startsWith("user:")) {
+                const authorId = term.substring(5); // Extract author ID from the term
+                return question.asked_by.toLowerCase() === authorId.toLowerCase();
+            }
+            return false;
+        })
+        const ansCountMatch = searchTerms.some(term => {
+            if (term.startsWith("answers:")) {
+                const answerCount = parseInt(term.substring(8));
+                return question.answers.length === answerCount;
+            }
+            return false;
+        })
+        const scoreMatch = searchTerms.some(term => {
+            if (term.startsWith("score:")) {
+                const scoreValue = parseInt(term.substring(6));
+                return question.score >= scoreValue;
+            }
+        })
+
+        return tagMatch || titleMatch || textMatch || authorMatch || ansCountMatch || scoreMatch;
     })
     return filteredQuestions;
 }

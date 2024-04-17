@@ -65,6 +65,7 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
       <h2>User Profile</h2>
       {loggedIn ? (
           <>
+            <img src={`images/${selectedProfileImage}`} alt="Profile Image" />
             <p>Username: {username}</p>
             <p>Contact Email: {contactEmail}</p>
             <button onClick={() => setShowChangePassword(prevState => !prevState)}>

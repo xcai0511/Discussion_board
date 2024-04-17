@@ -127,7 +127,6 @@ const updatePassword = async (req, res) => {
         console.error("Error updating password")
         res.status(500).json({ message: "Internal server error", error: e.toString() });
     }
-
 }
 
 // To add/remove saved question from user
