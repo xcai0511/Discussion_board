@@ -69,6 +69,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
     }
   };
 
+
   // Function to fetch user's questions
   const fetchUserQuestions = async () => {
     try {
@@ -81,12 +82,6 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
       setLoading(false); // Set loading to false if there's an error
     }
   };
-
-  useEffect(() => {
-    if (loggedIn) {
-      fetchUserQuestions(); // Fetch user's questions when logged in
-    }
-  }, [loggedIn]);
 
   const handleDeleteQuestion = async (questionId) => {
     if (window.confirm("Are you sure you want to delete this question?")) {
@@ -106,13 +101,19 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
       }
     }
   };
+  useEffect(() => {
+    if (loggedIn) {
+      fetchUserQuestions(); // Fetch user's questions when logged in
+      setSelectedProfileImage(user.profileImage);
+    }
+  }, [loggedIn]);
 
   return (
     <div className="userProfile_container">
       <h2>User Profile</h2>
       {loggedIn ? (
           <>
-            <img src={`images/${user.profileImage}`} alt="Profile Image" />
+            <img src={`images/${selectedProfileImage}`} alt="Profile Image" />
             <p>Username: {user.username}</p>
             <p>Contact Email: {user.contactemail}</p>
             <button onClick={() => setShowChangePassword(prevState => !prevState)}>
