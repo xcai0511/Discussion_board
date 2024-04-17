@@ -23,19 +23,31 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
             console.error("Error fetching updated question:", error);
         }
     };
+
     useEffect(() => {
         const fetchData = async () => {
             let res = await getQuestionById(qid);
             setQuestion(res || {});
+
+            // Check if the current question ID exists in the user's saved_questions array
+            if (loggedIn && user.saved_questions.includes(qid)) {
+                setIsBookmarked(true);
+            }
         };
         fetchData().catch((e) => console.log(e));
-    }, [qid]);
+    }, [qid, loggedIn, user]);
 
     const handleBookmarkClick = async () => {
+        // If user is not logged in
+        if (!loggedIn) {
+            alert("Please log in to bookmark questions.");
+            return;
+        }
+
         const bookmarkStatus = !isBookmarked;
         setIsBookmarked(bookmarkStatus);
         try {
-            const res = await saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken); // Pass qid to the function
+            const res = await saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken);
             console.log(res);
         } catch (error) {
             console.error("Error saving question:", error);
@@ -53,9 +65,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     return (
         <>
             <AnswerHeader
-                ansCount={
-                    question && question.answers && question.answers.length
-                }
+                ansCount={question && question.answers && question.answers.length}
                 title={question && question.title}
                 handleNewQuestion={handleNewQuestion}
             />
@@ -65,10 +75,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                     className={`vote_button ${vote === "upvote" ? "voted" : ""}`}
                     onClick={() => handleVote("upvote")}
                 >
-                    <FontAwesomeIcon
-                        icon="fa-solid fa-caret-up"
-                        transform="grow-10"
-                    />
+                    <FontAwesomeIcon icon="fa-solid fa-caret-up" transform="grow-10" />
                 </button>
                 <div className="question_score">
                     <h2>{question.score}</h2>
@@ -78,10 +85,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                     className={`vote_button ${vote === "downvote" ? "voted" : ""}`}
                     onClick={() => handleVote("downvote")}
                 >
-                    <FontAwesomeIcon
-                        icon="fa-solid fa-caret-down"
-                        transform="grow-10"
-                    />
+                    <FontAwesomeIcon icon="fa-solid fa-caret-down" transform="grow-10" />
                 </button>
                 <div>
                     <button className="bookmark_button" onClick={() => handleBookmarkClick()}>
