@@ -7,6 +7,7 @@ import AnswerPage from "./answerPage";
 import NewQuestion from "./newQuestion";
 import SavedQuestionPage from "./savedQuestionPage";
 import UserProfile from "./userProfile";
+import UsersPage from "./usersPage";
 
 const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, username, handleProfile, page, setPage, csrfToken }) => {
     //const [page, setPage] = useState("home");
@@ -50,6 +51,15 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
         handleProfile();
         setPage("profile");
     }
+
+    const handleUsers = () => {
+        setPage("users");
+    }
+
+    const clickUser = (uname) => {
+        setQuestionPage("users:" + uname, uname);
+        setPage("home");
+    };
 
     const getQuestionPage = (order = "newest", search = "") => {
         return (
@@ -116,6 +126,16 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
                 userEmail={userEmail} />;
             break;
         }
+        case "users": {
+            selected = "u";
+            content = (
+                <UsersPage
+                    clickUser={clickUser}
+                    handleNewQuestion={handleNewQuestion}
+                />
+            );
+            break;
+        }
         case "profile": {
             selected = "p";
             content = <UserProfile username={username} contactEmail={userEmail} loggedIn={loggedIn} csrfToken={csrfToken} />;
@@ -134,6 +154,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
                 handleQuestions={handleQuestions}
                 handleTags={handleTags}
                 handleSavedPosts={handleSavedPosts}
+                handleUsers={handleUsers}
                 handleProfile={handleProfilePage}
             />
             <div id="right_main" className="right_main">

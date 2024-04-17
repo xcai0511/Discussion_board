@@ -51,7 +51,7 @@ function questionCreate(title, text, tags, answers, asked_by, ask_date_time, vie
     return question.save();
 }
 
-async function userCreate(username, contactemail, password, saved_questions) {
+async function userCreate(username, contactemail, password, profileImage, saved_questions) {
     let hashedPassword = await hashPassword(password);
     let userdetail = {
         username: username,
@@ -59,6 +59,7 @@ async function userCreate(username, contactemail, password, saved_questions) {
         password: hashedPassword,
     };
 
+    if (profileImage != false) userdetail.profileImage = profileImage;
     if (saved_questions != false) userdetail.saved_questions = saved_questions;
 
     let user = new User(userdetail);
@@ -88,9 +89,9 @@ const init = async () => {
     let q3 = await questionCreate('Object storage for a web application', 'I am currently working on a website where, roughly 40 million documents and images should be served to its users. I need suggestions on which method is the most suitable for storing content with subject to these requirements.', [t5, t6], [a6, a7], 'monkeyABC', new Date('2023-02-18T01:02:15'), 200, 3, +2);
     let q4 = await questionCreate('Quick question about storage on android', 'I would like to know the best way to go about storing an array on an android phone so that even when the app/activity ended the data remains', [t3, t4, t5], [a8], 'elephantCDE', new Date('2023-03-10T14:28:01'), 103, 2, -2);
 
-    await userCreate('jaimesi', 'si.ja@northeastern.edu', 'testpassword', [q1, q2]);
-    await userCreate('xiaojincai', 'cai.xiaoj@northeastern.edu', 'testpassword', [q3, q4]);
-    await userCreate('admin', 'admin@fakeso.com', 'testpassword', [q1, q2, q3, q4]);
+    await userCreate('jaimesi', 'si.ja@northeastern.edu', 'testpassword', 'user-avatar-8.png', [q1, q2]);
+    await userCreate('xiaojincai', 'cai.xiaoj@northeastern.edu', 'testpassword', 'user-avatar-5.png', [q3, q4]);
+    await userCreate('admin', 'admin@fakeso.com', 'testpassword', 'user-avatar-1.png', [q1, q2, q3, q4]);
 
     if (db) db.close();
     console.log("done");

@@ -179,6 +179,16 @@ const updateUserProfileImage = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (e) {
+        console.error("Error retrieving all users", e);
+        res.status(500).send({ message: "Internal server error" });
+    }
+};
+
 router.post('/addUser', addUser);
 router.get('/getSavedQuestions/:email', csrfProtection, getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
@@ -187,5 +197,6 @@ router.put('/editUser', editUser);
 router.put('/updatePassword', csrfProtection, updatePassword);
 router.put('/saveQuestionToUser/:username', csrfProtection, saveQuestionToUser);
 router.put('/updateUserProfileImage', csrfProtection, updateUserProfileImage);
+router.get('/getAllUsers', getAllUsers);
 
 module.exports = router;

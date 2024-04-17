@@ -28,6 +28,13 @@ const getUserByEmail = async (email) => {
     return res.data;
 };
 
+// To retrieve all users
+const getAllUsers = async () => {
+    const res = await api.get(`${USER_API_URL}/getAllUsers`);
+
+    return res.data;
+}
+
 // To edit user
 const editUser = async(uid, user) => {
     const data = {uid: uid, user: user};
@@ -75,4 +82,4 @@ const updateUserProfileImage = async (username, profileImage, csrfToken) => {
     return res.data;
 };
 
-export { addUser, getUserById, getUserByEmail, editUser, getSavedQuestions, saveQuestionToUser, updatePassword, updateUserProfileImage  };
+export { addUser, getUserById, getUserByEmail, getAllUsers, editUser, getSavedQuestions, saveQuestionToUser, updatePassword, updateUserProfileImage  };
