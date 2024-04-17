@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { getSavedQuestions } from "../../../../services/userService";
 import Question from '../../questionPage/question/index';
 
-const SavedPosts = ({ clickTag, handleAnswer, userEmail, csrfToken }) => {
+const SavedPosts = ({ clickTag, handleAnswer, user, csrfToken }) => {
     const [savedQuestions, setSavedQuestions] = useState([]);
 
     useEffect(() => {
         const fetchSavedQuestions = async () => {
 
-            let res = await getSavedQuestions(userEmail, csrfToken);
+            let res = await getSavedQuestions(user.contactemail, csrfToken);
             setSavedQuestions(res || []);
         };
 

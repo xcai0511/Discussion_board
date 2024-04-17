@@ -5,7 +5,7 @@ import Textarea from "../../baseComponents/textarea";
 import { validateHyperlink } from "../../../../tool";
 import { addAnswer } from "../../../../services/answerService";
 
-const NewAnswer = ({ qid, handleAnswer, username, csrfToken  }) => {
+const NewAnswer = ({ qid, handleAnswer, user, csrfToken  }) => {
     const [text, setText] = useState("");
     const [textErr, setTextErr] = useState("");
     const postAnswer = async () => {
@@ -28,7 +28,7 @@ const NewAnswer = ({ qid, handleAnswer, username, csrfToken  }) => {
 
         const answer = {
             text: text,
-            ans_by: username,
+            ans_by: user.username,
             ans_date_time: new Date(),
         };
 

@@ -8,7 +8,7 @@ const SavedQuestionPage = ({
     clickTag,
     handleAnswer,
     loggedIn,
-    userEmail,
+    user,
 }) => {
     return (
         <div>
@@ -22,7 +22,7 @@ const SavedQuestionPage = ({
                         <SavedPosts
                             clickTag={clickTag}
                             handleAnswer={handleAnswer}
-                            userEmail={userEmail}/>
+                            user={user}/>
                     </div>
                 </>
             ) : (

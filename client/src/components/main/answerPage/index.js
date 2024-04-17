@@ -10,7 +10,7 @@ import NewAnswer from "./newAnswer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username, csrfToken }) => {
+const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     const [question, setQuestion] = useState({});
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [vote, setVote] = useState(null);
@@ -35,7 +35,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username, csrfToken }) =
         const bookmarkStatus = !isBookmarked;
         setIsBookmarked(bookmarkStatus);
         try {
-            const res = await saveQuestionToUser(username, bookmarkStatus, qid, csrfToken); // Pass qid to the function
+            const res = await saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken); // Pass qid to the function
             console.log(res);
         } catch (error) {
             console.error("Error saving question:", error);
@@ -106,7 +106,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username, csrfToken }) =
                     />
                 ))}
             {loggedIn ? (
-                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} username={username} csrfToken={csrfToken}/>
+                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} user={user} csrfToken={csrfToken}/>
             ) : (
                 <div>Please log in to add comments</div>
             )}

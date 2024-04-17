@@ -99,7 +99,8 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
                     handleNewQuestion={handleNewQuestion}
                     handleNewAnswer={handleNewAnswer}
                     loggedIn={loggedIn}
-                    username={user.username}
+                    user={user}
+                    //username={user.username}
                     csrfToken={csrfToken}
                 />
             );
@@ -110,7 +111,8 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
             content =
                 <NewQuestion
                     handleQuestions={handleQuestions}
-                    username={user.username}
+                    user={user}
+                    //username={user.username}
                     loggedIn={loggedIn}
                     csrfToken={csrfToken}
                 />;
@@ -123,7 +125,9 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
                 clickTag={clickTag}
                 handleAnswer={handleAnswer}
                 loggedIn={loggedIn}
-                userEmail={user.contactemail} />;
+                user={user}
+                // userEmail={user.contactemail}
+            />;
             break;
         }
         case "users": {

@@ -15,7 +15,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
   const [newPasswordError, setNewPasswordError] = useState('');
   const [userQuestions, setUserQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProfileImage, setSelectedProfileImage] = useState(user.profileImage);
+  const [selectedProfileImage, setSelectedProfileImage] = useState('');
 
   const handleSavePassword = async () => {
     let isValid = true;
@@ -112,7 +112,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
       <h2>User Profile</h2>
       {loggedIn ? (
           <>
-            <img src={`images/${selectedProfileImage}`} alt="Profile Image" />
+            <img src={`images/${user.profileImage}`} alt="Profile Image" />
             <p>Username: {user.username}</p>
             <p>Contact Email: {user.contactemail}</p>
             <button onClick={() => setShowChangePassword(prevState => !prevState)}>
