@@ -6,11 +6,11 @@ const login = async(email, password, csrfToken) => {
     const data = {email, password};
     const res = await api.post(`${AUTH_API_URL}/login`, data, {
         headers: {
-            'X-CSRF-Token': csrfToken,
+            'x-csrf-token': csrfToken,
         },
         withCredentials: true,
     });
-    console.log("enter login in authService ====", res.data);
+    //console.log("enter login in authService ====", res.data);
     return res.data;
 }
 
@@ -29,19 +29,19 @@ const logout = async (csrfToken) => {
     }
 }
 
-const checkLoginStatus = async (csrfToken) => {
-    return api.get(`${AUTH_API_URL}/check-login`, {
-        headers: {
-            'X-CSRF-Token': csrfToken,
-        },
-        withCredentials: true,
-    });
-};
+// const checkLoginStatus = async (csrfToken) => {
+//     return api.get(`${AUTH_API_URL}/check-login`, {
+//         headers: {
+//             'X-CSRF-Token': csrfToken,
+//         },
+//         withCredentials: true,
+//     });
+// };
 
 
 const fetchCsrfToken = async () => {
-    const response = await api.get(`${REACT_APP_API_URL}/csrf-token`, { withCredentials: true });
+    const response = await api.get(`${AUTH_API_URL}/csrf-token`, { withCredentials: true });
     return response.data.csrfToken;
 };
 
-export { login, logout, checkLoginStatus, fetchCsrfToken };
+export { login, logout, fetchCsrfToken };

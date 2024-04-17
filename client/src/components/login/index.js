@@ -1,5 +1,5 @@
 import "./index.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Form from "../main/baseComponents/form";
 import Input from "../main/baseComponents/input";
 //import { getUserByEmail } from "../../services/userService";
@@ -11,7 +11,7 @@ const Login = ({ loginUser }) => {
     const [errors, setErrors] = useState({ email: '', password: '' });
     const [loggedIn, setLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
-    const [csrfToken, setCsrfToken] = useState('');
+    //const [csrfToken, setCsrfToken] = useState('');
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -23,12 +23,14 @@ const Login = ({ loginUser }) => {
         }
 
         try {
+            const csrfToken = await fetchCsrfToken();
+            console.log("LOGGING IN with token: ", csrfToken);
             const res = await login(email, password, csrfToken);
             console.log("trying to log in with ==>", email, password, res);
             if (res.success) {
                 setLoggedIn(true);
                 setUser(res.user);
-                loginUser(res.user);
+                loginUser(res.user, csrfToken);
                 console.log("log in success");
             } else {
                 setErrors({ ...errors, form: 'Invalid credentials' });
@@ -48,14 +50,14 @@ const Login = ({ loginUser }) => {
     //         console.error('Error logging out:', error);
     //     }
     // };
-
-    useEffect(() => {
-        const initAuth = async () => {
-            const token = await fetchCsrfToken();
-            setCsrfToken(token);
-        };
-        initAuth();
-    }, []);
+    //
+    // useEffect(() => {
+    //     const initAuth = async () => {
+    //         const token = await fetchCsrfToken();
+    //         setCsrfToken(token);
+    //     };
+    //     initAuth();
+    // }, []);
 
     return (
         <div>

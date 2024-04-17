@@ -1,24 +1,17 @@
 import "./index.css";
 import {useEffect, useState} from "react";
 import Form from "../../baseComponents/form";
-//import Input from "../../baseComponents/input";
 import Textarea from "../../baseComponents/textarea";
 import { validateHyperlink } from "../../../../tool";
 import { addAnswer } from "../../../../services/answerService";
 import {fetchCsrfToken} from "../../../../services/authService";
 
 const NewAnswer = ({ qid, handleAnswer, username  }) => {
-    //const [usrn, setUsrn] = useState("");
     const [text, setText] = useState("");
     const [textErr, setTextErr] = useState("");
     const [csrfToken, setCsrfToken] = useState('');
     const postAnswer = async () => {
         let isValid = true;
-
-        // if (!usrn) {
-        //     setUsrnErr("Username cannot be empty");
-        //     isValid = false;
-        // }
 
         if (!text) {
             setTextErr("Answer text cannot be empty");
@@ -44,7 +37,6 @@ const NewAnswer = ({ qid, handleAnswer, username  }) => {
         const res = await addAnswer(qid, answer, csrfToken);
         if (res && res._id) {
             handleAnswer ();
-            //setUsrn("");
             setText("");
         }
     };

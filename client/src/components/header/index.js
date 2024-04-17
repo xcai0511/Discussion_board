@@ -1,10 +1,10 @@
 import "./index.css";
-import {useEffect, useState} from "react";
-import {logout, fetchCsrfToken} from "../../services/authService"
+import {useState} from "react";
+//import {logout} from "../../services/authService"
 
 const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, userEmail, handleLogout, setProfilePage }) => {
     const [val, setVal] = useState(search);
-    const [csrfToken, setCsrfToken] = useState('');
+    //const [csrfToken, setCsrfToken] = useState('');
 
     const handleProfile = () => {
         console.log("profile button clicked");
@@ -12,25 +12,27 @@ const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn
     };
 
     const handleLogoutClick = async () => {
-        try {
-            const response = await logout(csrfToken);
-            console.log(response);
-            if (response.success) {
-                handleLogout()
-            }
-        } catch (e) {
-            console.error('Error logging out:', e);
-        }
+        // try {
+        //     const response = await logout(csrfToken);
+        //     console.log(response);
+        //     if (response.success) {
+        //         handleLogout()
+        //     }
+        // } catch (e) {
+        //     console.error('Error logging out:', e);
+        // }
+        console.log("log out clicked");
+        handleLogout();
     }
 
-    useEffect(() => {
-        const initAuth = async () => {
-            const token = await fetchCsrfToken();
-            console.log('22',token)
-            setCsrfToken(token);
-        };
-        initAuth();
-    }, []);
+    // useEffect(() => {
+    //     const initAuth = async () => {
+    //         const token = await fetchCsrfToken();
+    //         console.log('22',token)
+    //         setCsrfToken(token);
+    //     };
+    //     initAuth();
+    // }, []);
 
     return (
         <div id="header" className="header">

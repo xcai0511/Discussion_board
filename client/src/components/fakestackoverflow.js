@@ -14,7 +14,7 @@ export default function FakeStackOverflow() {
     const [username, setUsername] = useState('');
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
-    //const [csrfToken, setCsrfToken] = useState('');
+    const [csrfToken, setCsrfToken] = useState('token');
 
     const setQuestionPage = (search = "", title = "All Questions") => {
         setSearch(search);
@@ -34,7 +34,10 @@ export default function FakeStackOverflow() {
         setPage("profile");
     }
 
-    const loginUser = (user) => {
+    const loginUser = (user, token) => {
+        setCsrfToken(token);
+        console.log("CSRF TOKEN passed after loggin in: ", csrfToken);
+        console.log("TOKEN passed after loggin in: ", token);
         setUser(user);
         setUserEmail(user.contactemail);
         setUsername(user.username);
@@ -49,38 +52,12 @@ export default function FakeStackOverflow() {
         setPage("login");
     }
     const handleLogout = async () => {
-        // try {
-        //     const result = await logout(csrfToken);
-        //     if (result.success) {
-        //         setLoggedIn(false);
-        //         setUser(null);
-        //         setUserEmail('');
-        //         setUsername('');
-        //         setPage("login");
-        //     }
-        // } catch (error) {
-        //     console.error('Error logging out:', error);
-        // }
         setLoggedIn(false);
         setUser(null);
         setUserEmail('');
         setUsername('');
         setPage("login");
     };
-
-    // useEffect(() => {
-    //     const initAuth = async () => {
-    //         const token = await fetchCsrfToken();
-    //         setCsrfToken(token);
-    //         const status = await checkLoginStatus(token);
-    //         setLoggedIn(status.loggedIn);
-    //         if (status.loggedIn) {
-    //             setUser(status.user);
-    //         }
-    //     };
-    //     initAuth();
-    // }, []);
-
     let content;
     switch(page) {
         case "login":
