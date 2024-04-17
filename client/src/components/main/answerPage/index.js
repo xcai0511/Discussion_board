@@ -8,11 +8,9 @@ import { getQuestionById } from "../../../services/questionService";
 import { saveQuestionToUser } from "../../../services/userService";
 import NewAnswer from "./newAnswer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchCsrfToken } from "../../../services/authService";
 
 // Component for the Answers page
-const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
-    const [csrfToken, setCsrfToken] = useState('');
+const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username, csrfToken }) => {
     const [question, setQuestion] = useState({});
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [vote, setVote] = useState(null);
@@ -52,14 +50,6 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
             setVote(type);
         }
     };
-    useEffect(() => {
-        const initAuth = async () => {
-            const token = await fetchCsrfToken();
-            setCsrfToken(token);
-        };
-        initAuth();
-    })
-
     return (
         <>
             <AnswerHeader
@@ -94,7 +84,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
                     />
                 </button>
                 <div>
-                    <button className="bookmark_button" onClick={() => handleBookmarkClick(csrfToken)}>
+                    <button className="bookmark_button" onClick={() => handleBookmarkClick()}>
                         <FontAwesomeIcon icon="fa-solid fa-bookmark" transform="grow-10" color={isBookmarked ? "rgb(252, 172, 142)" : "black"} />
                     </button>
                 </div>
@@ -116,7 +106,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, username }) => {
                     />
                 ))}
             {loggedIn ? (
-                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} username={username}/>
+                <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} username={username} csrfToken={csrfToken}/>
             ) : (
                 <div>Please log in to add comments</div>
             )}

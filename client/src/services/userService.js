@@ -48,7 +48,7 @@ const updatePassword = async(username, oldPassword, newPassword, csrfToken) => {
     const data = {username: username, oldPassword: oldPassword, newPassword: newPassword};
     const res = await api.put(`${USER_API_URL}/updatePassword`, data, {
         headers: {
-            "X-CSRF-Token": csrfToken
+            "x-csrf-token": csrfToken
         }});
     return res.data;
 }
@@ -58,7 +58,7 @@ const saveQuestionToUser = async(username, isBookmarked, qid, csrfToken) => {
     const data = {isBookmarked: isBookmarked, qid: qid};
     const res = await api.put(`${USER_API_URL}/saveQuestionToUser/${username}`,{data}, {
         headers: {
-            'X-CSRF-Token': csrfToken
+            'x-csrf-token': csrfToken
         },
         withCredentials: true,
     } );

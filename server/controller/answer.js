@@ -3,6 +3,7 @@ const Answer = require("../models/answers");
 const Question = require("../models/questions");
 
 const router = express.Router();
+const { csrfProtection } = require("../auth-server");
 
 // Adding answer
 const addAnswer = async (req, res) => {
@@ -29,5 +30,5 @@ const addAnswer = async (req, res) => {
 };
 
 // add appropriate HTTP verbs and their endpoints to the router.
-router.post('/addAnswer', addAnswer);
+router.post('/addAnswer', csrfProtection, addAnswer);
 module.exports = router;

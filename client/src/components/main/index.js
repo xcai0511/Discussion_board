@@ -90,6 +90,7 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, userEmail, userna
                     handleNewAnswer={handleNewAnswer}
                     loggedIn={loggedIn}
                     username={username}
+                    csrfToken={csrfToken}
                 />
             );
             break;

@@ -7,7 +7,7 @@ const addAnswer = async (qid, ans, csrfToken) => {
     const data = { qid: qid, ans: ans };
     const res = await api.post(`${ANSWER_API_URL}/addAnswer`, data, {
         headers: {
-            "X-CSRF-Token": csrfToken
+            "x-csrf-token": csrfToken
         }
     });
 

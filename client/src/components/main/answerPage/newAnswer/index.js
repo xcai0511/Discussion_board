@@ -1,15 +1,13 @@
 import "./index.css";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Form from "../../baseComponents/form";
 import Textarea from "../../baseComponents/textarea";
 import { validateHyperlink } from "../../../../tool";
 import { addAnswer } from "../../../../services/answerService";
-import {fetchCsrfToken} from "../../../../services/authService";
 
-const NewAnswer = ({ qid, handleAnswer, username  }) => {
+const NewAnswer = ({ qid, handleAnswer, username, csrfToken  }) => {
     const [text, setText] = useState("");
     const [textErr, setTextErr] = useState("");
-    const [csrfToken, setCsrfToken] = useState('');
     const postAnswer = async () => {
         let isValid = true;
 
@@ -40,13 +38,6 @@ const NewAnswer = ({ qid, handleAnswer, username  }) => {
             setText("");
         }
     };
-    useEffect(() => {
-        const initAuth = async () => {
-            const token = await fetchCsrfToken();
-            setCsrfToken(token);
-        };
-        initAuth();
-    })
     return (
         <Form>
             <Textarea
