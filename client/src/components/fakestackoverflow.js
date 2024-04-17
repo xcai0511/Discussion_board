@@ -9,13 +9,14 @@ export default function FakeStackOverflow() {
     const [search, setSearch] = useState("");
     const [mainTitle, setMainTitle] = useState("All Questions");
     const [page, setPage] = useState("home");
-    const [userEmail, setUserEmail] = useState('');
-    const [username, setUsername] = useState('');
+    //const [userEmail, setUserEmail] = useState('');
+    //const [username, setUsername] = useState('');
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
     const [csrfToken, setCsrfToken] = useState('token');
 
     const setQuestionPage = (search = "", title = "All Questions") => {
+        //console.log("set question page searching: ", search, title);
         setSearch(search);
         setMainTitle(title);
         setPage("home");
@@ -35,26 +36,24 @@ export default function FakeStackOverflow() {
 
     const loginUser = (user, token) => {
         setCsrfToken(token);
-        console.log("CSRF TOKEN passed after loggin in: ", csrfToken);
-        console.log("TOKEN passed after loggin in: ", token);
         setUser(user);
-        setUserEmail(user.contactemail);
-        setUsername(user.username);
+        //setUserEmail(user.contactemail);
+        //setUsername(user.username);
         setLoggedIn(true);
         setPage("home")
     }
 
     const logoutUser = () => {
         setUser(null);
-        setUserEmail("");
+        //setUserEmail("");
         setLoggedIn(false);
         setPage("login");
     }
     const handleLogout = async () => {
         setLoggedIn(false);
         setUser(null);
-        setUserEmail('');
-        setUsername('');
+        //setUserEmail('');
+        //setUsername('');
         setPage("login");
     };
     
@@ -76,8 +75,7 @@ export default function FakeStackOverflow() {
                         search={search}
                         setQuestionPage={setQuestionPage}
                         loggedIn={loggedIn}
-                        userEmail={userEmail}
-                        username={username}
+                        user={user}
                         handleProfile={setProfilePage}
                         page={page}
                         setPage={setPage}
@@ -95,7 +93,7 @@ export default function FakeStackOverflow() {
                 setLoginPage={setLoginPage} 
                 setSignUpPage={setSignUpPage}
                 loggedIn={loggedIn} 
-                userEmail={userEmail} 
+                user={user}
                 handleLogout={handleLogout}
                 setProfilePage={setProfilePage}
                 csrfToken={csrfToken}

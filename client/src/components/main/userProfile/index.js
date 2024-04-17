@@ -6,16 +6,16 @@ import {updatePassword, updateUserProfileImage} from "../../../services/userServ
 import YourQuestion from './question';
 import { getQuestionsByFilter, deleteQuestionById } from '../../../services/questionService';
 
-const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
+const UserProfile = ({ user, loggedIn, csrfToken }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showProfileImageOptions, setShowProfileImageOptions] = useState(false);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [currPasswordError, setCurrPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
-  const [selectedProfileImage, setSelectedProfileImage] = useState('user-avatar-1.png');
   const [userQuestions, setUserQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProfileImage, setSelectedProfileImage] = useState(user.profileImage);
 
   const handleSavePassword = async () => {
     let isValid = true;
@@ -37,9 +37,12 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
       return;
     }
     try {
-      const updateResponse = await updatePassword(username, currPassword, newPassword, csrfToken);
+      const updateResponse = await updatePassword(user.username, currPassword, newPassword, csrfToken);
       if (updateResponse.success) {
         alert("Password updated successfully!");
+        setShowChangePassword(false);
+        setCurrPassword('');
+        setNewPassword('');
       } else {
         setCurrPasswordError('Invalid current password');
       }
@@ -52,10 +55,12 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
 
   const handleSaveProfileImage = async () => {
     try {
+      console.log("handle save profile image button: ", selectedProfileImage);
         // Call the service method to update profile image
-        const updateResponse = await updateUserProfileImage(username, selectedProfileImage, csrfToken);
+        const updateResponse = await updateUserProfileImage(user.username, selectedProfileImage, csrfToken);
         if (updateResponse.success) {
             alert("Profile image updated successfully!");
+            setShowProfileImageOptions(false);
         } else {
             alert("Unable to update profile image.")
         }
@@ -108,8 +113,8 @@ const UserProfile = ({ username, contactEmail, loggedIn, csrfToken }) => {
       {loggedIn ? (
           <>
             <img src={`images/${selectedProfileImage}`} alt="Profile Image" />
-            <p>Username: {username}</p>
-            <p>Contact Email: {contactEmail}</p>
+            <p>Username: {user.username}</p>
+            <p>Contact Email: {user.contactemail}</p>
             <button onClick={() => setShowChangePassword(prevState => !prevState)}>
                 {showChangePassword ? "Hide Change Password" : "Change Password"}
             </button>

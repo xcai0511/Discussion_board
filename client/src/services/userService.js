@@ -75,7 +75,7 @@ const saveQuestionToUser = async(username, isBookmarked, qid, csrfToken) => {
 // To update user profile image
 const updateUserProfileImage = async (username, profileImage, csrfToken) => {
     const data = {username: username, profileImage: profileImage};
-    const res = await api.put(`${USER_API_URL}/updateProfileImage`, data, {
+    const res = await api.put(`${USER_API_URL}/updateUserProfileImage/`, data, {
         headers: {
             "x-csrf-token": csrfToken
         }});
