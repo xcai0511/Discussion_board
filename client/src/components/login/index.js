@@ -26,38 +26,29 @@ const Login = ({ loginUser }) => {
             const csrfToken = await fetchCsrfToken();
             console.log("LOGGING IN with token: ", csrfToken);
             const res = await login(email, password, csrfToken);
-            console.log("trying to log in with ==>", email, password, res);
+            console.log("trying to log in with ==>", email, password);
+            console.log(res);
+
             if (res.success) {
                 setLoggedIn(true);
                 setUser(res.user);
                 loginUser(res.user, csrfToken);
                 console.log("log in success");
-            } else {
-                setErrors({ ...errors, form: 'Invalid credentials' });
+            // } else {
+            //     console.log(res.message);
+            // }
+            } else if (res.message === "email") {
+                //alert("Email does not exist");
+                setErrors({email: "Email does not exist"});
+            } else if (res.message === "password") {
+                //alert("Password does not match");
+                setErrors({password: "Password does not match"});
             }
         } catch (error) {
             console.error("Error during login:", error);
-            setErrors({ ...errors, form: 'An error occurred while logging in. Please try again later.' });
+            setErrors({ ...errors, form: error.message || 'An error occurred while logging in. Please try again later.' });
         }
     };
-
-    // const handleLogout = async () => {
-    //     try {
-    //         await logout(csrfToken);
-    //         setLoggedIn(false);
-    //         setUser(null);
-    //     } catch (error) {
-    //         console.error('Error logging out:', error);
-    //     }
-    // };
-    //
-    // useEffect(() => {
-    //     const initAuth = async () => {
-    //         const token = await fetchCsrfToken();
-    //         setCsrfToken(token);
-    //     };
-    //     initAuth();
-    // }, []);
 
     return (
         <div>

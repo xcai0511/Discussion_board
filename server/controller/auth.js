@@ -11,12 +11,22 @@ const login = async (req, res) => {
     try {
         const user = await User.findOne({contactemail: email});
         console.log("LOGIN with user: ", user);
+        console.log(user == null);
+        console.log(user === null);
+        if (user == null) {
+            //res.status(404).json({success: false, message: "Email does not exist"});
+            //console.log("can't find user")
+            return res.json({success: false, message: "email"});
+        }
+
         const isMatch = await verifyPassword(password, user.password);
-        if (user && isMatch) {
+        if (isMatch) {
             req.session.user = user;
             res.json({ success: true, user });
         } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
+            //res.status(401).json({ success: false, message: 'Password is incorrect' });
+            //console.log("password doesn't match")
+            res.json({success: false, message: "password"});
         }
     } catch (e) {
         console.error("error logging in: ", e);
