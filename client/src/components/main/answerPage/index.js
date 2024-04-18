@@ -24,19 +24,6 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let res = await getQuestionById(qid);
-            setQuestion(res || {});
-
-            // Check if the current question ID exists in the user's saved_questions array
-            if (loggedIn && user.saved_questions.includes(qid)) {
-                setIsBookmarked(true);
-            }
-        };
-        fetchData().catch((e) => console.log(e));
-    }, [qid, loggedIn, user]);
-
     const handleBookmarkClick = async () => {
         // If user is not logged in
         if (!loggedIn) {
@@ -62,6 +49,19 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
             setVote(type);
         }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            let res = await getQuestionById(qid);
+            setQuestion(res || {});
+
+            // Check if the current question ID exists in the user's saved_questions array
+            if (loggedIn && user.saved_questions.includes(qid)) {
+                setIsBookmarked(true);
+            }
+        };
+        fetchData().catch((e) => console.log(e));
+    }, [qid, loggedIn, user]);
     return (
         <>
             <AnswerHeader
