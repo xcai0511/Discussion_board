@@ -99,46 +99,53 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                 title={question && question.title}
                 handleNewQuestion={handleNewQuestion}
             />
-            <div className="left_main">
-                <button
-                    id="upvote_button"
-                    className={`vote_button ${vote === "upvote" ? "voted" : ""}`}
-                    onClick={() => handleVote("upvote")}
-                >
-                    <FontAwesomeIcon icon="fa-solid fa-caret-up" transform="grow-10" />
-                </button>
-                <div className="question_score">
-                    <h2>{question.score}</h2>
-                </div>
-                <button
-                    id="downvote_button"
-                    className={`vote_button ${vote === "downvote" ? "voted" : ""}`}
-                    onClick={() => handleVote("downvote")}
-                >
-                    <FontAwesomeIcon icon="fa-solid fa-caret-down" transform="grow-10" />
-                </button>
-                <div>
-                    <button className="bookmark_button" onClick={() => handleBookmarkClick()}>
-                        <FontAwesomeIcon icon="fa-solid fa-bookmark" transform="grow-10" color={isBookmarked ? "rgb(252, 172, 142)" : "black"} />
+            <div className="container">
+                <div className="left_main actions">
+                    <button
+                        id="upvote_button"
+                        className={`vote_button ${vote === "upvote" ? "voted" : ""}`}
+                        onClick={() => handleVote("upvote")}
+                    >
+                        <FontAwesomeIcon icon="fa-solid fa-caret-up" transform="grow-10" />
                     </button>
+                    <div className="question_score">
+                        <h2>{question.score}</h2>
+                    </div>
+                    <button
+                        id="downvote_button"
+                        className={`vote_button ${vote === "downvote" ? "voted" : ""}`}
+                        onClick={() => handleVote("downvote")}
+                    >
+                        <FontAwesomeIcon icon="fa-solid fa-caret-down" transform="grow-10" />
+                    </button>
+                    <div>
+                        <button className="bookmark_button" onClick={() => handleBookmarkClick()}>
+                            <FontAwesomeIcon icon="fa-solid fa-bookmark" transform="grow-10" color={isBookmarked ? "rgb(252, 172, 142)" : "black"} />
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <QuestionBody
-                views={question && question.views}
-                text={question && question.text}
-                askby={question && question.asked_by}
-                meta={question && getMetaData(new Date(question.ask_date_time))}
-            />
-            {question &&
-                question.answers &&
-                question.answers.map((a, idx) => (
-                    <Answer
-                        key={idx}
-                        text={a.text}
-                        ansBy={a.ans_by}
-                        meta={getMetaData(new Date(a.ans_date_time))}
+                <div>
+                    <QuestionBody
+                        views={question && question.views}
+                        text={question && question.text}
+                        askby={question && question.asked_by}
+                        meta={question && getMetaData(new Date(question.ask_date_time))}
                     />
-                ))}
+                    {question &&
+                        question.answers &&
+                        question.answers.map((a, idx) => (
+                            <Answer
+                                key={idx}
+                                text={a.text}
+                                ansBy={a.ans_by}
+                                meta={getMetaData(new Date(a.ans_date_time))}
+                            />
+                        ))}
+                </div>
+
+            </div>
+
+
             {loggedIn ? (
                 <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} user={user} csrfToken={csrfToken}/>
             ) : (
