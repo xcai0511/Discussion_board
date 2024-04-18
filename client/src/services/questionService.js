@@ -42,7 +42,7 @@ const deleteQuestionById = async (qid, csrfToken) => {
 
 // To update the question with the new tag
 const updateQuestionWithTag = async (qid, newTag, csrfToken) => {
-    const data = { qid, newTag };
+    const data = { qid: qid, newTag: newTag };
     const res = await api.put(`${QUESTION_API_URL}/updateQuestionWithTag`, data, {
         headers: {
             "X-CSRF-Token": csrfToken

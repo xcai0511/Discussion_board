@@ -7,11 +7,50 @@ import { updateQuestionWithTag } from "../../../../services/questionService";
 const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
     const [newTag, setNewTag] = useState("");
     const [showAddTagInput, setShowAddTagInput] = useState(false);
+    const [tags, setTags] = useState(q.tags);
+
+    const [tagErr, setTagErr] = useState("");
 
     const handleAddTag = async () => {
         try {
-            const updatedQuestion = await updateQuestionWithTag(q._id, newTag, csrfToken);
-            console.log("Tag added successfully:", updatedQuestion);
+            // Reset tag error message
+            setTagErr("");
+
+            // Split the new tag string and filter out empty tags
+            let newTags = newTag.split(" ").filter(tag => tag.trim() !== "");
+
+            // Validate the number of tags
+            if (newTags.length === 0) {
+                setTagErr("Should have at least 1 tag");
+                return;
+            } else if (newTags.length > 5) {
+                setTagErr("Cannot have more than 5 tags");
+                return;
+            }
+
+            // Validate tag length
+            for (let tag of newTags) {
+                if (tag.length > 20) {
+                    setTagErr("New tag length cannot be more than 20");
+                    return;
+                }
+            }
+
+            // Check if any of the new tags already exist in the list of tags associated with the question
+            if (newTags.some(newTag => tags.some(tag => tag.name.toLowerCase() === newTag.toLowerCase()))) {
+                alert("One or more tags you are trying to add are already associated with this question");
+                return;
+            }
+
+            // Add each new tag to the question
+            for (let tag of newTags) {
+                const updatedQuestion = await updateQuestionWithTag(q._id, tag, csrfToken);
+                console.log("Tag added successfully:", updatedQuestion);
+                // Update the list of tags displayed on the screen
+                setTags([...tags, { name: tag }]);
+            }
+
+            // Reset new tag input field
             setNewTag("");
             setShowAddTagInput(false);
         } catch (error) {
@@ -52,6 +91,7 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
                             <button onClick={handleAddTag}>Add</button>
                         </>
                     )}
+                    {tagErr && <div className="tag_error">{tagErr}</div>}
                 </div>
             </div>
             <div className="lastActivity">

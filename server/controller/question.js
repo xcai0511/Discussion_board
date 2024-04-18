@@ -90,22 +90,13 @@ const deleteQuestionById = async (req, res) => {
 };
 
 const updateQuestionWithTag = async (req, res) => {
-    const { questionId, newTagName } = req.body;
+    const { qid, newTag }  = req.body
     try {
-        let tagId;
-        // Check if the tag already exists, if not, add it
-        let tag = await Tag.findOne({ name: newTagName });
-        if (!tag) {
-            // Add the new tag
-            const newTag = new Tag({ name: newTagName });
-            const savedTag = await newTag.save();
-            tagId = savedTag._id;
-        } else {
-            tagId = tag._id;
-        }
+        // Add the new tag or retrieve its ID if it already exists
+        const tagId = await addTag(newTag);
 
         // Find the question by its ID
-        const question = await Question.findById(questionId);
+        const question = await Question.findById(qid);
         if (!question) {
             return res.status(404).json({ message: 'Question not found' });
         }
