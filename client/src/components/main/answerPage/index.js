@@ -5,7 +5,7 @@ import AnswerHeader from "./header";
 import "./index.css";
 import QuestionBody from "./questionBody";
 import { getQuestionById, upvoteQuestion, downvoteQuestion } from "../../../services/questionService";
-import { saveQuestionToUser } from "../../../services/userService";
+import { getUserById, saveQuestionToUser } from "../../../services/userService";
 import NewAnswer from "./newAnswer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -91,15 +91,17 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
             if (!loggedIn) {
                 return;
             }
+
+            let currUser = await getUserById(user._id);
             // Check if the current question ID exists in the user's saved_questions array
-            if (user.saved_questions.includes(qid)) {
+            if (currUser.saved_questions.includes(qid)) {
                 setIsBookmarked(true);
             }
             // Check if the current question is already been voted by user
-            if (user.upvoted_questions.includes(qid)) {
+            if (currUser.upvoted_questions.includes(qid)) {
                 setVote("upvote");
             }
-            if (user.downvoted_questions.includes(qid)) {
+            if (currUser.downvoted_questions.includes(qid)) {
                 setVote("downvote");
             }
         };
