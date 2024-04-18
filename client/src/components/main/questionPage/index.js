@@ -6,15 +6,17 @@ import { getQuestionsByFilter } from "../../../services/questionService";
 import { useEffect, useState } from "react";
 
 const QuestionPage = ({
-                          title_text = "All Questions",
-                          order,
-                          search,
-                          setQuestionOrder,
-                          clickTag,
-                          handleAnswer,
-                          handleNewQuestion,
-                      }) => {
+    title_text = "All Questions",
+    order,
+    search,
+    setQuestionOrder,
+    clickTag,
+    handleAnswer,
+    handleNewQuestion,
+}) => {
+
     const [qlist, setQlist] = useState([]);
+
     useEffect(() => {
         const fetchData = async () => {
             let res = await getQuestionsByFilter(order, search);
@@ -23,6 +25,7 @@ const QuestionPage = ({
 
         fetchData().catch((e) => console.log(e));
     }, [order, search]);
+    
     return (
         <>
             <QuestionHeader
