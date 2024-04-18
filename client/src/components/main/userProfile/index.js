@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {updatePassword, updateUserProfileImage} from "../../../services/userService";
+import {getUserById, updatePassword, updateUserProfileImage} from "../../../services/userService";
 import YourQuestion from './question';
 import { getQuestionsByFilter, deleteQuestionById } from '../../../services/questionService';
 import './index.css';
@@ -100,11 +100,16 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
   };
   
   useEffect(() => {
-    if (loggedIn) {
-      fetchUserQuestions(); // Fetch user's questions when logged in
-      setSelectedProfileImage(user.profileImage);
-    }
-  }, [loggedIn]);
+    const fetchData = async () => {
+      if (loggedIn) {
+        fetchUserQuestions(); // Fetch user's questions when logged in
+        const currUser = await getUserById(user._id);
+        console.log(currUser);
+        setSelectedProfileImage(currUser.profileImage);
+      }
+    };
+    fetchData().catch((e) => console.log(e));
+  }, [loggedIn, user]);
 
   return (
     <div className="userProfile_container">
