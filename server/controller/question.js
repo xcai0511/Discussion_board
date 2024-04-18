@@ -2,7 +2,7 @@ const express = require("express");
 const Question = require("../models/questions");
 const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question');
 const { csrfProtection } = require("../auth-server");
-const Tag = require("../models/tags");
+const User = require("../models/users");
 
 const router = express.Router();
 
@@ -111,6 +111,88 @@ const updateQuestionWithTag = async (req, res) => {
     }
 };
 
+const upvoteQuestion = async (req, res) => {
+    const {uid} = req.body;
+    const {qid} = req.params;
+    console.log("upvoting quesiton: ", uid, qid);
+    try {
+        const user = await User.findById(uid);
+        const question = await Question.findById(qid);
+        if (!user || !question) {
+            return res.json({success: false, message: "User or question not found"});
+        }
+        // check if already upvoted
+        if (!user.upvoted_questions.includes(qid)) {
+            // adding upvote
+            user.upvoted_questions.push(qid);
+            question.votes += 1;
+            question.score += 1;
+            // if already downvoted, remove the downvote
+            if (user.downvoted_questions.includes(qid)) {
+                user.downvoted_questions.pull(qid);
+                question.votes -= 1;
+                question.score += 1;
+            }
+            await user.save();
+            await question.save();
+            return res.json({success: true, message: "upvote success" });
+        } else {
+            // removing upvote
+            user.upvoted_questions.pull(qid);
+            question.votes -= 1;
+            question.score -= 1;
+            await user.save();
+            await question.save();
+            return res.json({success: true, message: "upvote removed"});
+        }
+    } catch (e) {
+        console.error("Error upvoting:", e);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+const downvoteQuestion = async (req, res) => {
+    const {uid} = req.body;
+    const {qid} = req.params;
+    console.log("downvoting quesiton: ", uid, qid);
+    try {
+        const user = await User.findById(uid);
+        const question = await Question.findById(qid);
+        if (!user || !question) {
+            return res.json({success: false, message: "User or question not found"});
+        }
+
+        // check if already downvoted
+        if (!user.downvoted_questions.includes(qid)) {
+            // adding downvote
+            user.downvoted_questions.push(qid);
+            question.votes += 1;
+            question.score -= 1;
+
+            // if already upvoted, remove the upvote
+            if (user.upvoted_questions.includes(qid)) {
+                user.upvoted_questions.pull(qid);
+                question.votes -= 1;
+                question.score -= 1;
+            }
+            await user.save();
+            await question.save();
+
+            return res.json({success: true, message: "downvote success" });
+        } else {
+            // removing downvote
+            user.downvoted_questions.pull(qid);
+            question.votes -= 1;
+            question.score += 1;
+            await user.save();
+            await question.save();
+            return res.json({success: true, message: "downvote removed"});
+        }
+    } catch (e) {
+        console.error("Error downvoting:", e);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 // add appropriate HTTP verbs and their endpoints to the router
 router.get('/getQuestion', getQuestionsByFilter);
@@ -118,5 +200,7 @@ router.get('/getQuestionById/:qid', getQuestionById);
 router.post('/addQuestion', csrfProtection, addQuestion);
 router.delete('/deleteQuestionById/:qid', deleteQuestionById);
 router.put('/updateQuestionWithTag', csrfProtection, updateQuestionWithTag);
+router.put('/upvote/:qid', csrfProtection, upvoteQuestion);
+router.put('/downvote/:qid', csrfProtection, downvoteQuestion);
 
 module.exports = router;

@@ -8,6 +8,8 @@ module.exports = mongoose.Schema(
         password: {type: String, required: true},
         profileImage: { type: String, default: "user-avatar-1.png" },
         saved_questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
+        upvoted_questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
+        downvoted_questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
     },
 
     { collection: "User" }

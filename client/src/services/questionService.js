@@ -38,6 +38,16 @@ const deleteQuestionById = async (qid, csrfToken) => {
     });
 
     return res.data;
+};
+
+const upvoteQuestion = async (qid, uid, csrfToken) => {
+    const data = {uid: uid};
+    const res = await api.put(`${QUESTION_API_URL}/upvote/${qid}`, data, {
+        headers: {
+            "x-csrf-Token": csrfToken
+        }
+    });
+    return res.data;
 }
 
 // To update the question with the new tag
@@ -51,4 +61,22 @@ const updateQuestionWithTag = async (qid, newTag, csrfToken) => {
     return res.data;
 };
 
-export { getQuestionsByFilter, getQuestionById, addQuestion, deleteQuestionById, updateQuestionWithTag };
+const downvoteQuestion = async (qid, uid, csrfToken) => {
+    const data = {uid: uid};
+    const res = await api.put(`${QUESTION_API_URL}/downvote/${qid}`, data, {
+        headers: {
+            "x-csrf-Token": csrfToken
+        }
+    });
+    return res.data;
+}
+
+export { 
+    getQuestionsByFilter, 
+    getQuestionById, 
+    addQuestion, 
+    deleteQuestionById, 
+    upvoteQuestion,
+    updateQuestionWithTag,
+    downvoteQuestion
+ };
