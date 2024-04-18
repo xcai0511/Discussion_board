@@ -30,7 +30,6 @@ const getQuestionsByFilter = async (req, res) => {
 const getQuestionById = async (req, res) => {
     try {
         const id = req.params.qid;
-        console.log("get question by id, id: ", id);
         const updatedQuestion = await Question.findOneAndUpdate(
             { _id: id },
             { $inc: { views: 1 } },
@@ -114,7 +113,6 @@ const updateQuestionWithTag = async (req, res) => {
 const upvoteQuestion = async (req, res) => {
     const {uid} = req.body;
     const {qid} = req.params;
-    console.log("upvoting quesiton: ", uid, qid);
     try {
         const user = await User.findById(uid);
         const question = await Question.findById(qid);
@@ -154,7 +152,6 @@ const upvoteQuestion = async (req, res) => {
 const downvoteQuestion = async (req, res) => {
     const {uid} = req.body;
     const {qid} = req.params;
-    console.log("downvoting quesiton: ", uid, qid);
     try {
         const user = await User.findById(uid);
         const question = await Question.findById(qid);
