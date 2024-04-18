@@ -3,7 +3,6 @@ import { useState } from "react";
 import { getMetaData } from "../../../../tool";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { updateQuestionWithTag } from "../../../../services/questionService";
-import { useEffect } from "react";
 
 const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
     const [newTag, setNewTag] = useState("");
@@ -46,19 +45,17 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
             for (let tag of newTags) {
                 const updatedQuestion = await updateQuestionWithTag(q._id, tag, csrfToken);
                 console.log("Tag added successfully:", updatedQuestion);
+                setTags(updatedQuestion.tags);
             }
 
             // Reset new tag input field
             setNewTag("");
             setShowAddTagInput(false);
+
         } catch (error) {
             console.error("Error adding tag:", error);
         }
     };
-
-    useEffect(() => {
-        setTags(q.tags);
-    }, [q.tags]);
 
     return (
         <div className="question right_padding">
@@ -70,7 +67,7 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
             <div className="question_mid">
                 <div className="postTitle">{q.title}</div>
                 <div className="question_tags">
-                    {q.tags.map((tag, idx) => {
+                    {tags.map((tag, idx) => {
                         return (
                             <button
                                 key={idx}

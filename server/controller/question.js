@@ -95,15 +95,15 @@ const updateQuestionWithTag = async (req, res) => {
         // Add the new tag or retrieve its ID if it already exists
         const tagId = await addTag(newTag);
 
-        // Find the question by its ID
-        const question = await Question.findById(qid);
-        if (!question) {
+        const updatedQuestion = await Question.findByIdAndUpdate(
+            qid,
+            { $addToSet: { tags: tagId } }, // Use $addToSet to avoid duplicates
+            { new: true } // Return the modified document
+        ).populate('tags'); // Populate the 'tags' field
+
+        if (!updatedQuestion) {
             return res.status(404).json({ message: 'Question not found' });
         }
-        
-        // Add the tag to the question
-        question.tags.push(tagId);
-        const updatedQuestion = await question.save();
         return res.status(200).json(updatedQuestion);
     } catch (error) {
         console.error('Error updating question with tag:', error);
