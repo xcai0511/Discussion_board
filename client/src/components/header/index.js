@@ -1,21 +1,30 @@
 import "./index.css";
 import {useState} from "react";
-import {logout} from "../../services/authService"
+import {logout} from "../../services/authService";
+import SearchBar from "./searchBar";
+import UserInfo from "./userInfo";
 
-const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn, user, handleLogout, setProfilePage, csrfToken }) => {
+const Header = ({ 
+    search, 
+    setQuestionPage, 
+    setLoginPage, 
+    setSignUpPage, 
+    loggedIn, 
+    user, 
+    handleLogout, 
+    setProfilePage, 
+    csrfToken 
+}) => {
+
     const [val, setVal] = useState(search);
-    //const [csrfToken, setCsrfToken] = useState('');
 
     const handleProfile = () => {
-        console.log("profile button clicked");
         setProfilePage();
     };
 
     const handleLogoutClick = async () => {
         try {
-            console.log("Logout clicked with token: ", csrfToken);
             const response = await logout(csrfToken);
-            console.log(response);
             if (response.success) {
                 handleLogout()
             }
@@ -24,32 +33,30 @@ const Header = ({ search, setQuestionPage, setLoginPage, setSignUpPage, loggedIn
         }
     }
 
+    const handleSearchEnter = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            setQuestionPage(e.target.value, 'Search Results');
+        }
+    };
+
     return (
         <div id="header" className="header">
             <div></div>
             <div className="title">Fake Stack Overflow</div>
-            <input
-                id="searchBar"
-                placeholder="Search..."
-                type="text"
+            <SearchBar
                 value={val}
-                onChange={(e) => {
-                    setVal(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        setQuestionPage(e.target.value, "Search Results");
-                    }
-                }}
+                onChange={(e) => setVal(e.target.value)}
+                onEnter={handleSearchEnter}
             />
             {loggedIn ? (
-                <div className="user-info">
-                    <button className="user_email" onClick={handleProfile}><div>{user.contactemail}</div></button>
-                    <button className="logout_button" onClick={handleLogoutClick}><div>Logout</div></button>
-                </div>
+                <UserInfo
+                    user={user}
+                    onProfileClick={handleProfile}
+                    onLogoutClick={handleLogoutClick}
+                />
             ) : (
-                <div>
+                <div className="header_buttons">
                     <button className="login_button" onClick={setLoginPage}><div>Login</div></button>
                     <button className="signup_button" onClick={setSignUpPage}><div>Sign Up</div></button>
                 </div>

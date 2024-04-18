@@ -1,5 +1,6 @@
 .answer {
     display: flex;
+    width: 950px;
     flex-direction: row;
     border-bottom: #000000 1px dashed;
 }

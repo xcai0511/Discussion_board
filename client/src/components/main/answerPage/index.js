@@ -105,6 +105,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
         };
         fetchData().catch((e) => console.log(e));
     }, [qid, loggedIn, user]);
+
     return (
         <>
             <AnswerHeader
@@ -155,14 +156,12 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                             />
                         ))}
                 </div>
-
             </div>
-
 
             {loggedIn ? (
                 <NewAnswer qid={qid} handleAnswer={() => handleNewAnswer(qid)} user={user} csrfToken={csrfToken}/>
             ) : (
-                <div>Please log in to add comments</div>
+                <div className="log_in_msg">Please log in to add comments</div>
             )}
 
         </>
