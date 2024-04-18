@@ -10,7 +10,6 @@ const addUser = async (req, res) => {
     try {
         const { username, contactemail, password } = req.body.user;
         const hashedPassword = await hashPassword(password);
-        console.log("hashed password for adding new user: ", hashedPassword);
 
         // Check if a user with the same email already exists
         let existingUser = await User.findOne({ contactemail: contactemail });
@@ -27,7 +26,6 @@ const addUser = async (req, res) => {
         });
 
         const savedUser = await newUser.save();
-        console.log('Saved user:', savedUser);
 
         // Return the saved user
         res.status(201).json(savedUser);
@@ -73,18 +71,9 @@ const getUserByEmail = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.toString() });
     }
 };
-
-// TODO: Edit User
-const editUser = async (req, res) => {
-    console.log(req);
-    console.log(res);
-    return;
-}
-
 // To get user's saved questions
 const getSavedQuestions = async (req, res) => {
     const email = req.params.email;
-    console.log("getsavedquestions ===> ", email);
     try {
         // Find the user by email and populate the saved_questions array
         const user = await User.findOne({ contactemail: email })
@@ -135,10 +124,7 @@ const updatePassword = async (req, res) => {
 const saveQuestionToUser = async (req, res) => {
 
     const { isBookmarked, qid } = req.body.data;
-    console.log("save question to user controller =====", req.body);
-
     const { username } = req.params;
-    console.log("save question to user controller, req.params", req.params);
 
     const questionId = qid.toString();
 
@@ -150,10 +136,8 @@ const saveQuestionToUser = async (req, res) => {
 
         if (isBookmarked) {
             user.saved_questions.push(questionId);
-            console.log("Question ID being pushed is ===== ", questionId);
         } else {
             user.saved_questions = user.saved_questions.filter(id => id.toString() !== questionId);
-            console.log("Question ID being removed from saved posts is ===== ", questionId);
         }
 
         await user.save();
@@ -166,7 +150,6 @@ const saveQuestionToUser = async (req, res) => {
 
 // To update user profile image
 const updateUserProfileImage = async (req, res) => {
-    console.log("updating profile image: ", req.body);
     const { username, profileImage } = req.body;
     try {
         // Find the user by username and update the profileImage field
@@ -196,7 +179,6 @@ router.post('/addUser', addUser);
 router.get('/getSavedQuestions/:email', csrfProtection, getSavedQuestions);
 router.get('/getUserById/:uid', getUserById);
 router.get('/getUserByEmail/:email', getUserByEmail);
-router.put('/editUser', editUser);
 router.put('/updatePassword', csrfProtection, updatePassword);
 router.put('/saveQuestionToUser/:username', csrfProtection, saveQuestionToUser);
 router.put('/updateUserProfileImage', csrfProtection, updateUserProfileImage);

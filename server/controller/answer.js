@@ -9,13 +9,11 @@ const { csrfProtection } = require("../auth-server");
 const addAnswer = async (req, res) => {
     try {
         const {qid, ans} = req.body;
-        console.log("add answer: ", req.body);
         const savedAnswer = await Answer.create({
             text: ans.text,
             ans_by: ans.ans_by,
             ans_date_time: ans.ans_date_time
         })
-        console.log("saved answer: ", savedAnswer);
 
         await Question.findOneAndUpdate(
             { _id: qid },
