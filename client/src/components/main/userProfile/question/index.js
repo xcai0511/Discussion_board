@@ -3,12 +3,12 @@ import { useState } from "react";
 import { getMetaData } from "../../../../tool";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { updateQuestionWithTag } from "../../../../services/questionService";
+import { useEffect } from "react";
 
 const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
     const [newTag, setNewTag] = useState("");
     const [showAddTagInput, setShowAddTagInput] = useState(false);
     const [tags, setTags] = useState(q.tags);
-
     const [tagErr, setTagErr] = useState("");
 
     const handleAddTag = async () => {
@@ -46,8 +46,6 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
             for (let tag of newTags) {
                 const updatedQuestion = await updateQuestionWithTag(q._id, tag, csrfToken);
                 console.log("Tag added successfully:", updatedQuestion);
-                // Update the list of tags displayed on the screen
-                setTags([...tags, { name: tag }]);
             }
 
             // Reset new tag input field
@@ -57,6 +55,10 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
             console.error("Error adding tag:", error);
         }
     };
+
+    useEffect(() => {
+        setTags(q.tags);
+    }, [q.tags]);
 
     return (
         <div className="question right_padding">
