@@ -10,6 +10,45 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
     const [tags, setTags] = useState(q.tags);
     const [tagErr, setTagErr] = useState("");
 
+    // const validateTags = (tags) => {
+    //     if (tags.length === 0) {
+    //         setTagErr("Should have at least 1 tag");
+    //         return false;
+    //     } else if (tags.length > 5) {
+    //         setTagErr("Cannot have more than 5 tags");
+    //         return false;
+    //     }
+
+    //     for (let tag of tags) {
+    //         if (tag.length > 20) {
+    //             setTagErr("New tag length cannot be more than 20");
+    //             return false;
+    //         }
+    //     }
+
+    //     return true;
+    // };
+
+    // const checkExistingTags = async (newTags) => {
+    //     try {
+    //         const existingTags = await Promise.all(newTags.map(async (tag) => {
+    //             const response = await updateQuestionWithTag(q._id, tag, csrfToken);
+    //             return response.tags.some((existingTag) => existingTag.name.toLowerCase() === tag.toLowerCase());
+    //         }));
+
+    //         if (existingTags.some((exists) => exists)) {
+    //             alert("One or more tags you are trying to add are already associated with this question");
+    //             return true;
+    //         }
+
+    //         return false;
+    //     } catch (error) {
+    //         console.error("Error checking existing tags:", error);
+    //         return true;
+    //     }
+    // };
+
+    // TODO: Split into smaller functions
     const handleAddTag = async () => {
         try {
             // Reset tag error message
