@@ -14,6 +14,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     const [question, setQuestion] = useState({});
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [vote, setVote] = useState(null);
+    const [score, setScore] = useState("");
 
     const handleNewAnswer = async (qid) => {
         try {
@@ -82,12 +83,24 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
 
     useEffect(() => {
         const fetchData = async () => {
+
             let res = await getQuestionById(qid);
             setQuestion(res || {});
+            setScore(res.score);
 
+            if (!loggedIn) {
+                return;
+            }
             // Check if the current question ID exists in the user's saved_questions array
-            if (loggedIn && user.saved_questions.includes(qid)) {
+            if (user.saved_questions.includes(qid)) {
                 setIsBookmarked(true);
+            }
+            // Check if the current question is already been voted by user
+            if (user.upvoted_questions.includes(qid)) {
+                setVote("upvote");
+            }
+            if (user.downvoted_questions.includes(qid)) {
+                setVote("downvote");
             }
         };
         fetchData().catch((e) => console.log(e));
@@ -109,7 +122,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                         <FontAwesomeIcon icon="fa-solid fa-caret-up" transform="grow-10" />
                     </button>
                     <div className="question_score">
-                        <h2>{question.score}</h2>
+                        <h2>{score}</h2>
                     </div>
                     <button
                         id="downvote_button"
