@@ -181,7 +181,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
                 <p>You haven&apos;t posted any questions yet.</p>
               ) : (
                 userQuestions.map(question => (
-                  <YourQuestion key={question._id} q={question} handleDeleteQuestion={() => handleDeleteQuestion(question._id)} />
+                  <YourQuestion key={question._id} q={question} csrfToken={csrfToken} handleDeleteQuestion={() => handleDeleteQuestion(question._id)} />
                 ))
               )}
             </div>

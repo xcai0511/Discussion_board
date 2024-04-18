@@ -58,3 +58,7 @@
     border: none;
     background-color: white;
 }
+
+.addTag_button {
+    margin-left: 0.5rem;
+}

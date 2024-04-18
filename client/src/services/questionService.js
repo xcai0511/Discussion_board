@@ -40,4 +40,15 @@ const deleteQuestionById = async (qid, csrfToken) => {
     return res.data;
 }
 
-export { getQuestionsByFilter, getQuestionById, addQuestion, deleteQuestionById };
+// To update the question with the new tag
+const updateQuestionWithTag = async (qid, newTag, csrfToken) => {
+    const data = { qid, newTag };
+    const res = await api.put(`${QUESTION_API_URL}/updateQuestionWithTag`, data, {
+        headers: {
+            "X-CSRF-Token": csrfToken
+        }
+    });
+    return res.data;
+};
+
+export { getQuestionsByFilter, getQuestionById, addQuestion, deleteQuestionById, updateQuestionWithTag };

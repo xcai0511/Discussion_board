@@ -2,6 +2,7 @@ const express = require("express");
 const Question = require("../models/questions");
 const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question');
 const { csrfProtection } = require("../auth-server");
+const Tag = require("../models/tags");
 
 const router = express.Router();
 
@@ -88,10 +89,43 @@ const deleteQuestionById = async (req, res) => {
     }
 };
 
+const updateQuestionWithTag = async (req, res) => {
+    const { questionId, newTagName } = req.body;
+    try {
+        let tagId;
+        // Check if the tag already exists, if not, add it
+        let tag = await Tag.findOne({ name: newTagName });
+        if (!tag) {
+            // Add the new tag
+            const newTag = new Tag({ name: newTagName });
+            const savedTag = await newTag.save();
+            tagId = savedTag._id;
+        } else {
+            tagId = tag._id;
+        }
+
+        // Find the question by its ID
+        const question = await Question.findById(questionId);
+        if (!question) {
+            return res.status(404).json({ message: 'Question not found' });
+        }
+        
+        // Add the tag to the question
+        question.tags.push(tagId);
+        const updatedQuestion = await question.save();
+        return res.status(200).json(updatedQuestion);
+    } catch (error) {
+        console.error('Error updating question with tag:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
 // add appropriate HTTP verbs and their endpoints to the router
 router.get('/getQuestion', getQuestionsByFilter);
 router.get('/getQuestionById/:qid', getQuestionById);
 router.post('/addQuestion', csrfProtection, addQuestion);
 router.delete('/deleteQuestionById/:qid', deleteQuestionById);
+router.put('/updateQuestionWithTag', csrfProtection, updateQuestionWithTag);
 
 module.exports = router;
