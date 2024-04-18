@@ -1,0 +1,12 @@
+.link_to_login {
+    display: flex;
+    align-items: center;
+}
+
+.link_to_login h5 {
+    margin-right: 0.5rem;
+}
+
+.back_button_container {
+    margin-bottom: 1rem;
+}
