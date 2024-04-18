@@ -10,7 +10,6 @@ import UserProfile from "./userProfile";
 import UsersPage from "./usersPage";
 
 const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfile, page, setPage, csrfToken }) => {
-    //const [page, setPage] = useState("home");
     const [questionOrder, setQuestionOrder] = useState("newest");
     const [qid, setQid] = useState("");
     let selected = "";
@@ -37,10 +36,6 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
 
     const handleNewQuestion = () => {
         setPage("newQuestion");
-    };
-
-    const handleNewAnswer = () => {
-        // setPage("newAnswer");
     };
 
     const handleSavedPosts = () => {
@@ -97,10 +92,8 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
                 <AnswerPage
                     qid={qid}
                     handleNewQuestion={handleNewQuestion}
-                    handleNewAnswer={handleNewAnswer}
                     loggedIn={loggedIn}
                     user={user}
-                    //username={user.username}
                     csrfToken={csrfToken}
                 />
             );
@@ -112,7 +105,6 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
                 <NewQuestion
                     handleQuestions={handleQuestions}
                     user={user}
-                    //username={user.username}
                     loggedIn={loggedIn}
                     csrfToken={csrfToken}
                 />;
@@ -126,7 +118,6 @@ const Main = ({ search = "", title, setQuestionPage, loggedIn, user, handleProfi
                 handleAnswer={handleAnswer}
                 loggedIn={loggedIn}
                 user={user}
-                // userEmail={user.contactemail}
             />;
             break;
         }
