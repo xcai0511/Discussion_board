@@ -134,16 +134,16 @@ const upvoteQuestion = async (req, res) => {
                 question.score += 1;
             }
             await user.save();
-            await question.save();
-            return res.json({success: true, message: "upvote success" });
+            const updatedQuestion = await question.save();
+            return res.json({success: true, message: "upvote success", updatedQuestion });
         } else {
             // removing upvote
             user.upvoted_questions.pull(qid);
             question.votes -= 1;
             question.score -= 1;
             await user.save();
-            await question.save();
-            return res.json({success: true, message: "upvote removed"});
+            const updatedQuestion = await question.save();
+            return res.json({success: true, message: "upvote removed", updatedQuestion});
         }
     } catch (e) {
         console.error("Error upvoting:", e);
@@ -176,17 +176,17 @@ const downvoteQuestion = async (req, res) => {
                 question.score -= 1;
             }
             await user.save();
-            await question.save();
+            const updatedQuestion = await question.save();
 
-            return res.json({success: true, message: "downvote success" });
+            return res.json({success: true, message: "downvote success", updatedQuestion });
         } else {
             // removing downvote
             user.downvoted_questions.pull(qid);
             question.votes -= 1;
             question.score += 1;
             await user.save();
-            await question.save();
-            return res.json({success: true, message: "downvote removed"});
+            const updatedQuestion = await question.save();
+            return res.json({success: true, message: "downvote removed", updatedQuestion });
         }
     } catch (e) {
         console.error("Error downvoting:", e);

@@ -66,7 +66,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     const handleUpvote = async () => {
         try {
             const res = await upvoteQuestion(qid, user._id, csrfToken);
-            console.log(res);
+            setScore(res.updatedQuestion.score);
         } catch (e) {
             console.error("Error upvoting question:", e);
         }
@@ -75,7 +75,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     const handleDownvote = async () => {
         try {
             const res = await downvoteQuestion(qid, user._id, csrfToken);
-            console.log(res);
+            setScore(res.updatedQuestion.score);
         } catch (e) {
             console.error("Error downvoting question:", e);
         }
