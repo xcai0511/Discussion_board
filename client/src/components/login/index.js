@@ -35,8 +35,11 @@ const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
             } else if (res.message === "email") {
                 //alert("Email does not exist");
                 setErrors({email: "Email does not exist"});
+                setEmail("");
+                setPassword("");
             } else if (res.message === "password") {
                 setErrors({password: "Password does not match"});
+                setPassword("")
             }
         } catch (error) {
             console.error("Error during login:", error);
