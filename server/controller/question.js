@@ -89,190 +89,95 @@ const deleteQuestionById = async (req, res) => {
     }
 };
 
-// To upvote a question
 const upvoteQuestion = async (req, res) => {
-    const { questionId } = req.params;
-    const { userId } = req.body;
-
+    const {uid} = req.body;
+    const {qid} = req.params;
+    console.log("upvoting quesiton: ", uid, qid);
     try {
-        // Find the question by ID
-        const question = await Question.findById(questionId);
-
-        if (!question) {
-            return res.status(404).json({ message: "Question not found" });
+        const user = await User.findById(uid);
+        const question = await Question.findById(qid);
+        if (!user || !question) {
+            return res.json({success: false, message: "User or question not found"});
         }
-
-        // Check if the user has already upvoted the question
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        // check if already upvoted
+        if (!user.upvoted_questions.includes(qid)) {
+            // adding upvote
+            user.upvoted_questions.push(qid);
+            question.votes += 1;
+            question.score += 1;
+            // if already downvoted, remove the downvote
+            if (user.downvoted_questions.includes(qid)) {
+                user.downvoted_questions.pull(qid);
+                question.votes -= 1;
+                question.score += 1;
+            }
+            await user.save();
+            await question.save();
+            return res.json({success: true, message: "upvote success" });
+        } else {
+            // removing upvote
+            user.upvoted_questions.pull(qid);
+            question.votes -= 1;
+            question.score -= 1;
+            await user.save();
+            await question.save();
+            return res.json({success: true, message: "upvote removed"});
         }
-        if (user.upvoted_questions.includes(questionId)) {
-            return res.status(400).json({ message: "You have already upvoted this question" });
-        }
-
-        // Add the question ID to the user's upvoted_questions array
-        user.upvoted_questions.push(questionId);
-        await user.save();
-
-        // Update the vote count and score
-        question.votes += 1;
-        question.score += 1;
-
-        // Save the updated question
-        await question.save();
-
-        res.status(200).json({ message: "Question upvoted successfully" });
-    } catch (error) {
-        console.error("Error upvoting question:", error);
-        res.status(500).json({ message: "Internal server error" });
+    } catch (e) {
+        console.error("Error upvoting:", e);
+        res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
-// To downvote a question
 const downvoteQuestion = async (req, res) => {
-    const { questionId } = req.params;
-    const { userId } = req.body;
-
+    const {uid} = req.body;
+    const {qid} = req.params;
+    console.log("downvoting quesiton: ", uid, qid);
     try {
-        // Find the question by ID
-        const question = await Question.findById(questionId);
-
-        if (!question) {
-            return res.status(404).json({ message: "Question not found" });
+        const user = await User.findById(uid);
+        const question = await Question.findById(qid);
+        if (!user || !question) {
+            return res.json({success: false, message: "User or question not found"});
         }
 
-        // Check if the user has already downvoted the question
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        if (user.downvoted_questions.includes(questionId)) {
-            return res.status(400).json({ message: "You have already downvoted this question" });
-        }
-
-        // Add the question ID to the user's downvoted_questions array
-        user.downvoted_questions.push(questionId);
-        await user.save();
-
-        // Update the vote count and score
-        question.votes -= 1;
-        question.score -= 1;
-
-        // Save the updated question
-        await question.save();
-
-        res.status(200).json({ message: "Question downvoted successfully" });
-    } catch (error) {
-        console.error("Error downvoting question:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
-
-// To remove a vote from a question
-const removeVote = async (req, res) => {
-    const { questionId } = req.params;
-    const { userId } = req.body;
-
-    try {
-        // Find the question by ID
-        const question = await Question.findById(questionId);
-
-        if (!question) {
-            return res.status(404).json({ message: "Question not found" });
-        }
-
-        // Find the user by ID
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Check if the user has upvoted or downvoted the question
-        const upvotedIndex = user.upvoted_questions.indexOf(questionId);
-        const downvotedIndex = user.downvoted_questions.indexOf(questionId);
-
-        if (upvotedIndex !== -1) {
-            // Remove the upvote
-            user.upvoted_questions.splice(upvotedIndex, 1);
-            question.votes -= 1;
-            question.score -= 1;
-        } else if (downvotedIndex !== -1) {
-            // Remove the downvote
-            user.downvoted_questions.splice(downvotedIndex, 1);
+        // check if already downvoted
+        if (!user.downvoted_questions.includes(qid)) {
+            // adding downvote
+            user.downvoted_questions.push(qid);
             question.votes += 1;
-            question.score += 1;
-        } else {
-            // If the user hasn't voted, return without making any changes
-            return res.status(200).json({ message: "No vote to remove" });
-        }
-
-        await user.save();
-        await question.save();
-
-        res.status(200).json({ message: "Vote removed successfully" });
-    } catch (error) {
-        console.error("Error removing vote:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
-
-// To switch a vote
-const switchVote = async (req, res) => {
-    const { questionId } = req.params;
-    const { userId } = req.body;
-
-    try {
-        // Find the question by ID
-        const question = await Question.findById(questionId);
-
-        if (!question) {
-            return res.status(404).json({ message: "Question not found" });
-        }
-
-        // Find the user by ID
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Check if the user has already upvoted or downvoted the question
-        const upvotedIndex = user.upvoted_questions.indexOf(questionId);
-        const downvotedIndex = user.downvoted_questions.indexOf(questionId);
-
-        if (upvotedIndex !== -1) {
-            // Remove the upvote
-            user.upvoted_questions.splice(upvotedIndex, 1);
-            question.votes -= 1;
             question.score -= 1;
-        } else if (downvotedIndex !== -1) {
-            // Remove the downvote
-            user.downvoted_questions.splice(downvotedIndex, 1);
-            question.votes += 1;
-            question.score += 1;
+
+            // if already upvoted, remove the upvote
+            if (user.upvoted_questions.includes(qid)) {
+                user.upvoted_questions.pull(qid);
+                question.votes -= 1;
+                question.score -= 1;
+            }
+            await user.save();
+            await question.save();
+
+            return res.json({success: true, message: "downvote success" });
         } else {
-            // If the user hasn't voted yet, return without making any changes
-            return res.status(200).json({ message: "No vote to switch" });
+            // removing downvote
+            user.downvoted_questions.pull(qid);
+            question.votes -= 1;
+            question.score += 1;
+            await user.save();
+            await question.save();
+            return res.json({success: true, message: "downvote removed"});
         }
-
-        await user.save();
-        await question.save();
-
-        res.status(200).json({ message: "Vote switched successfully" });
-    } catch (error) {
-        console.error("Error switching vote:", error);
-        res.status(500).json({ message: "Internal server error" });
+    } catch (e) {
+        console.error("Error downvoting:", e);
+        res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
 // add appropriate HTTP verbs and their endpoints to the router
 router.get('/getQuestion', getQuestionsByFilter);
 router.get('/getQuestionById/:qid', getQuestionById);
 router.post('/addQuestion', csrfProtection, addQuestion);
 router.delete('/deleteQuestionById/:qid', deleteQuestionById);
-router.put('/upvoteQuestion/:questionId', csrfProtection, upvoteQuestion);
-router.put('/downvoteQuestion/:questionId', csrfProtection, downvoteQuestion);
-router.put('/removeVote/:questionId', csrfProtection, removeVote);
-router.put('/switchVote/:questionId', csrfProtection, switchVote);
+router.put('/upvote/:qid', csrfProtection, upvoteQuestion);
+router.put('/downvote/:qid', csrfProtection, downvoteQuestion);
 
 module.exports = router;

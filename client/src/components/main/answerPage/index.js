@@ -4,7 +4,7 @@ import Answer from "./answer";
 import AnswerHeader from "./header";
 import "./index.css";
 import QuestionBody from "./questionBody";
-import { getQuestionById } from "../../../services/questionService";
+import { getQuestionById, upvoteQuestion, downvoteQuestion } from "../../../services/questionService";
 import { saveQuestionToUser } from "../../../services/userService";
 import NewAnswer from "./newAnswer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,19 +24,6 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let res = await getQuestionById(qid);
-            setQuestion(res || {});
-
-            // Check if the current question ID exists in the user's saved_questions array
-            if (loggedIn && user.saved_questions.includes(qid)) {
-                setIsBookmarked(true);
-            }
-        };
-        fetchData().catch((e) => console.log(e));
-    }, [qid, loggedIn, user]);
-
     const handleBookmarkClick = async () => {
         // If user is not logged in
         if (!loggedIn) {
@@ -55,13 +42,56 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     };
 
     const handleVote = (type) => {
+        if (!loggedIn) {
+            alert("Please log in to vote.");
+            return;
+        }
+        console.log("clicking: ", type);
         if (vote === type) {
+            console.log("clicking: ", type);
             // Clear vote if the same button is clicked again
             setVote(null);
         } else {
             setVote(type);
         }
+
+        if (type === "upvote") {
+            handleUpvote();
+        } else {
+            handleDownvote();
+        }
     };
+
+    const handleUpvote = async () => {
+        try {
+            const res = await upvoteQuestion(qid, user._id, csrfToken);
+            console.log(res);
+        } catch (e) {
+            console.error("Error upvoting question:", e);
+        }
+    }
+
+    const handleDownvote = async () => {
+        try {
+            const res = await downvoteQuestion(qid, user._id, csrfToken);
+            console.log(res);
+        } catch (e) {
+            console.error("Error downvoting question:", e);
+        }
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            let res = await getQuestionById(qid);
+            setQuestion(res || {});
+
+            // Check if the current question ID exists in the user's saved_questions array
+            if (loggedIn && user.saved_questions.includes(qid)) {
+                setIsBookmarked(true);
+            }
+        };
+        fetchData().catch((e) => console.log(e));
+    }, [qid, loggedIn, user]);
     return (
         <>
             <AnswerHeader

@@ -51,7 +51,7 @@ function questionCreate(title, text, tags, answers, asked_by, ask_date_time, vie
     return question.save();
 }
 
-async function userCreate(username, contactemail, password, profileImage, saved_questions) {
+async function userCreate(username, contactemail, password, profileImage, saved_questions, upvoted_questions, downvote_questions) {
     let hashedPassword = await hashPassword(password);
     let userdetail = {
         username: username,
@@ -61,6 +61,8 @@ async function userCreate(username, contactemail, password, profileImage, saved_
 
     if (profileImage != false) userdetail.profileImage = profileImage;
     if (saved_questions != false) userdetail.saved_questions = saved_questions;
+    if (upvoted_questions != false) userdetail.upvoted_questions = upvoted_questions;
+    if (downvote_questions != false) userdetail.downvoted_questions = downvote_questions;
 
     let user = new User(userdetail);
     return user.save();

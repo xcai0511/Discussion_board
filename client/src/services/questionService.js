@@ -40,53 +40,31 @@ const deleteQuestionById = async (qid, csrfToken) => {
     return res.data;
 };
 
-const upvoteQuestion = async (questionId, userId) => {
-    const res = await api.put(`${QUESTION_API_URL}/upvoteQuestion/${questionId}`, { userId }, {
+const upvoteQuestion = async (qid, uid, csrfToken) => {
+    const data = {uid: uid};
+    const res = await api.put(`${QUESTION_API_URL}/upvote/${qid}`, data, {
         headers: {
-            "X-CSRF-Token": csrfToken
+            "x-csrf-Token": csrfToken
         }
     });
-
     return res.data;
-};
+}
 
-const downvoteQuestion = async (questionId, userId) => {
-    const res = await api.put(`${QUESTION_API_URL}/downvoteQuestion/${questionId}`, { userId }, {
+const downvoteQuestion = async (qid, uid, csrfToken) => {
+    const data = {uid: uid};
+    const res = await api.put(`${QUESTION_API_URL}/downvote/${qid}`, data, {
         headers: {
-            "X-CSRF-Token": csrfToken
+            "x-csrf-Token": csrfToken
         }
     });
-
     return res.data;
-};
-
-const removeVote = async (questionId, userId) => {
-    const res = await api.put(`${QUESTION_API_URL}/removeVote/${questionId}`, { userId }, {
-        headers: {
-            "X-CSRF-Token": csrfToken
-        }
-    });
-
-    return res.data;
-};
-
-const switchVote = async (questionId, userId) => {
-    const res = await api.put(`${QUESTION_API_URL}/switchVote/${questionId}`, { userId }, {
-        headers: {
-            "X-CSRF-Token": csrfToken
-        }
-    });
-
-    return res.data;
-};
+}
 
 export { 
     getQuestionsByFilter, 
     getQuestionById, 
     addQuestion, 
     deleteQuestionById, 
-    upvoteQuestion, 
-    downvoteQuestion,
-    removeVote,
-    switchVote,
+    upvoteQuestion,
+    downvoteQuestion
  };
