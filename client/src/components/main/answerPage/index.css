@@ -41,12 +41,16 @@
 }
 
 .container {
+    width: 100%;
     display: flex;
     flex-direction: row;
 }
 .actions {
     width: 12%;
-    overflow: auto;
+    /*overflow: auto;*/
+}
+.body {
+    width: 88%;
 }
 
 .log_in_msg {

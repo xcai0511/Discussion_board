@@ -140,7 +140,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                         </button>
                     </div>
                 </div>
-                <div>
+                <div className="body">
                     <QuestionBody
                         views={question && question.views}
                         text={question && question.text}
