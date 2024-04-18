@@ -8,7 +8,6 @@ const User = ({ u, clickUser }) => {
                 clickUser(u.username);
             }}
         >
-            {/*<div className="userImage">{u.profileImage}</div>*/}
             <img src={`images/${u.profileImage}`} className="userImage"/>
             <div className="userName">{u.username}</div>
         </div>

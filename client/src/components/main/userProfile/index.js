@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import Form from '../baseComponents/form';
-import Input from '../baseComponents/input';
-import './index.css';
 import {updatePassword, updateUserProfileImage} from "../../../services/userService";
 import YourQuestion from './question';
 import { getQuestionsByFilter, deleteQuestionById } from '../../../services/questionService';
+import './index.css';
+import ChangePasswordForm from './changePasswordForm';
+import ProfileImageOptions from './profileImageOptions';
 
 const UserProfile = ({ user, loggedIn, csrfToken }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -55,7 +55,6 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
 
   const handleSaveProfileImage = async () => {
     try {
-      console.log("handle save profile image button: ", selectedProfileImage);
         // Call the service method to update profile image
         const updateResponse = await updateUserProfileImage(user.username, selectedProfileImage, csrfToken);
         if (updateResponse.success) {
@@ -91,16 +90,15 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
         
         // Remove the deleted question from the userQuestions state
         setUserQuestions(userQuestions.filter(question => question._id !== questionId));
-        
-        // Optional: Provide feedback to the user
+
         alert("Question deleted successfully!");
       } catch (error) {
         console.error("Error deleting question:", error);
-        // Optional: Provide error feedback to the user
         alert("An error occurred while deleting the question. Please try again later.");
       }
     }
   };
+  
   useEffect(() => {
     if (loggedIn) {
       fetchUserQuestions(); // Fetch user's questions when logged in
@@ -123,55 +121,22 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
                 {showProfileImageOptions ? "Hide Change Profile Picture" : "Change Profile Picture"}
             </button>
             {showChangePassword && (
-                <div>
-                  <Form>
-                    <h3>Change Password</h3>
-                    <Input
-                        title={"Current Password"}
-                        id={"currPasswordInput"}
-                        val={currPassword}
-                        setState={setCurrPassword}
-                        err={currPasswordError}
-                    />
-                    <Input
-                        title={"New Password"}
-                        id={"newPasswordInput"}
-                        val={newPassword}
-                        setState={setNewPassword}
-                        err={newPasswordError}
-                    />
-                    <div className="btn_indicator_container">
-                        <button
-                            className="form_postBtn"
-                            onClick={() => {
-                              handleSavePassword();
-                            }}
-                        >
-                            <div>Change Password</div>
-                        </button>
-                        <div className="mandatory_indicator">
-                            * indicates mandatory fields
-                        </div>
-                    </div>
-                  </Form>
-                </div>
+                <ChangePasswordForm
+                  currPassword={currPassword}
+                  setCurrPassword={setCurrPassword}
+                  currPasswordError={currPasswordError}
+                  newPassword={newPassword}
+                  setNewPassword={setNewPassword}
+                  newPasswordError={newPasswordError}
+                  handleSavePassword={handleSavePassword}
+                />
             )}
             {showProfileImageOptions && (
-                <div>
-                    <h3>Select New Profile Image</h3>
-                    <div className="profile_image_options">
-                        {Array.from({ length: 8 }, (_, i) => i + 1).map((index) => (
-                            <img
-                                key={index}
-                                src={`images/user-avatar-${index}.png`}
-                                alt={`Profile Image ${index}`}
-                                onClick={() => setSelectedProfileImage(`user-avatar-${index}.png`)}
-                                className={selectedProfileImage === `user-avatar-${index}.png` ? 'selected' : ''}
-                            />
-                        ))}
-                    </div>
-                    <button onClick={handleSaveProfileImage}>Save</button>
-                </div>
+                <ProfileImageOptions
+                  selectedProfileImage={selectedProfileImage}
+                  setSelectedProfileImage={setSelectedProfileImage}
+                  handleSaveProfileImage={handleSaveProfileImage}
+                />
             )}
             <div>
             <h2>Your Posts</h2>
