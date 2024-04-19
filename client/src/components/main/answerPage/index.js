@@ -7,7 +7,7 @@ import QuestionBody from "./questionBody";
 import { getQuestionById, upvoteQuestion, downvoteQuestion } from "../../../services/questionService";
 import { getUserById, saveQuestionToUser } from "../../../services/userService";
 import NewAnswer from "./newAnswer";
-import { VotingButton, BookmarkButton } from "./buttons";
+import { VotingButtons, BookmarkButton } from "./buttons/index";
 
 const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     const [question, setQuestion] = useState({});
@@ -115,11 +115,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
             />
             <div className="container">
                 <div className="left_main actions">
-                    <VotingButton type="up" vote={vote} handleVote={handleVote} />
-                    <div className="question_score">
-                        <h2>{score}</h2>
-                    </div>
-                    <VotingButton type="down" vote={vote} handleVote={handleVote} />
+                    <VotingButtons vote={vote} handleVote={handleVote} score={score} />
                     <div className="bookmark_button_wrapper">
                         <BookmarkButton isBookmarked={isBookmarked} handleBookmarkClick={handleBookmarkClick} />
                     </div>

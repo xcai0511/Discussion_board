@@ -7,3 +7,9 @@
 .vote_button.voted {
     background-color: rgb(252, 172, 142);
 }
+
+.bookmark_button {
+    border: none;
+    background-color: white;
+    margin-top: 1.6rem;
+}
