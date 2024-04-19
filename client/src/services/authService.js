@@ -10,7 +10,6 @@ const login = async(email, password, csrfToken) => {
         },
         withCredentials: true,
     });
-    //console.log("enter login in authService ====", res.data);
     return res.data;
 }
 
@@ -28,16 +27,6 @@ const logout = async (csrfToken) => {
         throw error;
     }
 }
-
-// const checkLoginStatus = async (csrfToken) => {
-//     return api.get(`${AUTH_API_URL}/check-login`, {
-//         headers: {
-//             'X-CSRF-Token': csrfToken,
-//         },
-//         withCredentials: true,
-//     });
-// };
-
 
 const fetchCsrfToken = async () => {
     const response = await api.get(`${AUTH_API_URL}/csrf-token`, { withCredentials: true });

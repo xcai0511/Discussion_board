@@ -14,6 +14,7 @@ const addAnswer = async (qid, ans, csrfToken) => {
     return res.data;
 };
 
+// TODO: Delete if not needed/used
 // To edit answer
 const editAnswer = async(qid, ans) => {
     const data = {qid: qid, ans: ans};

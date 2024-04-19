@@ -35,12 +35,6 @@ app.use(session({
     cookie: { secure: 'auto' }
 }));
 
-// CSRF protection
-//app.use(csurf());
-// app.get('/csrf-token', (req, res) => {
-//     res.json({ csrfToken: req.csrfToken() });
-// });
-
 const questionController = require("./controller/question");
 const tagController = require("./controller/tag");
 const answerController = require("./controller/answer");
