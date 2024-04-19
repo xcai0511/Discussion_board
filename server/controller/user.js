@@ -97,7 +97,6 @@ const getSavedQuestions = async (req, res) => {
 }
 
 const updatePassword = async (req, res) => {
-    console.log(req.body);
     const {username, oldPassword, newPassword} = req.body;
     try {
         let user = await User.findOne({ username: username });
