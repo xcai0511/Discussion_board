@@ -1,0 +1,9 @@
+.vote_button {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.vote_button.voted {
+    background-color: rgb(252, 172, 142);
+}

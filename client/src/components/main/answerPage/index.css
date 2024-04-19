@@ -11,21 +11,35 @@
     margin-right: -3rem;
 }
 
-.vote_button {
-    border-radius: 50%;
-    height: 40px;
-    width: 40px;
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.actions {
+    width: 12%;
 }
 
-.vote_button.voted {
-    background-color: rgb(252, 172, 142);
+.body {
+    width: 88%;
+}
+
+.log_in_msg {
+    margin-top: 1.6rem;
+    margin-left: 2rem;
+}
+
+.bookmark_button_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0.6rem;
 }
 
 .bookmark_button {
     border: none;
     background-color: white;
-    margin-top: 1rem;
-    margin-left: 0.5rem;
+    margin-top: 1.6rem;
 }
 
 .question_score {
@@ -38,22 +52,4 @@
 
 .question_score h2 {
     margin: 0;
-}
-
-.container {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-.actions {
-    width: 12%;
-    /*overflow: auto;*/
-}
-.body {
-    width: 88%;
-}
-
-.log_in_msg {
-    margin-top: 1.6rem;
-    margin-left: 2rem;
 }

@@ -16,121 +16,130 @@ const addTag = async (tname) => {
     }
 };
 
+// Retrieving questions based on sort type
 const getQuestionsByOrder = async (order) => {
     try {
         let questions;
+
         switch (order) {
             case 'newest':
-                questions = await Question.find().populate('tags');
-                questions.sort((a, b) => {
-                    if (!a.ask_date_time) {return 1;}
-                    if (!b.ask_date_time) {return -1;}
-                    return b.ask_date_time - a.ask_date_time;
-                })
+                questions = await getQuestionsSortedByDate('ask_date_time');
                 break;
             case 'active':
-                questions = await Question.find().populate('tags').populate('answers');
-                questions.forEach(question => {
-                    if (question.answers && question.answers.length > 0) {
-                        question.answers.sort((a, b) => {
-                            if (!a.ans_date_time) {return 1;}
-                            if (!b.ans_date_time) {return -1;}
-                            return b.ans_date_time - a.ans_date_time;
-                        })
-                        question.answers = question.answers.slice(0, 1);
-                    }
-                });
-                questions.sort((a, b) => {
-                    const aHasAnswers = a.answers.length > 0;
-                    const bHasAnswers = b.answers.length > 0;
-                    if (aHasAnswers && !bHasAnswers) {return -1;}
-                    if (!aHasAnswers && bHasAnswers) {return 1;}
-                    let aLatestDate = aHasAnswers ? new Date(a.answers[0].ans_date_time) : new Date(a.ask_date_time);
-                    let bLatestDate = bHasAnswers ? new Date(b.answers[0].ans_date_time) : new Date(b.ask_date_time);
-
-                    let comparisonResult = bLatestDate - aLatestDate;
-                    if (comparisonResult === 0) {
-                        let aAskDate = new Date(a.ask_date_time);
-                        let bAskDate = new Date(b.ask_date_time);
-                        return bAskDate - aAskDate;
-                    }
-
-                    return comparisonResult;
-                });
+                questions = await getActiveQuestions();
                 break;
             case 'unanswered':
-                questions = await Question.find().populate('tags');
-                questions = questions.filter(question => question.answers.length === 0);
-                questions.sort((a, b) => {
-                    if (!a.ask_date_time) {return 1;}
-                    if (!b.ask_date_time) {return -1;}
-                    return b.ask_date_time - a.ask_date_time;
-                })
+                questions = await getUnansweredQuestions();
                 break;
             default:
-                questions = await Question.find().populate('tags');
-                questions.sort((a, b) => {
-                    if (!a.ask_date_time) {return 1;}
-                    if (!b.ask_date_time) {return -1;}
-                    return b.ask_date_time - a.ask_date_time;
-                })
+                questions = await getQuestionsSortedByDate('ask_date_time');
                 break;
         }
+
         return questions;
     } catch (e) {
         console.log(e);
     }
-}
+};
 
+const getQuestionsSortedByDate = async (dateField) => {
+    let questions = await Question.find().populate('tags');
+    questions.sort((a, b) => b[dateField] - a[dateField]);
+    return questions;
+};
+
+const getActiveQuestions = async () => {
+    let questions = await Question.find().populate('tags').populate('answers');
+
+    questions.forEach(question => {
+        if (question.answers && question.answers.length > 0) {
+            question.answers.sort((a, b) => b.ans_date_time - a.ans_date_time);
+            question.answers = question.answers.slice(0, 1);
+        }
+    });
+
+    questions.sort((a, b) => {
+        const aHasAnswers = a.answers.length > 0;
+        const bHasAnswers = b.answers.length > 0;
+
+        if (aHasAnswers && !bHasAnswers) return -1;
+        if (!aHasAnswers && bHasAnswers) return 1;
+
+        const aLatestDate = aHasAnswers ? new Date(a.answers[0].ans_date_time) : new Date(a.ask_date_time);
+        const bLatestDate = bHasAnswers ? new Date(b.answers[0].ans_date_time) : new Date(b.ask_date_time);
+
+        let comparisonResult = bLatestDate - aLatestDate;
+        if (comparisonResult === 0) {
+            let aAskDate = new Date(a.ask_date_time);
+            let bAskDate = new Date(b.ask_date_time);
+            return bAskDate - aAskDate;
+        }
+
+        return comparisonResult;
+    });
+
+    return questions;
+};
+
+const getUnansweredQuestions = async () => {
+    let questions = await Question.find().populate('tags');
+    questions = questions.filter(question => question.answers.length === 0);
+    questions.sort((a, b) => b.ask_date_time - a.ask_date_time);
+    return questions;
+};
+
+// Filtering questions based on search parameters
 const filterQuestionsBySearch = (qlist, search) => {
     if (!search) {
         return qlist;
     }
+
     const searchTerms = search.toLowerCase().match(/\[\s*([^\]]+)\s*\]|\S+/g);
     const filteredQuestions = qlist.filter(question => {
-        const tagMatch = searchTerms.some(term => {
+        return searchTerms.some(term => {
             if (term.startsWith("[") && term.endsWith("]")) {
                 const tagName = term.substring(1, term.length - 1);
-                return question.tags.some(tag => tag.name.toLowerCase() === tagName.toLowerCase());
-            }
-            return false;
-        });
-        const titleMatch = searchTerms.some(term => {
-            if (!(term.startsWith("[") && term.endsWith("]"))) {
-                return question.title.toLowerCase().includes(term);
-            }
-            return false;
-        })
-        const textMatch = searchTerms.some(term => {
-            if (!(term.startsWith("[") && term.endsWith("]"))) {
-                return question.text.toLowerCase().includes(term);
-            }
-            return false;
-        })
-        const authorMatch = searchTerms.some(term => {
-            if (term.startsWith("user:")) {
-                const authorId = term.substring(5); // Extract author ID from the term
-                return question.asked_by.toLowerCase() === authorId.toLowerCase();
-            }
-            return false;
-        })
-        const ansCountMatch = searchTerms.some(term => {
-            if (term.startsWith("answers:")) {
+                return filterByTag(question, tagName);
+            } else if (term.startsWith("user:")) {
+                const authorId = term.substring(5);
+                return filterByAuthor(question, authorId);
+            } else if (term.startsWith("answers:")) {
                 const answerCount = parseInt(term.substring(8));
-                return question.answers.length === answerCount;
-            }
-            return false;
-        })
-        const scoreMatch = searchTerms.some(term => {
-            if (term.startsWith("score:")) {
+                return filterByAnswerCount(question, answerCount);
+            } else if (term.startsWith("score:")) {
                 const scoreValue = parseInt(term.substring(6));
-                return question.score >= scoreValue;
+                return filterByScore(question, scoreValue);
+            } else {
+                return filterByTitle(question, term) || filterByText(question, term);
             }
-        })
+        });
+    });
 
-        return tagMatch || titleMatch || textMatch || authorMatch || ansCountMatch || scoreMatch;
-    })
     return filteredQuestions;
-}
+};
+
+const filterByTag = (question, tagName) => {
+    return question.tags.some(tag => tag.name.toLowerCase() === tagName.toLowerCase());
+};
+
+const filterByTitle = (question, searchTerm) => {
+    return question.title.toLowerCase().includes(searchTerm);
+};
+
+const filterByText = (question, searchTerm) => {
+    return question.text.toLowerCase().includes(searchTerm);
+};
+
+const filterByAuthor = (question, authorId) => {
+    return question.asked_by.toLowerCase() === authorId.toLowerCase();
+};
+
+const filterByAnswerCount = (question, answerCount) => {
+    return question.answers.length === answerCount;
+};
+
+const filterByScore = (question, scoreValue) => {
+    return question.score >= scoreValue;
+};
 
 module.exports = { addTag, getQuestionsByOrder, filterQuestionsBySearch };

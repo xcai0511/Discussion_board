@@ -7,9 +7,8 @@ import QuestionBody from "./questionBody";
 import { getQuestionById, upvoteQuestion, downvoteQuestion } from "../../../services/questionService";
 import { getUserById, saveQuestionToUser } from "../../../services/userService";
 import NewAnswer from "./newAnswer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { VotingButton, BookmarkButton } from "./buttons";
 
-// Component for the Answers page
 const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     const [question, setQuestion] = useState({});
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -26,7 +25,6 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     };
 
     const handleBookmarkClick = async () => {
-        // If user is not logged in
         if (!loggedIn) {
             alert("Please log in to bookmark questions.");
             return;
@@ -117,27 +115,13 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
             />
             <div className="container">
                 <div className="left_main actions">
-                    <button
-                        id="upvote_button"
-                        className={`vote_button ${vote === "upvote" ? "voted" : ""}`}
-                        onClick={() => handleVote("upvote")}
-                    >
-                        <FontAwesomeIcon icon="fa-solid fa-caret-up" transform="grow-10" />
-                    </button>
+                    <VotingButton type="up" vote={vote} handleVote={handleVote} />
                     <div className="question_score">
                         <h2>{score}</h2>
                     </div>
-                    <button
-                        id="downvote_button"
-                        className={`vote_button ${vote === "downvote" ? "voted" : ""}`}
-                        onClick={() => handleVote("downvote")}
-                    >
-                        <FontAwesomeIcon icon="fa-solid fa-caret-down" transform="grow-10" />
-                    </button>
-                    <div>
-                        <button className="bookmark_button" onClick={() => handleBookmarkClick()}>
-                            <FontAwesomeIcon icon="fa-solid fa-bookmark" transform="grow-10" color={isBookmarked ? "rgb(252, 172, 142)" : "black"} />
-                        </button>
+                    <VotingButton type="down" vote={vote} handleVote={handleVote} />
+                    <div className="bookmark_button_wrapper">
+                        <BookmarkButton isBookmarked={isBookmarked} handleBookmarkClick={handleBookmarkClick} />
                     </div>
                 </div>
                 <div className="body">
