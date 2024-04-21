@@ -26,7 +26,7 @@ const Header = ({
         try {
             const response = await logout(csrfToken);
             if (response.success) {
-                handleLogout()
+                handleLogout();
             }
         } catch (e) {
             console.error('Error logging out:', e);
@@ -65,4 +65,5 @@ const Header = ({
     );
 };
 
+Header.logout = logout;
 export default Header;
