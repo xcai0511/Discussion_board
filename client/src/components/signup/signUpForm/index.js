@@ -16,8 +16,8 @@ const SignUpForm = ({
 
     return (
         <Form>
-            <div className="back_button_container">
-                <a href="#" onClick={() => setQuestionPage()}>Back</a>
+            <div className="back_button_container" onClick={() => setQuestionPage()}>
+                <a href="#">Back</a>
             </div>
             <Input
                 title="Username"
@@ -52,7 +52,8 @@ const SignUpForm = ({
                 <div className="mandatory_indicator">* indicates mandatory fields</div>
             </div>
             <div className="link_to_login">
-                <h5>Already have an account?</h5><button onClick={setLoginPage}>Login</button>
+                <h5>Already have an account?</h5>
+                <button onClick={setLoginPage} id="login_btn">Login</button>
             </div>
         </Form>
     );
