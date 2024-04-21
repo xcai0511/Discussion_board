@@ -17,11 +17,15 @@
     flex-direction: row;
 }
 .actions {
-    width: 12%;
+    /*width: 12%;*/
+    flex: 0 0 12%;
+    overflow: auto;
 }
 
 .body {
-    width: 88%;
+    /*width: 88%;*/
+    flex: 0 0 88%;
+    overflow: hidden;
 }
 
 .log_in_msg {

@@ -1,173 +1,169 @@
-import AnswerHeader from '../../src/components/main/answerPage/header';
-import QuestionBody from '../../src/components/main/answerPage/questionBody'
-import Answer from '../../src/components/main/answerPage/answer';
-//import AnswerPage from '../../src/components/main/answerPage'
-import NewAnswer from "../../src/components/main/answerPage/newAnswer";
-// Answer Page - Header Tests
-it('Answer Header component shows question title, answer count and onclick function', () => {
-    const answerCount = 3;
-    const title = 'android studio save string shared preference, start activity and load the saved string';
-    const handleNewQuestion = cy.spy().as('handleNewQuestionSpy');
 
-    cy.mount(<AnswerHeader
-        ansCount={answerCount}
-        title={title}
-        handleNewQuestion={handleNewQuestion}/>);
-    cy.get('.bold_title').contains(answerCount + " answers");
-    cy.get('.answer_question_title').contains(title);
-    cy.get('.bluebtn').click();
-    cy.get('@handleNewQuestionSpy').should('have.been.called');
-})
+import AnswerPage from '../../src/components/main/answerPage';
+import NewAnswer from '../../src/components/main/answerPage/newAnswer'
 
-// Answer Page - Question Body
-it('Component should have a question body which shows question text, views, asked by and asked', () => {
-    const questionBody = 'Sample Question Body'
-    const views = '150'
-    const askedBy = 'vanshitatilwani'
-    const date = new Date().toLocaleString()
-    cy.mount(<QuestionBody
-        text={questionBody}
-        views={views}
-        askby={askedBy}
-        meta={date}
-    />)
+describe('AnswerPage Component Test when user not login', () => {
+    beforeEach(() => {
+        cy.stub(AnswerPage, 'getQuestionById').resolves({
+            title: 'Test Question Title',
+            text: 'Test Question Text',
+            tags: [],
+            asked_by: 'user1',
+            ask_date_time: new Date(),
+            views: 10,
+            answers: [{id: '1', text: "test answer", ans_by: "user", ans_date_time: new Date()}],
+            votes: 10,
+            score: 10
+        })
 
-    cy.get('.answer_question_text > div').contains(questionBody)
-    cy.get('.answer_question_view').contains(views + ' views')
-    cy.get('.answer_question_right > .question_author').contains(askedBy)
-    cy.get('.answer_question_right > .answer_question_meta').contains('asked ' + date)
+        const qid = 1;
+        const handleNewQuestion = cy.spy().as('handleNewQuestionSpy');
+        const loggedIn = false;
 
-})
-
-// Answer Page - Answer component
-it('Component should have a answer text ,answered by and answered date', () => {
-    const answerText = 'Sample Answer Text'
-    const answeredBy = 'joydeepmitra'
-    const date = new Date().toLocaleString()
-    cy.mount(<Answer
-        text={answerText}
-        ansBy={answeredBy}
-        meta={date}
-    />)
-
-    cy.get('.answerText').contains(answerText)
-    cy.get('.answerAuthor > .answer_author').contains(answeredBy)
-    cy.get('.answerAuthor > .answer_question_meta').contains(date)
-
-
-})
-
-it('mounts', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('#answerUsernameInput')
-    cy.get('#answerTextInput')
-    cy.get('.form_postBtn')
-})
-
-it('shows error message when both input is empty', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('.form_postBtn').click()
-    cy.get('div .input_error').contains('Username cannot be empty')
-    cy.get('div .input_error').contains('Answer text cannot be empty')
-})
-
-it('shows username inputted by user', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('#answerUsernameInput').should('have.value', '')
-    cy.get('#answerUsernameInput').type('abc')
-    cy.get('#answerUsernameInput').should('have.value', 'abc')
-})
-
-it('shows error message when text is empty', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('#answerUsernameInput').type('abc')
-    cy.get('.form_postBtn').click()
-    cy.get('div .input_error').contains('Answer text cannot be empty')
-})
-
-it('shows text inputted by user', () => {
-    cy.mount(<NewAnswer/>)
-    cy.get('#answerTextInput').should('have.value', '')
-    cy.get('#answerTextInput').type('abc')
-    cy.get('#answerTextInput').should('have.value', 'abc')
-})
-
-
-it('addAnswer is called when click Post Answer', () => {
-    const addAnswerSpy = cy.spy().as('addAnswerSpy');
-    cy.mount(<NewAnswer qid="123" addAnswer={addAnswerSpy} handleAnswer={() => {}} />);
-    cy.get('#answerUsernameInput').type('usr');
-    cy.get('#answerTextInput').type('abc');
-    cy.get('.form_postBtn').click().then(() => {
-        expect(addAnswerSpy).to.be.calledWith(123, { text: 'abc', ansBy: 'usr' });
+        cy.mount(<AnswerPage
+            qid={qid}
+            handleNewQuestioin={handleNewQuestion}
+            loggedIn={loggedIn}/>);
     });
-});
 
-it('handleAnswer is called when click Post Answer', () => {
-    const obj = {
-        addAnswer: (arg) => {return arg}
-    }
-    const handleAnswer = cy.spy().as('handleAnswerSpy')
-    cy.mount(<NewAnswer qid={123} addAnswer={obj.addAnswer} handleAnswer={handleAnswer} />)
-    cy.get('#answerUsernameInput').type('usr')
-    cy.get('#answerTextInput').type('abc')
-    cy.get('.form_postBtn').click()
-    cy.get('@handleAnswerSpy').should('have.been.calledWith', 123)
+    it('loads and displays question header correctly', () => {
+        cy.get('.bold_title').contains('1 answers');
+        cy.get('.bold_title').contains('Test Question Title');
+        cy.get('.bluebtn').should('have.text', 'Ask a Question');
+    })
+
+    it('loads and displays question body correctly', () => {
+        cy.get('.answer_question_view').contains('10 views');
+        cy.get('.answer_question_text').contains('Test Question Text');
+        cy.get('.question_author').contains('user1');
+        cy.get('.answer_question_meta').contains('asked 0 seconds ago');
+    })
+
+    it('loads and displays question answer correctly', () => {
+        cy.get('.answerText').contains("test answer");
+        cy.get('.answer_author').contains('user');
+        cy.get('.answer_question_meta').contains('0 seconds ago');
+    })
+
+    it('click save should show alert when user not logging in', () => {
+        cy.on('window:alert', (text) => {
+            expect(text).to.contains('Please log in to bookmark questions.');
+        });
+        cy.get('.bookmark_button').click({ force: true });
+    })
+
+    it('click upvote should show alert when user not logging in', () => {
+        cy.on('window:alert', (text) => {
+            expect(text).to.contains('Please log in to vote.');
+        });
+        cy.get('#upvote_button').click({ force: true });
+    })
+
+    it('click downvote should show alert when user not logging in', () => {
+        cy.on('window:alert', (text) => {
+            expect(text).to.contains('Please log in to vote.');
+        });
+        cy.get('#upvote_button').click({ force: true });
+    })
+
+    it('shows log in message for new answer component', () => {
+        cy.get('.log_in_msg').contains("Please log in to add comments");
+    })
+
 })
 
-// Anwer Page  - Main Component
-// it('Render a Answer Page Component and verify all details', () => {
-//     const handleNewQuestion = cy.spy().as('handleNewQuestionSpy')
-//     const handleNewAnswer = cy.spy().as('handleNewAnswerSpy')
-//     const answers = []
-//     for(let index= 1; index <= 2; index++){
-//         let newanswer = {
-//             aid: index,
-//             text: 'Sample Answer Text '+index,
-//             ansBy: 'sampleanswereduser'+index,
-//             ansDate: new Date(),
-//         };
-//         answers.push(new AnswerObj(newanswer))
-//     }
-//
-//     let question = {
-//         title: 'Sample Question Title',
-//         text: 'Sample Question Text',
-//         askedBy: 'vanshitatilwani',
-//         askDate: new Date(),
-//         views : 150,
-//         ansIds : answers.map(answer => answer.aid)
-//     };
-//
-//     cy.mount(<AnswerPage
-//         question={new Question(question)}
-//         ans={answers}
-//         handleNewQuestion={handleNewQuestion}
-//         handleNewAnswer={handleNewAnswer}
-//     />)
-//
-//     cy.get('.bold_title').contains(answers.length + " answers")
-//     cy.get('.answer_question_title').contains(question.title)
-//     cy.get('#answersHeader > .bluebtn').click()
-//     cy.get('@handleNewQuestionSpy').should('have.been.called');
-//
-//     cy.get('.answer_question_text > div').contains(question.text)
-//     cy.get('.answer_question_view').contains(question.views + ' views')
-//     cy.get('.answer_question_right > .question_author').contains(question.askedBy)
-//
-//     cy.get('.answerText')
-//         .eq(0)
-//         .find('div')
-//         .should('have.text', answers[0].text);
-//     cy.get('.answerAuthor > .answer_author').eq(0).should('have.text', answers[0].ansBy)
-//
-//     cy.get('.answerText')
-//         .eq(1)
-//         .find('div')
-//         .should('have.text', answers[1].text);
-//     cy.get('.answerAuthor > .answer_author').eq(0).should('have.text', answers[0].ansBy)
-//
-//     cy.get('.ansButton').click();
-//     cy.get('@handleNewAnswerSpy').should('have.been.called');
-//
-// })
+describe('Add answer component when logged in', () => {
+    beforeEach(() => {
+        cy.stub(AnswerPage, 'getQuestionById').resolves({
+            title: 'Test Question Title',
+            text: 'Test Question Text',
+            tags: [],
+            asked_by: 'user1',
+            ask_date_time: new Date(2024, 1, 24, 10, 33, 30),
+            views: 10,
+            answers: [{
+                id: '1',
+                text: "test answer",
+                ans_by: "user",
+                ans_date_time: new Date(2024, 3, 20, 12, 22, 30)}],
+            votes: 10,
+            score: 10
+        })
+
+        cy.stub(AnswerPage, 'getUserById').resolves({
+            _id: '1',
+            username: 'testuser',
+            contactemail: 'test@email.com',
+            password: 'testpassword',
+            profileImage: 'testprofileimage',
+            saved_questions: [],
+            upvoted_questions: [],
+            downvoted_questions: []
+        })
+
+        const qid = 1;
+        const handleNewQuestion = cy.spy().as('handleNewQuestionSpy');
+        const loggedIn = true;
+        const user = {
+            _id: '1',
+            username: 'testuser',
+            contactemail: 'test@email.com',
+            password: 'testpassword',
+            profileImage: 'testprofileimage',
+            saved_questions: [],
+            upvoted_questions: [],
+            downvoted_questions: []};
+
+        cy.mount(<AnswerPage
+            qid={qid}
+            handleNewQuestioin={handleNewQuestion}
+            loggedIn={loggedIn}
+            user={user}/>);
+
+    });
+
+    it('new answer shows text inputted by user', () => {
+        cy.get('#answerTextInput').should('have.value', '')
+        cy.get('#answerTextInput').type('test')
+        cy.get('#answerTextInput').should('have.value', 'test');
+    })
+
+    it('shows error message when input is empty', () => {
+        cy.get('.form_postBtn').should('have.text', 'Post Answer');
+        cy.get('.form_postBtn').click();
+        cy.get('div .input_error').contains('Answer text cannot be empty')
+    })
+
+    it('shows error message when input is invalid', () => {
+        cy.stub(NewAnswer, 'validateHyperlink').returns(false)
+        cy.get('.form_postBtn').click();
+        cy.get('div .input_error').contains('Invalid hyperlink format.')
+    })
+
+    it('successfully add answer', () => {
+        cy.stub(NewAnswer, 'validateHyperlink').returns(true);
+        cy.stub(NewAnswer, 'addAnswer').resolves({
+            _id: '1',
+            text: 'new answer',
+            ans_date_time: new Date()
+        })
+        const handleAnswer = cy.spy().as('handleAnswerSpy');
+        const user = {
+            _id: '1',
+            username: 'testuser',
+            contactemail: 'test@email.com',
+            password: 'testpassword',
+            profileImage: 'testprofileimage',
+            saved_questions: [],
+            upvoted_questions: [],
+            downvoted_questions: []};
+        cy.mount(<NewAnswer
+            user={user}
+            handleAnswer={handleAnswer}/>);
+
+        cy.get('#answerTextInput').type('new answer')
+        cy.get('.form_postBtn').click();
+        cy.get('@handleAnswerSpy').should('have.been.calledOnce');
+    })
+
+});
