@@ -1,87 +1,89 @@
 import "./index.css";
 import React, { useState } from 'react';
 import {login, fetchCsrfToken} from "../../services/authService";
-//import LoginForm from "./loginForm";
-import Input from '../main/baseComponents/input';
-import Form from '../main/baseComponents/form';
+import { validateEmailAddress } from "../../tool"
+import LoginForm from "./loginForm";
 
 const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
-    const [loggedIn, setLoggedIn] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [user, setUser] = useState(null);
+    //const [errors, setErrors] = useState({ email: '', password: '' });
+    const [emailErr, setEmailErr] = useState("");
+    const [passwordErr, setPasswordErr] = useState("");
 
+    const validateEmail = () => {
+        if (!email) {
+            setEmailErr("Email address cannot be empty");
+            return false;
+        } else if (!validateEmailAddress(email)) {
+            setEmailErr("Invalid email format.");
+            setEmail('');
+            return false;
+        }
+        setEmailErr("");
+        return true;
+    }
+
+    const validatePassword = () => {
+        if (!password) {
+            setPasswordErr("Password cannot be empty");
+            return false;
+        } else if (password.length < 8) {
+            setPasswordErr("Password is too short (min 8 characters)");
+            setPassword('');
+            return false;
+        } else if (password.length > 20) {
+            setPasswordErr("Password is too long (max is 20 characters)");
+            setPassword('');
+            return false;
+        }
+        setPasswordErr("");
+        return true;
+    };
     const handleLogin = async () => {
-        if (!email) setEmailError("Email cannot be empty");
-        if (!password) setPasswordError("Password cannot be empty")
+        let isValid = true;
+
+        isValid = validateEmail() && isValid;
+        isValid = validatePassword() && isValid;
+
+        if (!isValid) {
+            return;
+        }
 
         try {
-            const csrfToken = await fetchCsrfToken();
-            const res = await login(email, password, csrfToken);
+            const csrfToken = await Login.fetchCsrfToken();
+            const res = await Login.login(email, password, csrfToken);
 
             if (res.success) {
-                setLoggedIn(true);
-                setUser(res.user);
                 loginUser(res.user, csrfToken);
             } else if (res.message === "email") {
-                setEmailError("Email does not exist");
+                setEmailErr("Email does not exist");
                 setEmail("");
                 setPassword("");
             } else if (res.message === "password") {
-                setPasswordError("Password does not match");
+                setPasswordErr("Password does not match");
                 setPassword("")
             }
         } catch (error) {
             console.error("Error during login:", error);
-            //setErrors({ ...errors, form: error.message || 'An error occurred while logging in. Please try again later.' });
         }
     };
 
     return (
-        <div>
-            {loggedIn ? (
-                <div>
-                    <p>Welcome, {user.contactemail}!</p>
-                </div>
-            ) : (
-                <Form>
-                    <div className="back-button-container">
-                        <a href="#" onClick={() => setQuestionPage()}>Back</a>
-                    </div>
-                    <Input
-                        title={"Email Address"}
-                        id={"loginUsernameInput"}
-                        val={email}
-                        setState={setEmail}
-                        err={emailError}
-                    />
-                    <Input
-                        title={"Password"}
-                        id={"loginPasswordInput"}
-                        val={password}
-                        setState={setPassword}
-                        err={passwordError}
-                    />
-                    <div className="btn_indicator_container">
-                        <button
-                            className="form_postBtn"
-                            onClick={handleLogin}
-                        >
-                            Login
-                        </button>
-                        <div className="mandatory_indicator">
-                            * indicates mandatory fields
-                        </div>
-                    </div>
-                    <div className="link-to-signup">
-                        <h5>Don&apos;t have an account?</h5><button onClick={setSignUpPage}>Sign Up</button>
-                    </div>
-                </Form>
-            )}
-        </div>
+        <LoginForm
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            emailError={emailErr}
+            passwordError={passwordErr}
+            handleLogin={handleLogin}
+            setQuestionPage={setQuestionPage}
+            setSignUpPage={setSignUpPage}
+        />
     );
 };
 
+Login.login = login;
+Login.fetchCsrfToken = fetchCsrfToken;
 export default Login;
