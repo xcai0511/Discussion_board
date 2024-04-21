@@ -1,4 +1,4 @@
-import Header from '../../src/components/header/index.js';
+import Header from '../../src/components/header';
 import UserInfo from '../../src/components/header/userInfo';
 
 it('header shows search bar and title', () => {
@@ -77,23 +77,14 @@ it('setUserProfile should have been called when profile button clicked', () => {
     cy.get('@setProfilePageSpy').should('have.been.calledOnce');
 })
 
-it('handleLogout should have been called when logout button clicked', () => {
+it('handle log out', () => {
+    cy.stub(Header, 'logout').returns({success: true});
     const user = {username: 'test user', contactemail: 'test@gmail.com'};
-    const onLogoutClick = cy.spy().as('onLogoutClickSpy');
-    cy.mount(<UserInfo user={user} onLogoutClick={onLogoutClick}/>)
+    const handleLogout = cy.spy().as('handleLogoutSpy');
+    cy.mount(<Header
+        loggedIn={true}
+        user={user}
+        handleLogout={handleLogout}/>);
     cy.get('.logout_button').click();
-    cy.get('@onLogoutClickSpy').should('have.been.called');
+    cy.get('@handleLogoutSpy').should('have.been.called');
 })
-
-// it('handle log out'), () => {
-//     cy.stub(Header, 'logout').as('logout').returns({success:true});
-//     const user = {username: 'test user', contactemail: 'test@gmail.com'};
-//     const handleLogout = cy.spy().as('handleLogoutSpy');
-//     cy.mount(<Header
-//         loggedIn={true}
-//         user={user}
-//         handleLogout={handleLogout}/>);
-//     cy.get('.logout_button').click();
-//     cy.wait('@logoutapi')
-//     cy.get('@handleLogoutSpy').should('have.been.called');
-// }

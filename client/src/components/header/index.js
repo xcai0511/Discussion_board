@@ -24,7 +24,7 @@ const Header = ({
 
     const handleLogoutClick = async () => {
         try {
-            const response = await logout(csrfToken);
+            const response = await Header.logout(csrfToken);
             if (response.success) {
                 handleLogout();
             }
