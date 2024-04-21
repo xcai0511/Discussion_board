@@ -8,7 +8,8 @@ const LoginForm = ({
     setEmail, 
     password, 
     setPassword, 
-    errors, 
+    emailError,
+    passwordError,
     handleLogin, 
     setQuestionPage, 
     setSignUpPage 
@@ -31,14 +32,14 @@ const LoginForm = ({
                 id="loginUsernameInput"
                 val={email}
                 setState={setEmail}
-                err={errors.email}
+                err={emailError}
             />
             <Input
                 title="Password"
                 id="loginPasswordInput"
                 val={password}
                 setState={setPassword}
-                err={errors.password}
+                err={passwordError}
                 onKeyDown={handleEnter}
             />
             <div className="btn-indicator-container">
