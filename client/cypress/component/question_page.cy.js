@@ -49,21 +49,16 @@ describe('QuestionPage Header and OrderButton Component', () => {
 
 describe('QuestionPage Question Component Tests', () => {
     beforeEach(() => {
-        cy.intercept('GET', '**/question/getQuestion**', {
-            statusCode: 200,
-            body: [
-                {
-                    _id: '1',
-                    title: 'Example Title 1',
-                    answers: [],
-                    votes: 3,
-                    views: 150,
-                    tags: [{ _id: 'tag1', name: 'testing' }],
-                    asked_by: 'User1',
-                    ask_date_time: new Date(),
-                },
-            ],
-        }).as('getQuestions');
+        cy.stub(QuestionPage, 'getQuestionsByFilter').resolves([{
+            _id: '1',
+            title: 'Example Title 1',
+            answers: [],
+            votes: 3,
+            views: 150,
+            tags: [{ _id: '1', name: 'testing' }, { _id: '2', name: 'testing2' }],
+            asked_by: 'User1',
+            ask_date_time: new Date()
+        }])
 
         // Spies for prop functions
         const handleAnswer = cy.spy().as('handleAnswerSpy');
@@ -81,7 +76,6 @@ describe('QuestionPage Question Component Tests', () => {
     });
 
     it('loads and displays questions correctly', () => {
-        cy.wait('@getQuestions');
         cy.get('#question_list').should('contain', 'Example Title 1');
         cy.get('.postStats').should('contain', '0 answers');
         cy.get('.postStats').should('contain', '3 votes');
