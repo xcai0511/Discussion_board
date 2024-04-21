@@ -1,5 +1,4 @@
 import Login from "../../src/components/login"
-import LoginForm from "../../src/components/login/loginForm"
 describe('Login Page Component Test', () => {
     beforeEach(() => {
         cy.stub(Login, 'fetchCsrfToken').resolves('dummy-token');
@@ -18,6 +17,7 @@ describe('Login Page Component Test', () => {
 
     it('shows email inputted by user', () => {
         cy.mount(<Login/>);
+        cy.get(' .input_title').contains('Email Address*');
         cy.get('#loginEmailInput').should('have.value', '')
         cy.get('#loginEmailInput').type('abc')
         cy.get('#loginEmailInput').should('have.value', 'abc')
@@ -25,6 +25,7 @@ describe('Login Page Component Test', () => {
 
     it('shows password inputted by user', () => {
         cy.mount(<Login/>);
+        cy.get(' .input_title').contains('Password*');
         cy.get('#loginPasswordInput').should('have.value', '')
         cy.get('#loginPasswordInput').type('abc')
         cy.get('#loginPasswordInput').should('have.value', 'abc')
