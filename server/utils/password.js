@@ -9,6 +9,7 @@ async function hashPassword(password) {
         return hash;
     } catch (error) {
         console.error("Error hashing password:", error);
+        throw error;
     }
 }
 
@@ -17,7 +18,7 @@ async function verifyPassword(password, hash) {
         return await bcrypt.compare(password, hash);
     } catch (error) {
         console.error("Error verifying password:", error);
-        return false;
+        throw error;
     }
 }
 

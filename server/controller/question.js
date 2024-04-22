@@ -43,8 +43,8 @@ const getQuestionById = async (req, res) => {
         }
         res.json(updatedQuestion);
     } catch (e) {
-        console.error(e);
-        res.status(200).json({message: "error while getting question by id"});
+        console.error('Error in getQuestionById controller:', e);
+        res.status(500).json({message: "error while getting question by id"});
     }
 };
 
@@ -110,7 +110,6 @@ const updateQuestionWithTag = async (req, res) => {
     }
 };
 
-// TODO: Split function up into smaller, more readable functions
 const upvoteQuestion = async (req, res) => {
     const {uid} = req.body;
     const {qid} = req.params;
@@ -150,7 +149,6 @@ const upvoteQuestion = async (req, res) => {
     }
 }
 
-// TODO: Split function up into smaller, more readable functions
 const downvoteQuestion = async (req, res) => {
     const {uid} = req.body;
     const {qid} = req.params;

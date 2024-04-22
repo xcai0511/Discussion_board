@@ -7,8 +7,8 @@ on:
 
 jobs:
   # Cypress e2e Test
-  setup:
-    runs-on: [self-hosted]
+  cypress-e2e:
+    runs-on: [self-hosted, x64]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -72,32 +72,83 @@ jobs:
       - name: Stop the client process
         run: kill $(lsof -t -i:3000) || true
 
+  cypress-component:
+    runs-on: [self-hosted, x64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-# jobs:
-  # jest-tests:
-  #   name: Run Jest Tests
-  #   runs-on: [self-hosted, x64]
+      - name: Check if node.js is installed
+        run: node --version || echo "Node.js is not installed"
+        id: check_node_installed
+        continue-on-error: true
 
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+      - name: Install node.js and npm if not installed
+        if: steps.check_node_installed.outcome == 'failure'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies in server directory
+        run: npm install
+        working-directory: server/
 
-  #     - name: Install Jest Dependencies
-  #       run: npm install --prefix server
+      - name: Check if mongod is running
+        run: ps aux | grep -v grep | grep mongod || echo 'mongod is not running'
+        id: check_mongod_running
+        continue-on-error: true
 
-  #     - name: Run Jest Tests
-  #       run: npm test --prefix server/tests
+      - name: Run mongod if not running
+        if: steps.check_mongod_running == 'failure'
+        run: mongod --config /opt/homebrew/etc/mongod.conf --fork
 
-  # cypress-component-tests:
-  #   name: Run Cypress Component Tests
-  #   runs-on: self-hosted
+      - name: Set DB_URL variable
+        run: echo "DB_URL=mongodb://127.0.0.1:27017/fake_so" >> $GITHUB_ENV
 
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+      - name: Run destroy.js
+        env:
+          DB_URL: ${{ env.DB_URL }}
+        run: node destroy.js $DB_URL
+        working-directory: server/
 
-  #     - name: Install Cypress Dependencies
-  #       run: npm install --prefix testing/cypress
+      - name: Start the node server
+        run: node server.js > server.log 2?&1 &
+        working-directory: server/
 
-  #     - name: Run Cypress Component Tests
-  #       run: npx cypress run --headless --spec "testing/cypress/components/*.js"
+      - name: Install dependencies in client directory
+        run: npm install
+        working-directory: client/
+
+      - name: Start the client
+        run: npm start &
+        working-directory: client/
+
+      - name: Install testing dependencies
+        run: npm install cypress
+        working-directory: testing/
+
+      - name: Run component tests
+        run: npx cypress run --spec cypress/component/
+        working-directory: testing/
+
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
+    jest-tests:
+      name: Run Jest Tests
+      runs-on: [self-hosted, x64]
+
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Install Jest Dependencies
+          run: npm install
+          working-directory: server/
+
+        - name: Run Jest Tests
+          run: npm test
+          working-directory: server/tests/

@@ -10,6 +10,7 @@ const Question = require("../../models/questions");
 jest.mock("../../models/answers");
 
 let server;
+
 describe("POST /addAnswer", () => {
 
   beforeEach(() => {
@@ -23,6 +24,12 @@ describe("POST /addAnswer", () => {
 
   // Test Case 1: Should add a new answer
   it("should add a new answer to the question", async () => {
+    const respToken = await supertest(server)
+      .get('/auth/csrf-token');
+
+    // Extract CSRF token from response body
+    const token = respToken.body.csrfToken;
+
     // Mocking the request body
     const mockReqBody = {
       qid: "dummyQuestionId",
@@ -47,7 +54,8 @@ describe("POST /addAnswer", () => {
     // Making the request
     const response = await supertest(server)
       .post("/answer/addAnswer")
-      .send(mockReqBody);
+      .send(mockReqBody)
+      .set('x-csrf-token', token);
 
     // Asserting the response
     expect(response.status).toBe(200);
@@ -68,6 +76,12 @@ describe("POST /addAnswer", () => {
 
   // Test Case 2: Error handling when creating a new answer
   it("should handle error when creating a new answer", async () => {
+    const respToken = await supertest(server)
+      .get('/auth/csrf-token');
+
+    // Extract CSRF token from response body
+    const token = respToken.body.csrfToken;
+  
     // Mocking the request body
     const mockReqBody = {
       qid: "dummyQuestionId",
@@ -84,7 +98,8 @@ describe("POST /addAnswer", () => {
     // Making the request
     const response = await supertest(server)
       .post("/answer/addAnswer")
-      .send(mockReqBody);
+      .send(mockReqBody)
+      .set('x-csrf-token', token);
 
     // Asserting the response
     expect(response.status).toBe(500);
@@ -93,6 +108,12 @@ describe("POST /addAnswer", () => {
 
   // Test Case 3: Handling error when updating the question
   it("should handle error when updating the question", async () => {
+    const respToken = await supertest(server)
+      .get('/auth/csrf-token');
+
+    // Extract CSRF token from response body
+    const token = respToken.body.csrfToken;
+
     // Mocking the request body
     const mockReqBody = {
       qid: "dummyQuestionId",
@@ -114,7 +135,8 @@ describe("POST /addAnswer", () => {
     // Making the request
     const response = await supertest(server)
       .post("/answer/addAnswer")
-      .send(mockReqBody);
+      .send(mockReqBody)
+      .set('x-csrf-token', token);
 
     // Asserting the response
     expect(response.status).toBe(500);
