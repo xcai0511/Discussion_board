@@ -1,8 +1,8 @@
 // Unit tests for utils/question.js
 const mockingoose = require('mockingoose');
-const Tag = require("../../models/tags");
-const Question = require("../../models/questions");
-const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../../utils/question')
+const Tag = require("../models/tags");
+const Question = require("../models/questions");
+const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question')
 Question.schema.path('answers', Array);
 
 const _tag1 = {
@@ -52,6 +52,8 @@ const _questions = [
         text: 'I would like to know the best way to go about storing an array on an android phone so that even when the app/activity ended the data remains',
         tags: [_tag3, _tag2],
         answers: [_ans1, _ans2],
+        score: 3,
+        asked_by: 'user1',
         ask_date_time: new Date('2023-11-16T09:24:00')
     },
     {
@@ -60,6 +62,8 @@ const _questions = [
         text: 'I am currently working on a website where, roughly 40 million documents and images should be served to its users. I need suggestions on which method is the most suitable for storing content with subject to these requirements.',
         tags: [_tag1, _tag2],
         answers: [_ans1, _ans2, _ans3],
+        score: -2,
+        asked_by: 'user2',
         ask_date_time: new Date('2023-11-17T09:24:00')
     },
     {
@@ -68,6 +72,8 @@ const _questions = [
         text: 'Does something like that exist?',
         tags: [],
         answers: [],
+        score: 2,
+        asked_by: 'user3',
         ask_date_time: new Date('2023-11-19T09:24:00')
     },
     {
@@ -76,6 +82,8 @@ const _questions = [
         text: 'Does something like that exist?',
         tags: [],
         answers: [],
+        score: 1,
+        asked_by: 'user1',
         ask_date_time: new Date('2023-11-20T09:24:00')
     },
 ]
@@ -86,7 +94,7 @@ describe('question util module', () => {
         mockingoose.resetAll();
     });
 
-    // addTag
+    // Testing addTag from utils/question
     test('addTag return tag id if the tag already exists', async () => {
         mockingoose(Tag).toReturn(_tag1, 'findOne');
 
@@ -101,46 +109,21 @@ describe('question util module', () => {
         const result = await addTag('javascript');
         expect(result.toString()).toEqual(_tag2._id);
     });
-    
 
-    // filterQuestionsBySearch
-    test('filter question empty string', () => {
-        const result = filterQuestionsBySearch(_questions, '');
+    // Error handling in addTag function
+    test('addTag should handle error when saving new tag', async () => {
+        // Mock Tag.findOne to return null, indicating tag doesn't exist
+        mockingoose(Tag).toReturn(null, 'findOne');
+        // Mock Tag.save to throw an error when trying to save the new tag
+        mockingoose(Tag).toReturn(new Error('Error saving tag'), 'save');
 
-        expect(result.length).toEqual(4);
+        const result = await addTag('newTag');
+
+        // Verify that the function returns null and logs the error
+        expect(result).toBeNull();
     });
 
-    test('filter question by one tag', () => {
-        const result = filterQuestionsBySearch(_questions, '[android]');
-
-        expect(result.length).toEqual(1);
-        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
-    });
-
-    test('filter question by multiple tags', () => {
-        const result = filterQuestionsBySearch(_questions, '[android] [react]');
-
-        expect(result.length).toEqual(2);
-        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
-        expect(result[1]._id).toEqual('65e9b5a995b6c7045a30d823');
-    });
-
-    test('filter question by one keyword', () => {
-        const result = filterQuestionsBySearch(_questions, 'website');
-
-        expect(result.length).toEqual(1);
-        expect(result[0]._id).toEqual('65e9b5a995b6c7045a30d823');
-    });
-
-    test('filter question by tag and keyword', () => {
-        const result = filterQuestionsBySearch(_questions, 'website [android]');
-
-        expect(result.length).toEqual(2);
-        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
-        expect(result[1]._id).toEqual('65e9b5a995b6c7045a30d823');
-    });
-
-    // getQuestionsByOrder
+    // Testing getQuestionsByOrder from utils/question
     test('get active questions, newest questions sorted by most recently answered 1', async () => {
         mockingoose(Question).toReturn(_questions.slice(0, 3), 'find');
 
@@ -224,27 +207,80 @@ describe('question util module', () => {
         expect(result[1]._id.toString()).toEqual('65e9b716ff0e892116b2de01');
         expect(result[2]._id.toString()).toEqual('65e9b716ff0e892116b2de05');
     });
+    
 
-    // Error handling in addTag function
-    test('addTag should handle error when saving new tag', async () => {
-        // Mock Tag.findOne to return null, indicating tag doesn't exist
-        mockingoose(Tag).toReturn(null, 'findOne');
-        // Mock Tag.save to throw an error when trying to save the new tag
-        mockingoose(Tag).toReturn(new Error('Error saving tag'), 'save');
+    // Testing filterQuestionsBySearch from utils/question
+    test('filter question empty string', () => {
+        const result = filterQuestionsBySearch(_questions, '');
 
-        const result = await addTag('newTag');
-
-        // Verify that the function returns null and logs the error
-        expect(result).toBeNull();
+        expect(result.length).toEqual(4);
     });
 
-    // Error handling in filterQuestionsBySearch function
-    test('filterQuestionsBySearch should handle error during filtering', () => {
-        // Provide input that triggers an error, such as malformed search terms
-        const invalidSearch = '[invalid';
+    test('filter question by one tag', () => {
+        const result = filterQuestionsBySearch(_questions, '[android]');
 
-        // Call the function with invalid input and expect it to handle the error gracefully
-        const result = filterQuestionsBySearch(_questions, invalidSearch);
-        // Ensure that the error is logged or handled appropriately
+        expect(result.length).toEqual(1);
+        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
+    });
+
+    test('filter question by multiple tags', () => {
+        const result = filterQuestionsBySearch(_questions, '[android] [react]');
+
+        expect(result.length).toEqual(2);
+        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
+        expect(result[1]._id).toEqual('65e9b5a995b6c7045a30d823');
+    });
+
+    test('filter question by one keyword', () => {
+        const result = filterQuestionsBySearch(_questions, 'website');
+
+        expect(result.length).toEqual(1);
+        expect(result[0]._id).toEqual('65e9b5a995b6c7045a30d823');
+    });
+
+    test('filter question by tag and keyword', () => {
+        const result = filterQuestionsBySearch(_questions, 'website [android]');
+
+        expect(result.length).toEqual(2);
+        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
+        expect(result[1]._id).toEqual('65e9b5a995b6c7045a30d823');
+    });
+
+    test('filter question by tag that does not exist', () => {
+        const result = filterQuestionsBySearch(_questions, 'nonExistentTag');
+
+        expect(result.length).toEqual(0);
+    });
+
+    test('filter question by answer count', () => {
+        const result = filterQuestionsBySearch(_questions, 'answers:2');
+
+        expect(result.length).toEqual(1);
+        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
+    });
+
+    test('filter question by unanswered count', () => {
+        const result = filterQuestionsBySearch(_questions, 'answers:0');
+
+        expect(result.length).toEqual(2);
+        expect(result[0]._id).toEqual('65e9b9b44c052f0a08ecade0');
+        expect(result[1]._id).toEqual('65e9b716ff0e892116b2de09');
+    })
+
+    test ('filter question by user', () => {
+        const result = filterQuestionsBySearch(_questions, 'user:user1');
+
+        expect(result.length).toEqual(2);
+        expect(result[0].asked_by).toEqual('user1');
+        expect(result[1].asked_by).toEqual('user1');
+    });
+
+    test ('filter question by post score', () => {
+        const result = filterQuestionsBySearch(_questions, 'score:0');
+        
+        expect(result.length).toEqual(3);
+        expect(result[0]._id).toEqual('65e9b58910afe6e94fc6e6dc');
+        expect(result[1]._id).toEqual('65e9b9b44c052f0a08ecade0');
+        expect(result[2]._id).toEqual('65e9b716ff0e892116b2de09');
     });
 })
