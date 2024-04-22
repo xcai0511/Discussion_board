@@ -85,7 +85,7 @@ const NewQuestion = ({ handleQuestions, user, loggedIn, csrfToken }) => {
             ask_date_time: new Date(),
         };
 
-        const res = await addQuestion(question, csrfToken);
+        const res = await NewQuestion.addQuestion(question, csrfToken);
         if (res && res._id) {
             handleQuestions();
         }
@@ -136,12 +136,14 @@ const NewQuestion = ({ handleQuestions, user, loggedIn, csrfToken }) => {
                     </Form>
                 </>
             ) : (
-                <div>Please log in to ask questions</div>
+                <div className="login_indicator">Please log in to ask questions</div>
             )}
         </>
 
 
     );
 };
+
+NewQuestion.addQuestion = addQuestion;
 
 export default NewQuestion;
