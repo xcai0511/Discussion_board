@@ -1,53 +1,41 @@
 import Tag from '../../src/components/main/tagPage/tag';
 import TagPage from '../../src/components/main/tagPage'
 // Tag Component
-it('Rendering Tag Component', () => {
-    const tag = {tid : 1, name : 'Sample Tag '}
-    const getQuestionCountByTag = (id) => id
-    const clickTag = (name) => console.log('Clicked on clickTag '+name)
-    const handleNewQuestion = (name) => console.log('handle new question '+name)
+describe('Tag Page Component Test', () => {
+    beforeEach(() => {
+        cy.stub(TagPage, 'getTagsWithQuestionNumber').resolves([
+            {
+                name: 'tag1',
+                qcnt: 2
+            },
+            {
+                name: 'tag2',
+                qcnt: 3
+            }
+        ])
 
-    cy.window().then((win) => {
-        cy.spy(win.console, 'log').as('consoleLogSpy');
-    });
+        const clickTag = cy.spy().as('clickTagSpy');
+        const handleNewQuestion = cy.spy().as('handleNewQuestionSpy');
 
-    cy.mount(<Tag
-        clickTag={clickTag}
-        handleNewQuestion={handleNewQuestion}
-    />)
-    cy.get('.tagNode > .tagName').contains(tag.name)
-    cy.get('div.tagNode').invoke('text').then((text) => {
-        expect(text).to.equal(tag.name + getQuestionCountByTag(tag.tid) + ' questions');
+        cy.mount(<TagPage clickTag={clickTag} handleNewQuestion={handleNewQuestion}/>)
     })
-})
+    it('renders the tag page properly', () => {
+        cy.get('.bold_title').contains('0 Tags');
+        cy.get('.bold_title').contains('All Tags');
+        cy.get('.bluebtn').should('have.text', 'Ask a Question');
+        cy.get('.tagNode').contains('tag1');
+        cy.get('.tagNode').contains('2 questions');
+        cy.get('.tagNode').contains('tag2');
+        cy.get('.tagNode').contains('3 questions');
+    })
 
-// Tag Page Component
-it('Rendering Tag Page Component', () => {
-    const tag1 = {tid : 1, name : 'Sample Tag 1'}
-    const tag2 = {tid : 2, name : 'Sample Tag 2'}
-    const tlist = [tag1, tag2]
-    const getQuestionCountByTag = (id) => id
-    const clickTag = (name) => console.log('Clicked on clickTag '+name)
-    const onClickText = 'Ask a question'
-    const handleNewQuestion = () => console.log(onClickText)
-    cy.window().then((win) => {
-        cy.spy(win.console, 'log').as('consoleLogSpy');
-    });
+    it('clickTag should be called when tag is clicked', () => {
+        cy.get('.tagNode').click({ multiple: true });
+        cy.get('@clickTagSpy').should('have.been.calledTwice');
+    })
 
-    cy.mount(<TagPage
-        tlist={tlist}
-        getQuestionCountByTag={getQuestionCountByTag}
-        clickTag={clickTag}
-        handleNewQuestion = {handleNewQuestion}/>)
-    cy.get('.bold_title').contains(tlist.length + ' Tags')
-    cy.get('.bluebtn').click()
-    cy.get('@consoleLogSpy').should('have.been.called');
-    cy.get('@consoleLogSpy').then(consoleLogSpy => {
-        expect(consoleLogSpy).to.have.been.calledWith(onClickText);
-    });
-    cy.get('.tagNode > .tagName').contains(tag1.name)
-    cy.get('.tagNode > .tagName').contains(tag2.name)
-    cy.get('div.tagNode').invoke('text').then((text) => {
-        expect(text).to.equal(tag1.name + getQuestionCountByTag(tag1.tid) + ' questions' + tag2.name + getQuestionCountByTag(tag2.tid) + ' questions');
+    it('handleNewQuestion should be called when button clicked', () => {
+        cy.get('.bluebtn').click();
+        cy.get('@handleNewQuestionSpy').should('have.been.calledOnce');
     })
 })

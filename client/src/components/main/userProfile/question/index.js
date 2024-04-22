@@ -10,44 +10,6 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
     const [tags, setTags] = useState(q.tags);
     const [tagErr, setTagErr] = useState("");
 
-    // const validateTags = (tags) => {
-    //     if (tags.length === 0) {
-    //         setTagErr("Should have at least 1 tag");
-    //         return false;
-    //     } else if (tags.length > 5) {
-    //         setTagErr("Cannot have more than 5 tags");
-    //         return false;
-    //     }
-
-    //     for (let tag of tags) {
-    //         if (tag.length > 20) {
-    //             setTagErr("New tag length cannot be more than 20");
-    //             return false;
-    //         }
-    //     }
-
-    //     return true;
-    // };
-
-    // const checkExistingTags = async (newTags) => {
-    //     try {
-    //         const existingTags = await Promise.all(newTags.map(async (tag) => {
-    //             const response = await updateQuestionWithTag(q._id, tag, csrfToken);
-    //             return response.tags.some((existingTag) => existingTag.name.toLowerCase() === tag.toLowerCase());
-    //         }));
-
-    //         if (existingTags.some((exists) => exists)) {
-    //             alert("One or more tags you are trying to add are already associated with this question");
-    //             return true;
-    //         }
-
-    //         return false;
-    //     } catch (error) {
-    //         console.error("Error checking existing tags:", error);
-    //         return true;
-    //     }
-    // };
-
     // TODO: Split into smaller functions
     const handleAddTag = async () => {
         try {
@@ -63,6 +25,7 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
                 return;
             } else if (newTags.length > 5) {
                 setTagErr("Cannot have more than 5 tags");
+                setNewTag('');
                 return;
             }
 
@@ -77,13 +40,13 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
             // Check if any of the new tags already exist in the list of tags associated with the question
             if (newTags.some(newTag => tags.some(tag => tag.name.toLowerCase() === newTag.toLowerCase()))) {
                 alert("One or more tags you are trying to add are already associated with this question");
+                setNewTag('');
                 return;
             }
 
             // Add each new tag to the question
             for (let tag of newTags) {
-                const updatedQuestion = await updateQuestionWithTag(q._id, tag, csrfToken);
-                console.log("Tag added successfully:", updatedQuestion);
+                const updatedQuestion = await YourQuestion.updateQuestionWithTag(q._id, tag, csrfToken);
                 setTags(updatedQuestion.tags);
             }
 
@@ -126,7 +89,7 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
                                 onChange={(e) => setNewTag(e.target.value)}
                                 placeholder="Enter new tag"
                             />
-                            <button onClick={handleAddTag}>Add</button>
+                            <button onClick={handleAddTag} className='addTag_btn'>Add</button>
                         </>
                     )}
                     {tagErr && <div className="tag_error">{tagErr}</div>}
@@ -147,5 +110,6 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
         </div>
     );
 };
+YourQuestion.updateQuestionWithTag = updateQuestionWithTag;
 
 export default YourQuestion;

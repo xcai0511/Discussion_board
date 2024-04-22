@@ -3,16 +3,17 @@ import Input from '../../main/baseComponents/input';
 import Form from '../../main/baseComponents/form';
 import "./index.css";
 
-const LoginForm = ({ 
-    email, 
-    setEmail, 
-    password, 
-    setPassword, 
-    errors, 
-    handleLogin, 
-    setQuestionPage, 
-    setSignUpPage 
-}) => {
+const LoginForm = ({
+                       email,
+                       setEmail,
+                       password,
+                       setPassword,
+                       emailError,
+                       passwordError,
+                       handleLogin,
+                       setQuestionPage,
+                       setSignUpPage
+                   }) => {
 
     const handleEnter = (e) => {
         if (e.key === 'Enter') {
@@ -23,22 +24,22 @@ const LoginForm = ({
 
     return (
         <Form>
-            <div className="back-button-container">
-                <a href="#" onClick={() => setQuestionPage()}>Back</a>
+            <div className="back-button-container" onClick={() => setQuestionPage()}>
+                <a href="#">Back</a>
             </div>
             <Input
                 title="Email Address"
-                id="loginUsernameInput"
+                id="loginEmailInput"
                 val={email}
                 setState={setEmail}
-                err={errors.email}
+                err={emailError}
             />
             <Input
                 title="Password"
                 id="loginPasswordInput"
                 val={password}
                 setState={setPassword}
-                err={errors.password}
+                err={passwordError}
                 onKeyDown={handleEnter}
             />
             <div className="btn-indicator-container">
@@ -53,7 +54,10 @@ const LoginForm = ({
                 </div>
             </div>
             <div className="link-to-signup">
-                <h5>Don&apos;t have an account?</h5><button onClick={setSignUpPage}>Sign Up</button>
+                <h5>Don&apos;t have an account?</h5>
+                <button
+                    className="signupBtn"
+                    onClick={setSignUpPage}>Sign Up</button>
             </div>
         </Form>
     );

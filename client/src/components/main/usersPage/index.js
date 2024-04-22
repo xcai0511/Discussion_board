@@ -7,7 +7,7 @@ const UsersPage = ({ clickUser, handleNewQuestion}) => {
     const [ulist, setUlist] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            let res = await getAllUsers();
+            let res = await UsersPage.getAllUsers();
             setUlist(res || []);
         };
 
@@ -37,4 +37,5 @@ const UsersPage = ({ clickUser, handleNewQuestion}) => {
     );
 };
 
+UsersPage.getAllUsers = getAllUsers;
 export default UsersPage;

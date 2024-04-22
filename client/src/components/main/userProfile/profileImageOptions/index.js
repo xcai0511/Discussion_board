@@ -16,7 +16,7 @@ const ProfileImageOptions = ({ selectedProfileImage, setSelectedProfileImage, ha
                     />
                 ))}
             </div>
-            <button onClick={handleSaveProfileImage}>Save</button>
+            <button onClick={handleSaveProfileImage} className="saveImage_btn">Save</button>
         </div>
     );
 };

@@ -1,39 +1,71 @@
 import "./index.css";
 import React, { useState } from 'react';
 import {login, fetchCsrfToken} from "../../services/authService";
+import { validateEmailAddress } from "../../tool"
 import LoginForm from "./loginForm";
 
 const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({ email: '', password: '' });
+    //const [errors, setErrors] = useState({ email: '', password: '' });
+    const [emailErr, setEmailErr] = useState("");
+    const [passwordErr, setPasswordErr] = useState("");
 
+    const validateEmail = () => {
+        if (!email) {
+            setEmailErr("Email address cannot be empty");
+            return false;
+        } else if (!validateEmailAddress(email)) {
+            setEmailErr("Invalid email format.");
+            setEmail('');
+            return false;
+        }
+        setEmailErr("");
+        return true;
+    }
+
+    const validatePassword = () => {
+        if (!password) {
+            setPasswordErr("Password cannot be empty");
+            return false;
+        } else if (password.length < 8) {
+            setPasswordErr("Password is too short (min 8 characters)");
+            setPassword('');
+            return false;
+        } else if (password.length > 20) {
+            setPasswordErr("Password is too long (max is 20 characters)");
+            setPassword('');
+            return false;
+        }
+        setPasswordErr("");
+        return true;
+    };
     const handleLogin = async () => {
-        if (!email || !password) {
-            setErrors({
-                email: email ? '' : 'Email cannot be empty',
-                password: password ? '' : 'Password cannot be empty',
-            });
+        let isValid = true;
+
+        isValid = validateEmail() && isValid;
+        isValid = validatePassword() && isValid;
+
+        if (!isValid) {
             return;
         }
 
         try {
-            const csrfToken = await fetchCsrfToken();
-            const res = await login(email, password, csrfToken);
+            const csrfToken = await Login.fetchCsrfToken();
+            const res = await Login.login(email, password, csrfToken);
 
             if (res.success) {
                 loginUser(res.user, csrfToken);
             } else if (res.message === "email") {
-                setErrors({email: "Email does not exist"});
+                setEmailErr("Email does not exist");
                 setEmail("");
                 setPassword("");
             } else if (res.message === "password") {
-                setErrors({password: "Password does not match"});
+                setPasswordErr("Password does not match");
                 setPassword("")
             }
         } catch (error) {
             console.error("Error during login:", error);
-            setErrors({ ...errors, form: error.message || 'An error occurred while logging in. Please try again later.' });
         }
     };
 
@@ -43,7 +75,8 @@ const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
             setEmail={setEmail}
             password={password}
             setPassword={setPassword}
-            errors={errors}
+            emailError={emailErr}
+            passwordError={passwordErr}
             handleLogin={handleLogin}
             setQuestionPage={setQuestionPage}
             setSignUpPage={setSignUpPage}
@@ -51,4 +84,6 @@ const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
     );
 };
 
+Login.login = login;
+Login.fetchCsrfToken = fetchCsrfToken;
 export default Login;

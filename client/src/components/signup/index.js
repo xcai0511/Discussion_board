@@ -22,6 +22,7 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
             return false;
         } else if (usrn.length > 20) {
             setUsrnErr("Username cannot be more than 20 characters")
+            setUsrn('');
             return false;
         }
         setUsrnErr("");
@@ -34,6 +35,7 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
             return false;
         } else if (!validateEmailAddress(email)) {
             setEmailErr("Invalid email format.");
+            setEmail('');
             return false;
         }
         setEmailErr("");
@@ -46,9 +48,11 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
             return false;
         } else if (password.length < 8) {
             setPasswordErr("Password is too short (min 8 characters)");
+            setPassword('');
             return false;
         } else if (password.length > 20) {
             setPasswordErr("Password is too long (max is 20 characters)");
+            setPassword('');
             return false;
         }
         setPasswordErr("");
@@ -56,8 +60,14 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
     };
 
     const validatePasswordMatch = () => {
+        if (!passwordVerify) {
+            setPasswordVerifyErr("Confirm password cannot be empty");
+            return false;
+        }
         if (password !== passwordVerify) {
             setPasswordVerifyErr("Password does not match");
+            setPasswordVerify('');
+            setPassword('')
             return false;
         }
         setPasswordVerifyErr("");
@@ -84,7 +94,7 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
                 saved_questions: []
             };
     
-            const res = await addUser(newUser, csrfToken);
+            const res = await SignUp.addUser(newUser, csrfToken);
             if (res && res._id) {
                 alert("Sign up success!");
                 signUpUser();
@@ -98,7 +108,7 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
 
     useEffect(() => {
         const initAuth = async () => {
-            const token = await fetchCsrfToken();
+            const token = await SignUp.fetchCsrfToken();
             setCsrfToken(token);
         };
         initAuth();
@@ -124,5 +134,8 @@ const SignUp = ({ signUpUser, setQuestionPage, setLoginPage }) => {
         />
     );
 };
+
+SignUp.addUser = addUser;
+SignUp.fetchCsrfToken = fetchCsrfToken;
 
 export default SignUp;

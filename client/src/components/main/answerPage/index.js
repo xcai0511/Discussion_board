@@ -17,7 +17,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
 
     const handleNewAnswer = async (qid) => {
         try {
-            const updatedQuestion = await getQuestionById(qid);
+            const updatedQuestion = await AnswerPage.getQuestionById(qid);
             setQuestion(updatedQuestion || {});
         } catch (error) {
             console.error("Error fetching updated question:", error);
@@ -33,7 +33,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
         const bookmarkStatus = !isBookmarked;
         setIsBookmarked(bookmarkStatus);
         try {
-            const res = await saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken);
+            const res = await AnswerPage.saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken);
             console.log(res);
         } catch (error) {
             console.error("Error saving question:", error);
@@ -63,7 +63,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
 
     const handleUpvote = async () => {
         try {
-            const res = await upvoteQuestion(qid, user._id, csrfToken);
+            const res = await AnswerPage.upvoteQuestion(qid, user._id, csrfToken);
             setScore(res.updatedQuestion.score);
         } catch (e) {
             console.error("Error upvoting question:", e);
@@ -72,7 +72,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
 
     const handleDownvote = async () => {
         try {
-            const res = await downvoteQuestion(qid, user._id, csrfToken);
+            const res = await AnswerPage.downvoteQuestion(qid, user._id, csrfToken);
             setScore(res.updatedQuestion.score);
         } catch (e) {
             console.error("Error downvoting question:", e);
@@ -82,7 +82,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
     useEffect(() => {
         const fetchData = async () => {
 
-            let res = await getQuestionById(qid);
+            let res = await AnswerPage.getQuestionById(qid);
             setQuestion(res || {});
             setScore(res.score);
 
@@ -90,7 +90,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
                 return;
             }
 
-            let currUser = await getUserById(user._id);
+            let currUser = await AnswerPage.getUserById(user._id);
             // Check if the current question ID exists in the user's saved_questions array
             if (currUser.saved_questions.includes(qid)) {
                 setIsBookmarked(true);
@@ -149,5 +149,9 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
         </>
     );
 };
-
+AnswerPage.getQuestionById = getQuestionById;
+AnswerPage.upvoteQuestion = upvoteQuestion;
+AnswerPage.downvoteQuestion = downvoteQuestion;
+AnswerPage.getUserById = getUserById;
+AnswerPage.saveQuestionToUser = saveQuestionToUser
 export default AnswerPage;

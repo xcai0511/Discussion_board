@@ -17,7 +17,7 @@ const NewAnswer = ({ qid, handleAnswer, user, csrfToken  }) => {
         }
 
         // Hyperlink validation
-        if (!validateHyperlink(text)) {
+        if (!NewAnswer.validateHyperlink(text)) {
             setTextErr("Invalid hyperlink format.");
             isValid = false;
         }
@@ -32,9 +32,9 @@ const NewAnswer = ({ qid, handleAnswer, user, csrfToken  }) => {
             ans_date_time: new Date(),
         };
 
-        const res = await addAnswer(qid, answer, csrfToken);
+        const res = await NewAnswer.addAnswer(qid, answer, csrfToken);
         if (res && res._id) {
-            handleAnswer ();
+            handleAnswer();
             setText("");
         }
     };
@@ -63,5 +63,8 @@ const NewAnswer = ({ qid, handleAnswer, user, csrfToken  }) => {
         </Form>
     );
 };
+
+NewAnswer.validateHyperlink = validateHyperlink;
+NewAnswer.addAnswer = addAnswer;
 
 export default NewAnswer;

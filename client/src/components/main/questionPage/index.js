@@ -19,7 +19,7 @@ const QuestionPage = ({
 
     useEffect(() => {
         const fetchData = async () => {
-            let res = await getQuestionsByFilter(order, search);
+            let res = await QuestionPage.getQuestionsByFilter(order, search);
             setQlist(res || []);
         };
 
@@ -53,4 +53,5 @@ const QuestionPage = ({
     );
 };
 
+QuestionPage.getQuestionsByFilter = getQuestionsByFilter;
 export default QuestionPage;
