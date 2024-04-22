@@ -122,6 +122,10 @@ describe('Add answer component when logged in', () => {
 
     });
 
+    it('new answer component shows title', () => {
+        cy.get(' .input_title').contains('Answer Text*');
+    })
+
     it('new answer shows text inputted by user', () => {
         cy.get('#answerTextInput').should('have.value', '')
         cy.get('#answerTextInput').type('test')

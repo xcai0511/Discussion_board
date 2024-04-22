@@ -11,6 +11,11 @@ describe('New Question Page Components when user logged in', () => {
         const loggedIn = true;
         cy.mount(<NewQuestion loggedIn={loggedIn}/>)
     })
+    it('shows input title', () => {
+        cy.get(' .input_title').contains('Question Title*');
+        cy.get(' .input_title').contains('Question Text*');
+        cy.get(' .input_title').contains('Tags*');
+    })
     it('shows title inputted by user', () => {
         cy.get('#formTitleInput').should('have.value', '')
         cy.get('#formTitleInput').type('abc')

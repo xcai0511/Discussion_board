@@ -28,16 +28,18 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
       isValid = false;
     } else if (newPassword.length < 8) {
       setNewPasswordError("Password is too short (minimum is 8 characters)")
+      setNewPassword('');
       isValid = false;
     } else if (newPassword.length > 20) {
       setNewPasswordError("Password is too long (maximum is 20 characters)")
+      setNewPassword('');
       isValid = false;
     }
     if (!isValid) {
       return;
     }
     try {
-      const updateResponse = await updatePassword(user.username, currPassword, newPassword, csrfToken);
+      const updateResponse = await UserProfile.updatePassword(user.username, currPassword, newPassword, csrfToken);
       if (updateResponse.success) {
         alert("Password updated successfully!");
         setShowChangePassword(false);
@@ -56,7 +58,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
   const handleSaveProfileImage = async () => {
     try {
         // Call the service method to update profile image
-        const updateResponse = await updateUserProfileImage(user.username, selectedProfileImage, csrfToken);
+        const updateResponse = await UserProfile.updateUserProfileImage(user.username, selectedProfileImage, csrfToken);
         if (updateResponse.success) {
             alert("Profile image updated successfully!");
             setShowProfileImageOptions(false);
@@ -72,7 +74,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
   // Function to fetch user's questions
   const fetchUserQuestions = async () => {
     try {
-      const questions = await getQuestionsByFilter('newest', ''); // Fetch all questions
+      const questions = await UserProfile.getQuestionsByFilter('newest', ''); // Fetch all questions
       const userQuestions = questions.filter(question => question.asked_by === user.username); // Filter questions by logged-in user
       setUserQuestions(userQuestions);
       setLoading(false); // Set loading to false after fetching questions
@@ -86,7 +88,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
     if (window.confirm("Are you sure you want to delete this question?")) {
       try {
         // Call the service method to delete the question
-        await deleteQuestionById(questionId, csrfToken);
+        await UserProfile.deleteQuestionById(questionId, csrfToken);
         
         // Remove the deleted question from the userQuestions state
         setUserQuestions(userQuestions.filter(question => question._id !== questionId));
@@ -103,8 +105,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
     const fetchData = async () => {
       if (loggedIn) {
         fetchUserQuestions(); // Fetch user's questions when logged in
-        const currUser = await getUserById(user._id);
-        console.log(currUser);
+        const currUser = await UserProfile.getUserById(user._id);
         setSelectedProfileImage(currUser.profileImage);
       }
     };
@@ -116,13 +117,13 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
       <h2>User Profile</h2>
       {loggedIn ? (
           <>
-            <img src={`images/${selectedProfileImage}`} alt="Profile Image" />
-            <p>Username: {user.username}</p>
-            <p>Contact Email: {user.contactemail}</p>
-            <button onClick={() => setShowChangePassword(prevState => !prevState)}>
+            <img src={`images/${selectedProfileImage}`} className="profileImage" alt="Profile Image" />
+            <p className="profileUsername">Username: {user.username}</p>
+            <p className="profileEmail">Contact Email: {user.contactemail}</p>
+            <button onClick={() => setShowChangePassword(prevState => !prevState)} className="password_btn">
                 {showChangePassword ? "Hide Change Password" : "Change Password"}
             </button>
-            <button onClick={() => setShowProfileImageOptions(prevState => !prevState)}>
+            <button onClick={() => setShowProfileImageOptions(prevState => !prevState)} className="image_btn">
                 {showProfileImageOptions ? "Hide Change Profile Picture" : "Change Profile Picture"}
             </button>
             {showChangePassword && (
@@ -163,5 +164,11 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
     </div>
   );
 };
+
+UserProfile.getUserById = getUserById;
+UserProfile.updatePassword = updatePassword;
+UserProfile.updateUserProfileImage = updateUserProfileImage;
+UserProfile.getQuestionsByFilter = getQuestionsByFilter;
+UserProfile.deleteQuestionById = deleteQuestionById;
 
 export default UserProfile;
