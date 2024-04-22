@@ -8,7 +8,7 @@ const SavedPosts = ({ clickTag, handleAnswer, user, csrfToken }) => {
     useEffect(() => {
         const fetchSavedQuestions = async () => {
 
-            let res = await getSavedQuestions(user.contactemail, csrfToken);
+            let res = await SavedPosts.getSavedQuestions(user.contactemail, csrfToken);
             setSavedQuestions(res || []);
         };
 
@@ -28,4 +28,5 @@ const SavedPosts = ({ clickTag, handleAnswer, user, csrfToken }) => {
     );
 };
 
+SavedPosts.getSavedQuestions = getSavedQuestions;
 export default SavedPosts;

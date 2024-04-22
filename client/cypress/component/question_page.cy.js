@@ -80,6 +80,8 @@ describe('QuestionPage Question Component Tests', () => {
         cy.get('.postStats').should('contain', '0 answers');
         cy.get('.postStats').should('contain', '3 votes');
         cy.get('.postStats').should('contain', '150 views');
+        cy.get('.question_tags').should('contain', 'testing');
+        cy.get('.question_tags').should('contain', 'testing2');
         cy.get('.question_author').should('contain', 'User1');
         cy.get('.question_meta').should('contain', 'asked 0 seconds ago');
     });
