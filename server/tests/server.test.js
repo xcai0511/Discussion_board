@@ -1,9 +1,15 @@
 const request = require('supertest');
 const { default: mongoose } = require("mongoose");
+const User = require('../models/users');
+const { verifyPassword } = require("../utils/password");
 
+jest.mock("../utils/password", () => ({
+  verifyPassword: jest.fn()
+}));
+jest.mock('../models/users');
 let server;
 describe('Session management tests', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     server = require('../server');
   })
 
@@ -12,39 +18,50 @@ describe('Session management tests', () => {
     await mongoose.disconnect()
   });
 
-  // TODO: Fix -- returns 403 error
   it('POST /login should return 200 if the user is valid and has a token and session', async () => {
     // Get CSRF token
-    const respToken = await request(server)
-    .get('/auth/csrf-token');
+    const respToken = await request(server).get('/auth/csrf-token');
 
     const token = respToken.body.csrfToken;
 
     // Extract the session ID from the response headers
-    const setCookieHeader = respToken.headers['set-cookie'][0];
-    sessionId = setCookieHeader.split(';')[0].split('=')[1];
+    let connectSidValue = null;
+    respToken.headers['set-cookie'].forEach(cookie => {
+      if (cookie.includes('connect.sid')) {
+        connectSidValue = cookie.split('=')[1].split(';')[0];
+      }
+    });
 
     // Ensure the CSRF token was obtained successfully
     expect(respToken.status).toBe(200);
 
-    const fakeUser = { username: 'user1', password: 'password1' };
-    const loginResponse = await request(server)
-      .post('/auth/login')
-      .send({ fakeUser })
-      .set('x-csrf-token', token)
-      .set('Cookie', `session_id=${sessionId}`);
+    const fakeUser = { username: 'user1', contactemail: 'test@email.com', password: 'testpassword' };
+    User.findOne = jest.fn().mockResolvedValueOnce(fakeUser);
+    verifyPassword.mockResolvedValue(true);
+    const loginResponse =  await request(server)
+        .post('/auth/login')
+        .send(fakeUser)
+        .set('x-csrf-token', token)
+        .set('Cookie', [`connect.sid=${connectSidValue}`]);
+    expect(loginResponse.status).toBe(200);
 
-      expect(loginResponse.status).toBe(200);
+    // Assert that the response body contains the expected user object
+    expect(loginResponse.body.user.contactemail).toBe(fakeUser.contactemail);
+    expect(loginResponse.body.user.password).toBe(fakeUser.password);
   });
+
 
   it('POST /login must return 403 forbidden if the user is valid but has no token', async () => {
     // Get CSRF token
-    const respToken = await request(server)
-    .get('/auth/csrf-token');
+    const respToken = await request(server).get('/auth/csrf-token');
 
     // Extract the session ID from the response headers
-    const setCookieHeader = respToken.headers['set-cookie'][0];
-    sessionId = setCookieHeader.split(';')[0].split('=')[1];
+    let connectSidValue = null;
+    respToken.headers['set-cookie'].forEach(cookie => {
+      if (cookie.includes('connect.sid')) {
+        connectSidValue = cookie.split('=')[1].split(';')[0];
+      }
+    });
 
     // Ensure the CSRF token was obtained successfully
     expect(respToken.status).toBe(200);
@@ -53,7 +70,7 @@ describe('Session management tests', () => {
     const loginResponse = await request(server)
       .post('/auth/login')
       .send({ fakeUser })
-      .set('Cookie', `session_id=${sessionId}`);
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
       expect(loginResponse.status).toBe(403);
   });
 
@@ -76,14 +93,16 @@ describe('Session management tests', () => {
       expect(respLogin.status).toBe(403);
   });
 
-  // TODO: Fix -- returns 403 error
   it('/logout should successfully destroy the session', async () => {
     // Get CSRF token
-    const respToken = await request(server)
-      .get('/auth/csrf-token');
+    const respToken = await request(server).get('/auth/csrf-token');
 
-    const setCookieHeader = respToken.headers['set-cookie'][0];
-    sessionId = setCookieHeader.split(';')[0].split('=')[1];
+    let connectSidValue = null;
+    respToken.headers['set-cookie'].forEach(cookie => {
+      if (cookie.includes('connect.sid')) {
+        connectSidValue = cookie.split('=')[1].split(';')[0];
+      }
+    });
   
     const token = respToken.body.csrfToken;
   
@@ -91,22 +110,25 @@ describe('Session management tests', () => {
     expect(respToken.status).toBe(200);
   
     // Login to establish a session
-    const loginResponse = await request(server)
-      .post('/auth/login')
-      .send({ username: 'user1', password: 'password1' })
-      .set('x-csrf-token', token)
-      .set('Cookie', `session_id=${sessionId}`);
+    const fakeUser = { username: 'user1', contactemail: 'test@email.com', password: 'testpassword' };
+    User.create.mockResolvedValueOnce(fakeUser);
+    User.findOne = jest.fn().mockResolvedValueOnce(fakeUser);
+    verifyPassword.mockResolvedValue(true);
+    const loginResponse =  await request(server)
+        .post('/auth/login')
+        .send(fakeUser)
+        .set('x-csrf-token', token)
+        .set('Cookie', [`connect.sid=${connectSidValue}`]);
   
     // Ensure login was successful
     expect(loginResponse.status).toBe(200);
   
     // Extract session cookie from login response
-    const sessionCookie = loginResponse.headers['set-cookie'][0];
   
     // Perform logout using the session cookie
     const logoutResponse = await request(server)
       .post('/auth/logout')
-      .set('Cookie', sessionCookie)
+      .set('Cookie', [`connect.sid=${connectSidValue}`])
       .set('x-csrf-token', token);
   
     // Ensure the session is destroyed and the response indicates success

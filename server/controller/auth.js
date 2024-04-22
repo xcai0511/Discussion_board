@@ -6,9 +6,9 @@ const { verifyPassword } = require("../utils/password")
 const { csrfProtection } = require("../auth-server");
 
 const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { contactemail, password } = req.body;
     try {
-        const user = await User.findOne({contactemail: email});
+        const user = await User.findOne({contactemail: contactemail});
         if (user == null) {
             return res.json({success: false, message: "email"});
         }
@@ -27,16 +27,21 @@ const login = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    req.session.destroy();
-    res.json({ success: true });
+    if(req.session) {
+        req.session.destroy();
+        res.json({ success: true });
+    }
+    else {
+        res.json({ success: false });
+    }
 }
 
-const csrf = async (req, res) => {
+const fetchCsrfToken = async (req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 }
 
 
 router.post('/login', csrfProtection, login);
 router.post('/logout', csrfProtection, logout);
-router.get('/csrf-token', csrfProtection, csrf);
+router.get('/csrf-token', csrfProtection, fetchCsrfToken);
 module.exports = router;
