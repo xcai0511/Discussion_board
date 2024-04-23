@@ -128,7 +128,7 @@ jobs:
         working-directory: client/
 
       - name: Run component tests
-        run: npx cypress run --spec cypress/component/
+        run: npx cypress run --component
         working-directory: client/
 
       - name: Kill the node server process
