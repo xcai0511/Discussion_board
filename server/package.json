@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "jest --runInBand --force-exit"
+        "test": "jest"
     },
     "author": "",
     "license": "ISC",
