@@ -8,8 +8,8 @@ const { default: mongoose } = require("mongoose");
 
 // Mock data for tags
 const mockTags = [
-  { name: 'tag1' },
-  { name: 'tag2' },
+  { _id: 't1', name: 'tag1' },
+  { _id: 't2', name: 'tag2' },
 ];
  
 const mockQuestions = [
@@ -32,9 +32,8 @@ describe('GET /getTagsWithQuestionNumber', () => {
     it('should return tags with question numbers', async () => {
         // Mocking Tag.find() and Question.find()
         Tag.find = jest.fn().mockResolvedValueOnce(mockTags);
-        Question.find = jest.fn().mockImplementation(() => ({
-            populate: jest.fn().mockResolvedValueOnce(mockQuestions)
-        }));
+        Question.find = jest.fn().mockReturnThis();
+        Question.populate = jest.fn().mockResolvedValue(mockQuestions);
 
         // Send a request to the endpoint 
         const response = await supertest(server).get('/tag/getTagsWithQuestionNumber');
