@@ -21,7 +21,6 @@ const getQuestionsByFilter = async (req, res) => {
         }
         res.json(questions);
     } catch (e) {
-        //console.error("Error getting questions by filter: ", e);
         res.status(500).json({message: e.message});
     }
 };
@@ -43,7 +42,6 @@ const getQuestionById = async (req, res) => {
         }
         res.json(updatedQuestion);
     } catch (e) {
-        //console.error('Error in getQuestionById controller:', e);
         res.status(500).json({message: "error while getting question by id"});
     }
 };
@@ -62,7 +60,6 @@ const addQuestion = async (req, res) => {
         })
         res.status(200).json(savedQuestion);
     } catch (e) {
-        //console.log(e);
         res.status(400).json({ message: 'Error saving the question', error: e.toString() });
     }
 };
@@ -83,7 +80,6 @@ const deleteQuestionById = async (req, res) => {
         // If the question was successfully deleted, send a success response
         res.status(200).json({ message: 'Question deleted successfully' });
     } catch (e) {
-        //console.error("Error deleting question:", e);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -91,12 +87,11 @@ const deleteQuestionById = async (req, res) => {
 const updateQuestionWithTag = async (req, res) => {
     const { qid, newTag }  = req.body
     try {
-        // Add the new tag or retrieve its ID if it already exists
         const tagId = await addTag(newTag);
 
         const updatedQuestion = await Question.findByIdAndUpdate(
             qid,
-            { $addToSet: { tags: tagId } }, // Use $addToSet to avoid duplicates
+            { $addToSet: { tags: tagId } },
             { new: true } // Return the modified document
         ).populate('tags'); // Populate the 'tags' field
 
@@ -105,7 +100,6 @@ const updateQuestionWithTag = async (req, res) => {
         }
         return res.status(200).json(updatedQuestion);
     } catch (error) {
-        //console.error('Error updating question with tag:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -147,7 +141,6 @@ const upvoteQuestion = async (req, res) => {
             return res.json({success: true, message: "upvote removed", updatedQuestion});
         }
     } catch (e) {
-        console.error("Error upvoting:", e);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -189,7 +182,6 @@ const downvoteQuestion = async (req, res) => {
             return res.json({success: true, message: "downvote removed", updatedQuestion });
         }
     } catch (e) {
-        //console.error("Error downvoting:", e);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

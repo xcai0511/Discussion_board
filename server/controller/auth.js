@@ -21,7 +21,6 @@ const login = async (req, res) => {
             res.json({success: false, message: "password"});
         }
     } catch (e) {
-        console.error("error logging in: ", e);
         res.status(500).json({message: "error logging in"});
     }
 }

@@ -22,7 +22,6 @@ const addAnswer = async (req, res) => {
         );
         res.status(200).json(savedAnswer);
     } catch (e) {
-        console.error("error adding answer: ", e);
         res.status(500).json({message: "error adding answer"});
     }
 };
