@@ -1,5 +1,6 @@
 const supertest = require("supertest");
 const mongoose = require("mongoose");
+mongoose.connection.setMaxListeners(20);
 const User = require("../../models/users");
 const { hashPassword, verifyPassword } = require("../../utils/password");
 
@@ -16,9 +17,13 @@ beforeEach(() => {
   server = require("../../server");
 });
 
-afterEach(async () => {
+afterEach(() => {
+    server.close();
+})
+
+afterAll(() => {
   server.close();
-  await mongoose.disconnect();
+  mongoose.disconnect();
 });
 
 describe("addUser controller", () => {
@@ -440,7 +445,6 @@ describe("updatePassword controller", () => {
             .set('x-csrf-token', token)
             .send({ username: 'nonexistentuser', oldPassword: 'oldpassword', newPassword: 'newpassword' })
             .set('Cookie', [`connect.sid=${connectSidValue}`]);
-        console.log(response.body);
         expect(response.body.success).toBe(false);
         expect(response.body.message).toBe('User not found');
     });

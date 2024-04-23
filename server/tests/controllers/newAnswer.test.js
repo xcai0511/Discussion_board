@@ -1,7 +1,8 @@
 // Unit tests for addAnswer in contoller/answer.js
 
 const supertest = require("supertest")
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
+mongoose.connection.setMaxListeners(20);
 
 const Answer = require("../../models/answers");
 const Question = require("../../models/questions");

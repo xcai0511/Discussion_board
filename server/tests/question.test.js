@@ -3,6 +3,7 @@ const mockingoose = require('mockingoose');
 const Tag = require("../models/tags");
 const Question = require("../models/questions");
 const { addTag, getQuestionsByOrder, filterQuestionsBySearch } = require('../utils/question')
+//const {default: mongoose} = require("mongoose");
 Question.schema.path('answers', Array);
 
 const _tag1 = {
@@ -89,11 +90,6 @@ const _questions = [
 ]
 
 describe('question util module', () => {
-
-    beforeEach(() => {
-        mockingoose.resetAll();
-    });
-
     // Testing addTag from utils/question
     test('addTag return tag id if the tag already exists', async () => {
         mockingoose(Tag).toReturn(_tag1, 'findOne');

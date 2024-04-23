@@ -4,7 +4,8 @@ const supertest = require("supertest")
 
 const Tag = require('../../models/tags');
 const Question = require('../../models/questions');
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
+mongoose.connection.setMaxListeners(20);
 
 // Mock data for tags
 const mockTags = [
@@ -23,10 +24,15 @@ describe('GET /getTagsWithQuestionNumber', () => {
         server = require("../../server");
     });
 
-    afterEach(async () => {
+    afterEach(() => {
         server.close();
-        await mongoose.disconnect();
+        mongoose.disconnect();
     });
+    afterAll(done => {
+        server.close();
+        mongoose.disconnect();
+        done()
+    })
 
     // Test Case 1: Ensures that the endpoint /tag/getTagsWithQuestionNumber returns the correct tags and counts
     it('should return tags with question numbers', async () => {

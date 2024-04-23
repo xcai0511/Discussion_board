@@ -7,18 +7,16 @@ async function hashPassword(password) {
         const salt = await bcrypt.genSalt(saltRounds);
         const hash = await bcrypt.hash(password, salt);
         return hash;
-    } catch (error) {
-        console.error("Error hashing password:", error);
-        throw error;
+    } catch (e) {
+        throw (new Error(e.message));
     }
 }
 
 async function verifyPassword(password, hash) {
     try {
         return await bcrypt.compare(password, hash);
-    } catch (error) {
-        console.error("Error verifying password:", error);
-        throw error;
+    } catch (e) {
+        throw (new Error(e.message));
     }
 }
 

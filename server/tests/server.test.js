@@ -1,5 +1,6 @@
 const request = require('supertest');
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
+mongoose.connection.setMaxListeners(20);
 const User = require('../models/users');
 const { verifyPassword } = require("../utils/password");
 const supertest = require("supertest");

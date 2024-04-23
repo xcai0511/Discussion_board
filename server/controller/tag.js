@@ -33,7 +33,6 @@ const getTagsWithQuestionNumber = async (req, res) => {
 
         res.json(tagsWithCounts);
     } catch (error) {
-        console.error("Error getting tags with question number:", error);
         res.status(500).send({ message: "Internal server error" });
     }
 };
