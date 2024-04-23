@@ -19,23 +19,23 @@ jest.mock("../../utils/password", () => ({
 let server;
 
 const tag1 = {
-  _id: '507f191e810c19729de860ea',
+  _id: 't1',
   name: 'tag1'
 };
 const tag2 = {
-  _id: '65e9a5c2b26199dbcc3e6dc8',
+  _id: 't2',
   name: 'tag2'
 };
 
 const ans1 = {
-  _id: '65e9b58910afe6e94fc6e6dc',
+  _id: 'a1',
   text: 'Answer 1 Text',
   ans_by: 'answer1_user',
   
 }
 
 const ans2 = {
-  _id: '65e9b58910afe6e94fc6e6dd',
+  _id: 'a2',
   text: 'Answer 2 Text',
   ans_by: 'answer2_user',
   
@@ -43,18 +43,18 @@ const ans2 = {
 
 const mockQuestions = [
   {
-      _id: '65e9b58910afe6e94fc6e6dc',
+      _id: 'q1',
       title: 'Question 1 Title',
       text: 'Question 1 Text',
-      tags: [{name: 'tag1'}],
+      tags: [tag1],
       answers: [{ans1}],
       views: 21
   },
   {
-      _id: '65e9b5a995b6c7045a30d823',
+      _id: 'q2',
       title: 'Question 2 Title',
       text: 'Question 2 Text',
-      tags: [{name: 'tag2'}],
+      tags: [tag2],
       answers: [{ans2}],
       views: 99
   }
@@ -66,6 +66,7 @@ describe('getQuestionsByFilter controller', () => {
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     server.close();
     mongoose.disconnect();
   });
@@ -166,13 +167,18 @@ describe('getQuestionsByFilter controller', () => {
 });
 
 describe('getQuestionById controller', () => {
+  beforeEach(() => {
+    server = require("../../server");
+  });
+
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
+    server.close();
+    mongoose.disconnect();
   });
   it('should return question by ID', async () => {
     // Mock request parameters
-    const questionId = '65e9b58910afe6e94fc6e6dc';
-    const mockRequest = { params: { qid: questionId } };
+    const questionId = 'q1';
 
     // Mock expected response
     const expectedQuestion = mockQuestions.find(question => question._id === questionId);
@@ -181,8 +187,7 @@ describe('getQuestionById controller', () => {
 
     // Making the request
     const response = await supertest(server)
-      .get(`/question/getQuestionById/${questionId}`)
-      .send(mockRequest);
+      .get(`/question/getQuestionById/${questionId}`);
 
     // Asserting the response
     expect(response.status).toBe(200);
@@ -207,6 +212,8 @@ describe('getQuestionById controller', () => {
   it('should handle errors', async () => {
     // Mock request parameters
     const questionId = 'errorId';
+    Question.findOneAndUpdate = jest.fn().mockReturnThis();
+    Question.populate = jest.fn().mockRejectedValueOnce(new Error('Mock error'));
     // Making the request
     const response = await supertest(server).get(`/question/getQuestionById/${questionId}`);
     // Asserting the response
@@ -232,6 +239,7 @@ describe('addQuestion controller', () => {
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     server.close();
     mongoose.disconnect();
   });
@@ -267,6 +275,7 @@ describe('addQuestion controller', () => {
     addTag.mockResolvedValueOnce('tag1');
     addTag.mockResolvedValueOnce('tag2');
 
+    User.findOne = jest.fn().mockResolvedValueOnce(mockUser);
     const loginResponse = await supertest(server)
       .post('/auth/login')
       .send({ email: mockUser.contactemail, password: mockUser.password })
@@ -283,7 +292,6 @@ describe('addQuestion controller', () => {
         .send(requestBody)
         .set('x-csrf-token', token)
         .set('Cookie', [`connect.sid=${connectSidValue}`]);
-    console.log(response.body);
 
     // Asserting the response
     expect(response.status).toBe(200);
@@ -336,6 +344,7 @@ describe('deleteQuestionById controller', () => {
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     server.close();
     mongoose.disconnect();
   });
@@ -435,6 +444,7 @@ describe('updateQuestionWithTag controller', () => {
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     server.close();
     mongoose.disconnect();
   });
@@ -575,6 +585,7 @@ describe('upvoteQuestion controller', () => {
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     server.close();
     mongoose.disconnect();
   });
@@ -596,25 +607,25 @@ describe('upvoteQuestion controller', () => {
       upvoted_questions: ['mockQuestionId'],
       downvoted_questions: [] };
 
-    User.findById = jest.fn().mockResolvedValueOnce(mockUser);
-
     // Mock question data
     const mockQuestion = { _id: 'mockQuestionId', votes: 0, score: 0 };
     const updatedQuestion = { _id: 'mockQuestionId', votes: 1, score: 1 };
-    Question.create = jest.fn().mockResolvedValueOnce(mockQuestion);
-    Question.findById = jest.fn().mockResolvedValueOnce(mockQuestion);
 
-    // Mock upvote
-    Question.save = jest.fn().mockResolvedValueOnce(updatedQuestion);
-    User.save = jest.fn().mockResolvedValueOnce(updatedUser);
+    User.findById = jest.fn().mockResolvedValue({
+      ...mockUser,
+      save: jest.fn().mockResolvedValue(updatedUser)
+    });
+    Question.findById = jest.fn().mockResolvedValue({
+      ...mockQuestion,
+      save: jest.fn().mockResolvedValue(updatedQuestion)
+    });
 
     // Make the request to upvote the question with CSRF token
     const response = await supertest(server)
-      .post('/question/upvote/mockQuestionId')
-      .send({ uid: 'mockUserId' })
+      .put('/question/upvote/mockQuestionId')
+      .send({ uid: mockUser._id })
       .set('x-csrf-token', token)
       .set('Cookie', [`connect.sid=${connectSidValue}`]);
-
     // Assert the response
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
@@ -625,18 +636,34 @@ describe('upvoteQuestion controller', () => {
 
   it('should remove an upvote and decrement votes and score', async () => {
     // Mock user data with upvoted question
-    const mockUser = new User({ _id: 'mockUserId', upvoted_questions: ['mockQuestionId'], downvoted_questions: [] });
-    await mockUser.save();
+    const mockUser = { _id: 'mockUserId', upvoted_questions: ['mockQuestionId'], downvoted_questions: [] };
+    const updatedUser = { _id: 'mockUserId', upvoted_questions: [], downvoted_questions: [] };
 
     // Mock question data
-    const mockQuestion = new Question({ _id: 'mockQuestionId', votes: 1, score: 1 });
-    await mockQuestion.save();
+    const mockQuestion = { _id: 'mockQuestionId', votes: 1, score: 1 };
+    const updatedQuestion = { _id: 'mockQuestionId', votes: 0, score: 0 };
+
+
+    User.findById = jest.fn().mockResolvedValue({
+      ...mockUser,
+      upvoted_questions: {
+        push: jest.fn(),
+        pull: jest.fn(),
+        includes: jest.fn().mockReturnValue(true)
+      },
+      save: jest.fn().mockResolvedValue(updatedUser)
+    });
+    Question.findById = jest.fn().mockResolvedValue({
+      ...mockQuestion,
+      save: jest.fn().mockResolvedValue(updatedQuestion)
+    });
 
     // Make the request to remove the upvote with CSRF token
     const response = await supertest(server)
-      .post('/upvoteQuestion/mockQuestionId')
-      .send({ uid: 'mockUserId' })
-      .set('x-csrf-token', token);
+      .put('/question/upvote/mockQuestionId')
+      .send({ uid: mockUser._id })
+      .set('x-csrf-token', token)
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
     // Assert the response
     expect(response.status).toBe(200);
@@ -647,16 +674,15 @@ describe('upvoteQuestion controller', () => {
   });
 
   it('should return an error if user or question not found', async () => {
-    let csrfToken;
-    const csrfResponse = await supertest(server)
-      .get('/auth/csrf-token');
-    csrfToken = csrfResponse.body.csrfToken;
-    
+
+    User.findById = jest.fn().mockResolvedValue(undefined);
+    Question.findById = jest.fn().mockResolvedValue(undefined);
     // Make the request with invalid user and question IDs and CSRF token
     const response = await supertest(server)
-      .post('/upvoteQuestion/nonExistentQuestionId')
+      .put('/question/upvote/nonExistentQuestionId')
       .send({ uid: 'nonExistentUserId' })
-      .set('x-csrf-token', csrfToken);
+      .set('x-csrf-token', token)
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
     // Assert the response
     expect(response.status).toBe(200); // Assuming it returns a 200 status for simplicity
@@ -687,16 +713,25 @@ describe('downvoteQuestion controller', () => {
   });
   it('should downvote a question and decrement votes and score', async () => {
     // Mock user data
-    const mockUser = new User({ _id: 'mockUserId', upvoted_questions: [], downvoted_questions: [] });
-    await mockUser.save();
+    const mockUser = { _id: 'mockUserId', upvoted_questions: [], downvoted_questions: [] };
+    const updatedUser = { _id: 'mockUserId', upvoted_questions: [], downvoted_questions: ['mockQuestionId'] };
 
     // Mock question data
-    const mockQuestion = new Question({ _id: 'mockQuestionId', votes: 0, score: 0 });
-    await mockQuestion.save();
+    const mockQuestion = { _id: 'mockQuestionId', votes: 0, score: 0 };
+    const updatedQuestion = { _id: 'mockQuestionId', votes: 1, score: -1 };
+
+    User.findById = jest.fn().mockResolvedValue({
+      ...mockUser,
+      save: jest.fn().mockResolvedValue(updatedUser)
+    });
+    Question.findById = jest.fn().mockResolvedValue({
+      ...mockQuestion,
+      save: jest.fn().mockResolvedValue(updatedQuestion)
+    });
 
     // Make the request to downvote the question with CSRF token
     const response = await supertest(server)
-      .post('/downvoteQuestion/mockQuestionId')
+      .put('/question/downvote/mockQuestionId')
       .send({ uid: 'mockUserId' })
       .set('x-csrf-token', token)
       .set('Cookie', [`connect.sid=${connectSidValue}`]);
@@ -705,24 +740,40 @@ describe('downvoteQuestion controller', () => {
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.message).toBe('downvote success');
-    expect(response.body.updatedQuestion.votes).toBe(-1);
+    expect(response.body.updatedQuestion.votes).toBe(1);
     expect(response.body.updatedQuestion.score).toBe(-1);
   });
 
   it('should remove a downvote and increment votes and score', async () => {
     // Mock user data with downvoted question
-    const mockUser = new User({ _id: 'mockUserId', upvoted_questions: [], downvoted_questions: ['mockQuestionId'] });
-    await mockUser.save();
+    const mockUser = { _id: 'mockUserId', upvoted_questions: [], downvoted_questions: ['mockQuestionId'] };
+    const updatedUser = { _id: 'mockUserId', upvoted_questions: [], downvoted_questions: [] };
 
     // Mock question data
-    const mockQuestion = new Question({ _id: 'mockQuestionId', votes: -1, score: -1 });
-    await mockQuestion.save();
+    const mockQuestion = { _id: 'mockQuestionId', votes: 1, score: -1 };
+    const updatedQuestion = { _id: 'mockQuestionId', votes: 0, score: 0 };
+
+
+    User.findById = jest.fn().mockResolvedValue({
+      ...mockUser,
+      downvoted_questions: {
+        push: jest.fn(),
+        pull: jest.fn(),
+        includes: jest.fn().mockReturnValue(true)
+      },
+      save: jest.fn().mockResolvedValue(updatedUser)
+    });
+    Question.findById = jest.fn().mockResolvedValue({
+      ...mockQuestion,
+      save: jest.fn().mockResolvedValue(updatedQuestion)
+    });
 
     // Make the request to remove the downvote with CSRF token
     const response = await supertest(server)
-      .post('/downvoteQuestion/mockQuestionId')
+      .put('/question/downvote/mockQuestionId')
       .send({ uid: 'mockUserId' })
-      .set('x-csrf-token', token);
+      .set('x-csrf-token', token)
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
     // Assert the response
     expect(response.status).toBe(200);

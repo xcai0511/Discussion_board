@@ -116,6 +116,9 @@ const upvoteQuestion = async (req, res) => {
     try {
         const user = await User.findById(uid);
         const question = await Question.findById(qid);
+        console.log("downvote questions");
+        console.log(uid, qid);
+        console.log(user, question);
         if (!user || !question) {
             return res.json({success: false, message: "User or question not found"});
         }
@@ -144,7 +147,7 @@ const upvoteQuestion = async (req, res) => {
             return res.json({success: true, message: "upvote removed", updatedQuestion});
         }
     } catch (e) {
-        //console.error("Error upvoting:", e);
+        console.error("Error upvoting:", e);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
