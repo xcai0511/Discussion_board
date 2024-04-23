@@ -6,30 +6,9 @@ on:
       - main
 
 jobs:
-  jest-tests:
-    name: Run Jest Tests
-    runs-on: [ self-hosted, x64 ]
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Install Jest Dependencies
-        run: npm install
-        working-directory: server/
-
-      - name: Kill the node server process
-        run: kill $(lsof -t -i:8000) || true
-
-      - name: Stop the client process
-        run: kill $(lsof -t -i:3000) || true
-
-      - name: Run Jest Tests
-        run: npm test
-        working-directory: server/tests/
   # Cypress e2e Test
   cypress-e2e:
-    runs-on: [self-hosted, x64]
+    runs-on: [self-hosted, x64, macOS]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,7 +22,7 @@ jobs:
         if: steps.check_node_installed.outcome == 'failure'
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '21'
       
       - name: Install dependencies in server directory
         run: npm install
@@ -68,7 +47,7 @@ jobs:
         working-directory: server/
 
       - name: Start the node server
-        run: node server.js > server.log 2?&1 &
+        run: node server.js > server.log 2>&1 &
         working-directory: server/
 
       - name: Install dependencies in client directory
@@ -81,11 +60,11 @@ jobs:
 
       - name: Install testing dependencies
         run: npm install cypress
-        working-directory: client/
+        working-directory: testing/
 
       - name: Run e2e tests
         run: npx cypress run --spec cypress/e2e/
-        working-directory: client/
+        working-directory: testing/
 
       - name: Kill the node server process
         run: kill $(lsof -t -i:8000) || true
@@ -94,7 +73,7 @@ jobs:
         run: kill $(lsof -t -i:3000) || true
 
   cypress-component:
-    runs-on: [self-hosted, x64]
+    runs-on: [self-hosted, x64, macOS]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -158,3 +137,24 @@ jobs:
       - name: Stop the client process
         run: kill $(lsof -t -i:3000) || true
 
+  jest-tests:
+    name: Run Jest Tests
+    runs-on: [self-hosted, x64, macOS]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Jest Dependencies
+        run: npm install
+        working-directory: server/
+
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
+      - name: Run Jest Tests
+        run: npm test
+        working-directory: server/tests/
