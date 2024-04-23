@@ -18,6 +18,8 @@
         "express-session": "*",
         "jsonwebtoken": "*",
         "mockingoose": "^2.16.2",
+        "mongo": "^0.1.0",
+        "mongod": "^2.0.0",
         "mongoose": "^8.3.1",
         "mysql": "*",
         "nodemon": "^3.1.0",
