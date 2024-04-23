@@ -13,23 +13,29 @@ let server;
 
 describe("POST /addAnswer", () => {
 
-  beforeEach(() => {
+  let connectSidValue = null;
+  let respToken;
+  let token;
+  beforeEach(async () => {
     server = require("../../server");
-  })
+    // Obtain CSRF token
+    respToken = await supertest(server).get('/auth/csrf-token');
+    token = respToken.body.csrfToken;
+    respToken.headers['set-cookie'].forEach(cookie => {
+      if (cookie.includes('connect.sid')) {
+        connectSidValue = cookie.split('=')[1].split(';')[0];
+      }
+    });
+  });
 
-  afterEach(async() => {
+  afterEach(() => {
+    jest.clearAllMocks();
     server.close();
-    await mongoose.disconnect()
+    mongoose.disconnect();
   });
 
   // Test Case 1: Should add a new answer
   it("should add a new answer to the question", async () => {
-    const respToken = await supertest(server)
-      .get('/auth/csrf-token');
-
-    // Extract CSRF token from response body
-    const token = respToken.body.csrfToken;
-
     // Mocking the request body
     const mockReqBody = {
       qid: "dummyQuestionId",
@@ -55,7 +61,8 @@ describe("POST /addAnswer", () => {
     const response = await supertest(server)
       .post("/answer/addAnswer")
       .send(mockReqBody)
-      .set('x-csrf-token', token);
+      .set('x-csrf-token', token)
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
     // Asserting the response
     expect(response.status).toBe(200);
@@ -76,12 +83,6 @@ describe("POST /addAnswer", () => {
 
   // Test Case 2: Error handling when creating a new answer
   it("should handle error when creating a new answer", async () => {
-    const respToken = await supertest(server)
-      .get('/auth/csrf-token');
-
-    // Extract CSRF token from response body
-    const token = respToken.body.csrfToken;
-  
     // Mocking the request body
     const mockReqBody = {
       qid: "dummyQuestionId",
@@ -99,7 +100,8 @@ describe("POST /addAnswer", () => {
     const response = await supertest(server)
       .post("/answer/addAnswer")
       .send(mockReqBody)
-      .set('x-csrf-token', token);
+      .set('x-csrf-token', token)
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
     // Asserting the response
     expect(response.status).toBe(500);
@@ -108,12 +110,6 @@ describe("POST /addAnswer", () => {
 
   // Test Case 3: Handling error when updating the question
   it("should handle error when updating the question", async () => {
-    const respToken = await supertest(server)
-      .get('/auth/csrf-token');
-
-    // Extract CSRF token from response body
-    const token = respToken.body.csrfToken;
-
     // Mocking the request body
     const mockReqBody = {
       qid: "dummyQuestionId",
@@ -136,7 +132,8 @@ describe("POST /addAnswer", () => {
     const response = await supertest(server)
       .post("/answer/addAnswer")
       .send(mockReqBody)
-      .set('x-csrf-token', token);
+      .set('x-csrf-token', token)
+      .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
     // Asserting the response
     expect(response.status).toBe(500);
