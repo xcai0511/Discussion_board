@@ -60,11 +60,11 @@ jobs:
 
       - name: Install testing dependencies
         run: npm install cypress
-        working-directory: testing/
+        working-directory: client/
 
       - name: Run e2e tests
         run: npx cypress run --spec cypress/e2e/
-        working-directory: testing/
+        working-directory: client/
 
       - name: Kill the node server process
         run: kill $(lsof -t -i:8000) || true
