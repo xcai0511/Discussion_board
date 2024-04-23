@@ -5,6 +5,10 @@ const { hashPassword, verifyPassword } = require("../../utils/password");
 
 jest.mock("../../models/users");
 jest.mock("../../utils/password");
+jest.mock("../../utils/password", () => ({
+    verifyPassword: jest.fn(),
+    hashPassword: jest.fn()
+}));
 
 let server;
 
@@ -287,50 +291,67 @@ describe("getAllUsers controller", () => {
     });
 });
 
-// TODO: Fix all tests with csrf protection -- returns error 500
 describe("getSavedQuestions controller", () => {
+    let connectSidValue = null;
+    let respToken;
+    let token;
+    beforeEach(async () => {
+        server = require("../../server");
+        // Obtain CSRF token
+        respToken = await supertest(server).get('/auth/csrf-token');
+        token = respToken.body.csrfToken;
+        respToken.headers['set-cookie'].forEach(cookie => {
+            if (cookie.includes('connect.sid')) {
+                connectSidValue = cookie.split('=')[1].split(';')[0];
+            }
+        });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        server.close();
+        mongoose.disconnect();
+    });
     it("should return user's saved questions if user exists", async () => {
-        // Get CSRF token
-        const respToken = await supertest(server)
-            .get('/auth/csrf-token');
-
-        // Ensure the CSRF token was obtained successfully
-        expect(respToken.status).toBe(200);
-        const token = respToken.body.csrfToken;
-
         // Mock user data
         const mockUser = {
-            _id: "6621d103fc9e6051353b70d8",
+            _id: "u1",
             username: 'testuser',
             contactemail: 'testuser@test.com',
             password: 'password',
-            saved_questions: ['6621d103fc9f6051353b70d2', '6621d103fc9e6051353c70d0']
+            saved_questions: [
+                {_id: 'q1', tags: [{name: 'tag1'}]},
+                {_id: 'q2', tags: [{name: 'tag2'}]}]
         };
+
+        User.findOne = jest.fn().mockResolvedValueOnce(mockUser);
 
         const loginResponse = await supertest(server)
             .post('/auth/login')
             .set('x-csrf-token', token)
-            .send({ email: mockUser.contactemail, password: mockUser.password });
+            .send({ email: mockUser.contactemail, password: mockUser.password })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure login was successful
         expect(loginResponse.status).toBe(200);
 
+        User.findOne = jest.fn().mockReturnThis()
+        User.populate = jest.fn().mockResolvedValueOnce(mockUser);
+
         // Retrieve saved questions using the obtained CSRF token
         const respSavedQuestions = await supertest(server)
             .get(`/user/getSavedQuestions/${mockUser.contactemail}`)
-            .set('x-csrf-token', token);
+            .set('x-csrf-token', token)
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure the request was successful
         expect(respSavedQuestions.status).toBe(200);
-        expect(respSavedQuestions[0]._id.toString()).toEqual('6621d103fc9f6051353b70d2');
-        expect(respSavedQuestions[1]._id.toString()).toEqual('6621d103fc9e6051353c70d0');
+        expect(respSavedQuestions.body[0]._id.toString()).toEqual('q1');
+        expect(respSavedQuestions.body[1]._id.toString()).toEqual('q2');
         
     });
 
     it("should return 'Internal server error' message if there is an error", async () => {
-        const respToken = await supertest(server).get('/auth/csrf-token');
-        const token = respToken.body.csrfToken;
-
         const userEmail = 'testuser@test.com'; // Existing user
 
         // Mocking an internal server error by causing findOne to throw an error
@@ -341,7 +362,8 @@ describe("getSavedQuestions controller", () => {
         // Request saved questions which should cause an internal server error
         const respSavedQuestions = await supertest(server)
             .get(`/user/getSavedQuestions/${userEmail}`)
-            .set('x-csrf-token', token);
+            .set('x-csrf-token', token)
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Check response status and message
         expect(respSavedQuestions.status).toBe(500);
@@ -350,6 +372,26 @@ describe("getSavedQuestions controller", () => {
 });
 
 describe("updatePassword controller", () => {
+    let connectSidValue = null;
+    let respToken;
+    let token;
+    beforeEach(async () => {
+        server = require("../../server");
+        // Obtain CSRF token
+        respToken = await supertest(server).get('/auth/csrf-token');
+        token = respToken.body.csrfToken;
+        respToken.headers['set-cookie'].forEach(cookie => {
+            if (cookie.includes('connect.sid')) {
+                connectSidValue = cookie.split('=')[1].split(';')[0];
+            }
+        });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        server.close();
+        mongoose.disconnect();
+    });
     it("should update user's password if old password is correct", async () => {
         // Mock user data
         const username = 'testuser';
@@ -358,85 +400,99 @@ describe("updatePassword controller", () => {
         const hashedOldPassword = await hashPassword(oldPassword);
         const hashedNewPassword = await hashPassword(newPassword);
         const mockUser = {
-            _id: "6621d103fc9e6051353b70d8",
+            _id: "u1",
             username: username,
             password: hashedOldPassword
         };
+        const updatedUser = {
+            _id: "u1",
+            username: username,
+            password: hashedNewPassword
+        };
 
         // Mock User.findOne to return the mock user
-        User.findOne.mockResolvedValue(mockUser);
-
-        // Mock verifyPassword to return true
+        User.findOne = jest.fn().mockResolvedValue(mockUser);
         verifyPassword.mockResolvedValue(true);
-
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
+        hashPassword.mockResolvedValue('mockedHashedPassword');
+        mockUser.save = jest.fn().mockResolvedValue(updatedUser);
 
         // Send request to update password
         const response = await supertest(server)
-            .post('/user/update-password')
+            .put('/user/updatePassword')
+            .send({ username, oldPassword, newPassword })
             .set('x-csrf-token', token)
-            .send({ username, oldPassword, newPassword });
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
         expect(response.body.message).toBe('Password updated successfully');
-        expect(mockUser.password).not.toBe(hashedOldPassword);
-        expect(mockUser.password).toBe(hashedNewPassword);
+        expect(mockUser.save).toHaveBeenCalled();
+        expect(mockUser.password).toBe('mockedHashedPassword');
     });
 
     it("should return 'User not found' message if user does not exist", async () => {
         // Mock User.findOne to return null (user not found)
-        User.findOne.mockResolvedValue(null);
-
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
+        User.findOne.mockResolvedValue(undefined);
 
         // Send request to update password
         const response = await supertest(server)
-            .post('/user/update-password')
+            .put('/user/updatePassword')
             .set('x-csrf-token', token)
-            .send({ username: 'nonexistentuser', oldPassword: 'oldpassword', newPassword: 'newpassword' });
-
-        expect(response.status).toBe(401);
+            .send({ username: 'nonexistentuser', oldPassword: 'oldpassword', newPassword: 'newpassword' })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
+        console.log(response.body);
         expect(response.body.success).toBe(false);
         expect(response.body.message).toBe('User not found');
     });
 
     it("should return 'Invalid current password' message if old password is incorrect", async () => {
+        const mockUser = {
+            _id: "u1",
+            username: 'username',
+            password: 'password'
+        };
         // Mock User.findOne to return a user
-        User.findOne.mockResolvedValue({});
+        User.findOne.mockResolvedValue(mockUser);
 
         // Mock verifyPassword to return false
         verifyPassword.mockResolvedValue(false);
 
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
-
         // Send request to update password
         const response = await supertest(server)
-            .post('/user/update-password')
+            .put('/user/updatePassword')
             .set('x-csrf-token', token)
-            .send({ username: 'testuser', oldPassword: 'incorrectpassword', newPassword: 'newpassword' });
-
-        expect(response.status).toBe(401);
+            .send({ username: 'testuser', oldPassword: 'incorrectpassword', newPassword: 'newpassword' })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
         expect(response.body.success).toBe(false);
         expect(response.body.message).toBe('Invalid current password');
     });
 });
 
 describe("saveQuestionToUser controller", () => {
+    let connectSidValue = null;
+    let respToken;
+    let token;
+    beforeEach(async () => {
+        server = require("../../server");
+        // Obtain CSRF token
+        respToken = await supertest(server).get('/auth/csrf-token');
+        token = respToken.body.csrfToken;
+        respToken.headers['set-cookie'].forEach(cookie => {
+            if (cookie.includes('connect.sid')) {
+                connectSidValue = cookie.split('=')[1].split(';')[0];
+            }
+        });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        server.close();
+        mongoose.disconnect();
+    });
     it("should save the question to user if user exists", async () => {
         // Mock user data
         const username = 'testuser';
         const questionId = '6621d103fc9f6051353b70d2';
-
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
 
         // Mock User.findOne to return the user
         const mockUser = {
@@ -448,9 +504,10 @@ describe("saveQuestionToUser controller", () => {
 
         // Send request to save the question to user
         const response = await supertest(server)
-            .post(`/user/saveQuestionToUser/${username}`)
+            .put(`/user/saveQuestionToUser/${username}`)
             .set('x-csrf-token', token)
-            .send({ data: { isBookmarked: true, qid: questionId } });
+            .send({ data: { isBookmarked: true, qid: questionId } })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure the question is saved to the user
         expect(response.status).toBe(200);
@@ -462,10 +519,6 @@ describe("saveQuestionToUser controller", () => {
         const username = 'testuser';
         const questionId = '6621d103fc9f6051353b70d2';
 
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
-
         // Mock User.findOne to return the user with the question already saved
         const mockUser = {
             _id: "6621d103fc9e6051353b70d8",
@@ -476,9 +529,10 @@ describe("saveQuestionToUser controller", () => {
 
         // Send request to remove the question from user
         const response = await supertest(server)
-            .post(`/user/saveQuestionToUser/${username}`)
+            .put(`/user/saveQuestionToUser/${username}`)
             .set('x-csrf-token', token)
-            .send({ data: { isBookmarked: false, qid: questionId } });
+            .send({ data: { isBookmarked: false, qid: questionId } })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure the question is removed from the user
         expect(response.status).toBe(200);
@@ -488,20 +542,17 @@ describe("saveQuestionToUser controller", () => {
     it("should return 'User not found' message if user does not exist", async () => {
         // Mock user data
         const username = 'nonexistentuser';
-        const questionId = '6621d103fc9f6051353b70d2';
-
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
+        const questionId = 'q1';
 
         // Mock User.findOne to return null (user not found)
         User.findOne.mockResolvedValueOnce(null);
 
         // Send request to save/remove the question from non-existent user
         const response = await supertest(server)
-            .post(`/user/saveQuestionToUser/${username}`)
+            .put(`/user/saveQuestionToUser/${username}`)
             .set('x-csrf-token', token)
-            .send({ data: { isBookmarked: true, qid: questionId } });
+            .send({ data: { isBookmarked: true, qid: questionId } })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure the response contains 'User not found' message
         expect(response.status).toBe(404);
@@ -511,20 +562,17 @@ describe("saveQuestionToUser controller", () => {
     it("should handle error when saving/removing question", async () => {
         // Mock user data
         const username = 'testuser';
-        const questionId = '6621d103fc9f6051353b70d2';
-
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
+        const questionId = 'q1';
 
         // Mock User.findOne to throw an error
         User.findOne.mockRejectedValueOnce(new Error('Database error'));
 
         // Send request to save/remove the question
         const response = await supertest(server)
-            .post(`/user/saveQuestionToUser/${username}`)
+            .put(`/user/saveQuestionToUser/${username}`)
             .set('x-csrf-token', token)
-            .send({ data: { isBookmarked: true, qid: questionId } });
+            .send({ data: { isBookmarked: true, qid: questionId } })
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure the response contains 'Internal server error' message
         expect(response.status).toBe(500);
@@ -533,16 +581,32 @@ describe("saveQuestionToUser controller", () => {
 });
 
 describe("updateUserProfileImage controller", () => {
+    let connectSidValue = null;
+    let respToken;
+    let token;
+    beforeEach(async () => {
+        server = require("../../server");
+        // Obtain CSRF token
+        respToken = await supertest(server).get('/auth/csrf-token');
+        token = respToken.body.csrfToken;
+        respToken.headers['set-cookie'].forEach(cookie => {
+            if (cookie.includes('connect.sid')) {
+                connectSidValue = cookie.split('=')[1].split(';')[0];
+            }
+        });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        server.close();
+        mongoose.disconnect();
+    });
     it("should update user's profile image", async () => {
         // Mock data for request body
         const mockReqBody = {
             username: 'testuser',
             profileImage: 'new-profile-image-url'
         };
-
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
 
         // Mock updated user object after successful update
         const mockUpdatedUser = {
@@ -558,7 +622,8 @@ describe("updateUserProfileImage controller", () => {
         const response = await supertest(server)
             .put(`/user/updateUserProfileImage`)
             .set('x-csrf-token', token)
-            .send(mockReqBody);
+            .send(mockReqBody)
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure response is successful and contains updated user data
         expect(response.status).toBe(200);
@@ -579,10 +644,6 @@ describe("updateUserProfileImage controller", () => {
             profileImage: 'new-profile-image-url'
         };
 
-        // Obtain CSRF token
-        const csrfResponse = await supertest(server).get('/auth/csrf-token');
-        const token = csrfResponse.body.csrfToken;
-
         // Mock error during update process
         const mockError = new Error("Update failed");
 
@@ -593,7 +654,8 @@ describe("updateUserProfileImage controller", () => {
         const response = await supertest(server)
             .put(`/user/updateUserProfileImage`)
             .set('x-csrf-token', token)
-            .send(mockReqBody);
+            .send(mockReqBody)
+            .set('Cookie', [`connect.sid=${connectSidValue}`]);
 
         // Ensure response indicates internal server error
         expect(response.status).toBe(500);

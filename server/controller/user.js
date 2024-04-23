@@ -100,10 +100,10 @@ const updatePassword = async (req, res) => {
     const {username, oldPassword, newPassword} = req.body;
     try {
         let user = await User.findOne({ username: username });
-        const isMatch = await verifyPassword(oldPassword, user.password);
         if (!user) {
-            return res.status(401).json({ success: false, message: 'User not found' });
+            return res.json({ success: false, message: 'User not found' });
         }
+        const isMatch = await verifyPassword(oldPassword, user.password);
         if (isMatch) {
             // Hash the new password before saving it
             const hashedNewPassword = await hashPassword(newPassword);
@@ -111,10 +111,9 @@ const updatePassword = async (req, res) => {
             await user.save(); // Save the updated user object
             res.json({ success: true, message: 'Password updated successfully' });
         } else {
-            res.status(401).json({ success: false, message: 'Invalid current password' });
+            res.json({ success: false, message: 'Invalid current password' });
         }
     } catch (e) {
-        console.error("Error updating password")
         res.status(500).json({ message: "Internal server error", error: e.toString() });
     }
 }
