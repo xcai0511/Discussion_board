@@ -56,7 +56,6 @@ const NewQuestionForm = ({ onSubmit, csrfToken }) => {
     };
 
     const handleSubmit = async (e) => {
-        console.log("HANDLE SUBMIT BUTTON");
         e.preventDefault();
         if (!validateInputs()) return;
 

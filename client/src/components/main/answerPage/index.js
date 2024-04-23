@@ -33,8 +33,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
         const bookmarkStatus = !isBookmarked;
         setIsBookmarked(bookmarkStatus);
         try {
-            const res = await AnswerPage.saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken);
-            console.log(res);
+            await AnswerPage.saveQuestionToUser(user.username, bookmarkStatus, qid, csrfToken);
         } catch (error) {
             console.error("Error saving question:", error);
         }
