@@ -492,15 +492,16 @@ describe("saveQuestionToUser controller", () => {
     it("should save the question to user if user exists", async () => {
         // Mock user data
         const username = 'testuser';
-        const questionId = '6621d103fc9f6051353b70d2';
+        const questionId = 'q1';
 
         // Mock User.findOne to return the user
         const mockUser = {
-            _id: "6621d103fc9e6051353b70d8",
+            _id: "q1",
             username: username,
-            saved_questions: []
+            saved_questions: [],
+            save: jest.fn().mockResolvedValue({})
         };
-        User.findOne.mockResolvedValueOnce(mockUser);
+        User.findOne = jest.fn().mockResolvedValue(mockUser);
 
         // Send request to save the question to user
         const response = await supertest(server)
@@ -517,15 +518,16 @@ describe("saveQuestionToUser controller", () => {
     it("should remove the question from user if user exists", async () => {
         // Mock user data
         const username = 'testuser';
-        const questionId = '6621d103fc9f6051353b70d2';
+        const questionId = 'q1';
 
         // Mock User.findOne to return the user with the question already saved
         const mockUser = {
-            _id: "6621d103fc9e6051353b70d8",
+            _id: "u1",
             username: username,
-            saved_questions: [questionId]
+            saved_questions: [questionId],
+            save: jest.fn().mockResolvedValue({})
         };
-        User.findOne.mockResolvedValueOnce(mockUser);
+        User.findOne = jest.fn().mockResolvedValue(mockUser);
 
         // Send request to remove the question from user
         const response = await supertest(server)
@@ -545,7 +547,7 @@ describe("saveQuestionToUser controller", () => {
         const questionId = 'q1';
 
         // Mock User.findOne to return null (user not found)
-        User.findOne.mockResolvedValueOnce(null);
+        User.findOne.mockResolvedValueOnce(undefined);
 
         // Send request to save/remove the question from non-existent user
         const response = await supertest(server)

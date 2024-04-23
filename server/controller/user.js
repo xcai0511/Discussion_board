@@ -31,7 +31,6 @@ const addUser = async (req, res) => {
         res.status(201).json(savedUser);
 
     } catch (e) {
-        console.error("Error adding user:", e);
         res.status(500).json({ message: 'Error adding user', error: e.toString() });
     }
 };
@@ -141,7 +140,6 @@ const saveQuestionToUser = async (req, res) => {
         await user.save();
         res.status(200).json({ message: "Question saved/removed successfully" });
     } catch (error) {
-        console.error("Error saving/removing question:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -158,7 +156,6 @@ const updateUserProfileImage = async (req, res) => {
         );
         res.json({ success: true, message: 'Profile image updated successfully', user: updatedUser });
     } catch (error) {
-        console.error("Error updating profile image:", error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
@@ -168,7 +165,6 @@ const getAllUsers = async (req, res) => {
         const users = await User.find();
         res.status(200).json(users);
     } catch (e) {
-        console.error("Error retrieving all users", e);
         res.status(500).send({ message: "Internal server error" });
     }
 };
