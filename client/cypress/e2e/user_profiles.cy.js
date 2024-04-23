@@ -170,27 +170,26 @@ describe("User profile e2e tests", () => {
         cy.contains("Password is too long (maximum is 20 characters)");
     });
 
-    // TODO: Check if this passes after fixing current password bug
-    // it("given a user who is logged in, when the user navigates to their profile page to change their password but their current password is incorrect, then a password error is displayed", () => {
-    //     cy.visit("http://localhost:3000");
+    it("given a user who is logged in, when the user navigates to their profile page to change their password but their current password is incorrect, then a password error is displayed", () => {
+        cy.visit("http://localhost:3000");
 
-    //     // Login user
-    //     cy.contains("Login").click();
-    //     cy.get("#loginEmailInput").type("testuser@fakeso.com");
-    //     cy.get("#loginPasswordInput").type("testpassword");
-    //     cy.get(".loginBtn").click();
+        // Login user
+        cy.contains("Login").click();
+        cy.get("#loginEmailInput").type("testuser@fakeso.com");
+        cy.get("#loginPasswordInput").type("testpassword");
+        cy.get(".loginBtn").click();
 
-    //     cy.contains("Profile").click();
+        cy.contains("Profile").click();
 
-    //     cy.wait(1000);
+        cy.wait(1000);
 
-    //     cy.contains("Change Password").click();
-    //     cy.get("#currPasswordInput").type("wrongpassword");
-    //     cy.get("#newPasswordInput").type("newpassword");
-    //     cy.get(".form_postBtn").click();
+        cy.contains("Change Password").click();
+        cy.get("#currPasswordInput").type("wrongpassword");
+        cy.get("#newPasswordInput").type("newpassword");
+        cy.get(".form_postBtn").click();
 
-    //     cy.contains("Invalid current password");
-    // });
+        cy.contains("Invalid current password");
+    });
 
     it("given a user who is logged in, when the user navigates to their profile page to change their profile picture, then their new profile picture should be displayed correctly before and after navigating away from the page", () => {
         cy.visit("http://localhost:3000");

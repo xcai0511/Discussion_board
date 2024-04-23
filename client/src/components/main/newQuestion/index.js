@@ -77,10 +77,12 @@ const NewQuestion = ({ handleQuestions, user, loggedIn, csrfToken }) => {
 
         if (!isValid) return;
 
+        const tags = Array.from(new Set(tag.split(" ").map(tag => tag.trim()).filter(tag => tag !== "")));
+
         const question = {
             title: title,
             text: text,
-            tags: tag.split(" ").filter((tag) => tag.trim() !== ""),
+            tags: tags,
             asked_by: user.username,
             ask_date_time: new Date(),
         };

@@ -14,12 +14,4 @@ const addAnswer = async (qid, ans, csrfToken) => {
     return res.data;
 };
 
-// TODO: Delete if not needed/used
-// To edit answer
-const editAnswer = async(qid, ans) => {
-    const data = {qid: qid, ans: ans};
-    const res = await api.put(`${ANSWER_API_URL}/editAnswer`, data)
-    return res.data;
-}
-
-export { addAnswer, editAnswer };
+export { addAnswer };

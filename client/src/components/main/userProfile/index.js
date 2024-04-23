@@ -47,6 +47,7 @@ const UserProfile = ({ user, loggedIn, csrfToken }) => {
         setNewPassword('');
       } else {
         setCurrPasswordError('Invalid current password');
+        setCurrPassword('');
       }
     } catch (error) {
       console.error("Error updating password:", error);
