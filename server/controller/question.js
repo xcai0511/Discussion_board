@@ -110,9 +110,6 @@ const upvoteQuestion = async (req, res) => {
     try {
         const user = await User.findById(uid);
         const question = await Question.findById(qid);
-        console.log("downvote questions");
-        console.log(uid, qid);
-        console.log(user, question);
         if (!user || !question) {
             return res.json({success: false, message: "User or question not found"});
         }
