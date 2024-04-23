@@ -134,32 +134,31 @@ describe("Create new posts e2e tests", () => {
         cy.contains("Cannot have more than 5 tags");
     });
 
-    // TODO: Check if this test passes after fixing duplicate tag error
-    // it("given a user who is logged in, when the user attempts to create a new question but inputs a duplicate tag, then the question should be displayed with only one tag", () => {
-    //     cy.visit("http://localhost:3000");
+    it("given a user who is logged in, when the user attempts to create a new question but inputs a duplicate tag, then the question should be displayed with only one tag", () => {
+        cy.visit("http://localhost:3000");
 
-    //     // Login user
-    //     cy.contains("Login").click();
-    //     cy.get("#loginEmailInput").type("testuser@fakeso.com");
-    //     cy.get("#loginPasswordInput").type("testpassword");
-    //     cy.get(".loginBtn").click();
+        // Login user
+        cy.contains("Login").click();
+        cy.get("#loginEmailInput").type("testuser@fakeso.com");
+        cy.get("#loginPasswordInput").type("testpassword");
+        cy.get(".loginBtn").click();
 
-    //     // Ask question with error
-    //     cy.contains("Ask a Question").click();
-    //     cy.get("#formTitleInput").type("Test Question Q1");
-    //     cy.get("#formTextInput").type("Test Question Q1 Text T1");
-    //     cy.get("#formTagInput").type("react react");
-    //     cy.contains("Post Question").click();
+        // Ask question with error
+        cy.contains("Ask a Question").click();
+        cy.get("#formTitleInput").type("Test Question Q1");
+        cy.get("#formTextInput").type("Test Question Q1 Text T1");
+        cy.get("#formTagInput").type("react react");
+        cy.contains("Post Question").click();
 
-    //     // Check tags
-    //     cy.contains("Test Question Q1");
-    //     cy.get("#searchBar").type("Test{enter}");
-    //     cy.wait(1000);
-    //     cy.get(".question_tags")
-    //         .find(".question_tag_button")
-    //         .should("have.length", 1)
-    //         .and("contain", "react");
-    // });
+        // Check tags
+        cy.contains("Test Question Q1");
+        cy.get("#searchBar").type("Test{enter}");
+        cy.wait(1000);
+        cy.get(".question_tags")
+            .find(".question_tag_button")
+            .should("have.length", 1)
+            .and("contain", "react");
+    });
 
     it("given a user who is logged in, when the user attempts to create a new question but inputs a tag longer than 20 characters, then the new question form should display a tag error", () => {
         cy.visit("http://localhost:3000");

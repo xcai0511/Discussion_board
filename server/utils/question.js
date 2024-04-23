@@ -11,7 +11,6 @@ const addTag = async (tname) => {
         }
         return tag._id.toString();
     } catch (e) {
-        console.log("Error adding tag: ", e);
         return null;
     }
 };
