@@ -1,0 +1,160 @@
+name: github-actions
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Cypress e2e Test
+  cypress-e2e:
+    runs-on: [self-hosted, x64, macOS]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check if node.js is installed
+        run: node --version || echo "Node.js is not installed"
+        id: check_node_installed
+        continue-on-error: true
+
+      - name: Install node.js and npm if not installed
+        if: steps.check_node_installed.outcome == 'failure'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '21'
+      
+      - name: Install dependencies in server directory
+        run: npm install
+        working-directory: server/
+
+      - name: Check if mongod is running
+        run: ps aux | grep -v grep | grep mongod || echo 'mongod is not running'
+        id: check_mongod_running
+        continue-on-error: true
+
+      - name: Run mongod if not running
+        if: steps.check_mongod_running == 'failure'
+        run: mongod --config /opt/homebrew/etc/mongod.conf --fork
+
+      - name: Set DB_URL variable
+        run: echo "DB_URL=mongodb://127.0.0.1:27017/fake_so" >> $GITHUB_ENV
+
+      - name: Run destroy.js
+        env:
+          DB_URL: ${{ env.DB_URL }}
+        run: node destroy.js $DB_URL
+        working-directory: server/
+
+      - name: Start the node server
+        run: node server.js > server.log 2>&1 &
+        working-directory: server/
+
+      - name: Install dependencies in client directory
+        run: npm install
+        working-directory: client/
+
+      - name: Start the client
+        run: npm start &
+        working-directory: client/
+
+      - name: Install testing dependencies
+        run: npm install cypress
+        working-directory: client/
+
+      - name: Run e2e tests
+        run: npx cypress run --spec cypress/e2e/
+        working-directory: client/
+
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
+  cypress-component:
+    runs-on: [self-hosted, x64, macOS]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check if node.js is installed
+        run: node --version || echo "Node.js is not installed"
+        id: check_node_installed
+        continue-on-error: true
+
+      - name: Install node.js and npm if not installed
+        if: steps.check_node_installed.outcome == 'failure'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies in server directory
+        run: npm install
+        working-directory: server/
+
+      - name: Check if mongod is running
+        run: ps aux | grep -v grep | grep mongod || echo 'mongod is not running'
+        id: check_mongod_running
+        continue-on-error: true
+
+      - name: Run mongod if not running
+        if: steps.check_mongod_running == 'failure'
+        run: mongod --config /opt/homebrew/etc/mongod.conf --fork
+
+      - name: Set DB_URL variable
+        run: echo "DB_URL=mongodb://127.0.0.1:27017/fake_so" >> $GITHUB_ENV
+
+      - name: Run destroy.js
+        env:
+          DB_URL: ${{ env.DB_URL }}
+        run: node destroy.js $DB_URL
+        working-directory: server/
+
+      - name: Start the node server
+        run: node server.js > server.log 2?&1 &
+        working-directory: server/
+
+      - name: Install dependencies in client directory
+        run: npm install
+        working-directory: client/
+
+      - name: Start the client
+        run: npm start &
+        working-directory: client/
+
+      - name: Install testing dependencies
+        run: npm install cypress
+        working-directory: client/
+
+      - name: Run component tests
+        run: npx cypress run --component
+        working-directory: client/
+
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
+  jest-tests:
+    name: Run Jest Tests
+    runs-on: [self-hosted, x64, macOS]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Jest Dependencies
+        run: npm install
+        working-directory: server/
+
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
+      - name: Run Jest Tests
+        run: npm test
+        working-directory: server/tests/

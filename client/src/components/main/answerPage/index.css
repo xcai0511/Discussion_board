@@ -1,0 +1,53 @@
+.answer_question_meta {
+    color: #bbbbbb;
+}
+
+.ansButton {
+    margin: 2% 0 2% 2%;
+}
+
+.left_main {
+    margin-left: 2rem;
+    margin-right: -3rem;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.actions {
+    /*width: 12%;*/
+    flex: 0 0 12%;
+    overflow: auto;
+}
+
+.body {
+    /*width: 88%;*/
+    flex: 0 0 88%;
+    overflow: hidden;
+}
+
+.log_in_msg {
+    margin-top: 1.6rem;
+    margin-left: 2rem;
+}
+
+.bookmark_button_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0.6rem;
+}
+
+.question_score {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 46px;
+}
+
+.question_score h2 {
+    margin: 0;
+}

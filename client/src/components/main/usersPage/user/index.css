@@ -1,0 +1,19 @@
+.userNode {
+    place-self: center;
+    border: #000000 1px dashed;
+    padding: 5%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+.userImage {
+    height: 30px;
+    width: 30px;
+}
+
+.userName {
+    color: cornflowerblue;
+}

@@ -1,0 +1,19 @@
+.userProfile_container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.user_profile_title {
+    font-size: 22pt;
+    font-weight: bolder;
+}
+
+.login_msg_profile {
+    margin-top: 1rem;
+}
+
+.profile_image_options img {
+    width: 100px;
+    height: 100px;
+    margin: 0.5rem;
+}
