@@ -6,6 +6,27 @@ on:
       - main
 
 jobs:
+  jest-tests:
+    name: Run Jest Tests
+    runs-on: [ self-hosted, x64 ]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Jest Dependencies
+        run: npm install
+        working-directory: server/
+
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
+      - name: Run Jest Tests
+        run: npm test
+        working-directory: server/tests/
   # Cypress e2e Test
   cypress-e2e:
     runs-on: [self-hosted, x64]
@@ -125,11 +146,11 @@ jobs:
 
       - name: Install testing dependencies
         run: npm install cypress
-        working-directory: testing/
+        working-directory: client/
 
       - name: Run component tests
         run: npx cypress run --spec cypress/component/
-        working-directory: testing/
+        working-directory: client/
 
       - name: Kill the node server process
         run: kill $(lsof -t -i:8000) || true
@@ -137,24 +158,3 @@ jobs:
       - name: Stop the client process
         run: kill $(lsof -t -i:3000) || true
 
-  jest-tests:
-    name: Run Jest Tests
-    runs-on: [self-hosted, x64]
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Install Jest Dependencies
-        run: npm install
-        working-directory: server/
-
-      - name: Kill the node server process
-        run: kill $(lsof -t -i:8000) || true
-
-      - name: Stop the client process
-        run: kill $(lsof -t -i:3000) || true
-
-      - name: Run Jest Tests
-        run: npm test
-        working-directory: server/tests/
