@@ -137,18 +137,18 @@ jobs:
       - name: Stop the client process
         run: kill $(lsof -t -i:3000) || true
 
-    jest-tests:
-      name: Run Jest Tests
-      runs-on: [self-hosted, x64]
+  jest-tests:
+    name: Run Jest Tests
+    runs-on: [self-hosted, x64]
 
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-        - name: Install Jest Dependencies
-          run: npm install
-          working-directory: server/
+      - name: Install Jest Dependencies
+        run: npm install
+        working-directory: server/
 
-        - name: Run Jest Tests
-          run: npm test
-          working-directory: server/tests/
+      - name: Run Jest Tests
+        run: npm test
+        working-directory: server/tests/
