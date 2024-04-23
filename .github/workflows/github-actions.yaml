@@ -149,6 +149,12 @@ jobs:
         run: npm install
         working-directory: server/
 
+      - name: Kill the node server process
+        run: kill $(lsof -t -i:8000) || true
+
+      - name: Stop the client process
+        run: kill $(lsof -t -i:3000) || true
+
       - name: Run Jest Tests
         run: npm test
         working-directory: server/tests/
