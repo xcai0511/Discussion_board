@@ -15,13 +15,6 @@ const LoginForm = ({
                        setSignUpPage
                    }) => {
 
-    const handleEnter = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleLogin();
-        }
-    };
-
     return (
         <Form>
             <div className="back-button-container" onClick={() => setQuestionPage()}>
@@ -40,7 +33,6 @@ const LoginForm = ({
                 val={password}
                 setState={setPassword}
                 err={passwordError}
-                onKeyDown={handleEnter}
             />
             <div className="btn-indicator-container">
                 <button

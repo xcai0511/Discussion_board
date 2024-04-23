@@ -84,6 +84,7 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
                     {showAddTagInput && (
                         <>
                             <input
+                                className="addTagInput"
                                 type="text"
                                 value={newTag}
                                 onChange={(e) => setNewTag(e.target.value)}
@@ -103,7 +104,7 @@ const YourQuestion = ({ q, handleDeleteQuestion, csrfToken }) => {
                 </div>
             </div>
             <div className="delete_button_container">
-                <button onClick={() => handleDeleteQuestion()}>
+                <button className="delete_btn" onClick={() => handleDeleteQuestion()}>
                     <FontAwesomeIcon icon="fa-regular fa-trash-can" transform="grow-20"/>
                 </button>
             </div>
