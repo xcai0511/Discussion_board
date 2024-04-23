@@ -45,9 +45,7 @@ const AnswerPage = ({ qid, handleNewQuestion, loggedIn, user, csrfToken }) => {
             alert("Please log in to vote.");
             return;
         }
-        console.log("clicking: ", type);
         if (vote === type) {
-            console.log("clicking: ", type);
             // Clear vote if the same button is clicked again
             setVote(null);
         } else {

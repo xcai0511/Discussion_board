@@ -7,7 +7,6 @@ import LoginForm from "./loginForm";
 const Login = ({ loginUser, setQuestionPage, setSignUpPage }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    //const [errors, setErrors] = useState({ email: '', password: '' });
     const [emailErr, setEmailErr] = useState("");
     const [passwordErr, setPasswordErr] = useState("");
 
