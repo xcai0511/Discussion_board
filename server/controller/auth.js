@@ -6,9 +6,9 @@ const { verifyPassword } = require("../utils/password")
 const { csrfProtection } = require("../auth-server");
 
 const login = async (req, res) => {
-    const { contactemail, password } = req.body;
+    const { email, password } = req.body;
     try {
-        const user = await User.findOne({contactemail: contactemail});
+        const user = await User.findOne({contactemail: email});
         if (user == null) {
             return res.json({success: false, message: "email"});
         }
